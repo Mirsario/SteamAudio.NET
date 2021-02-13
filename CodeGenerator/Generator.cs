@@ -19,7 +19,7 @@ namespace CodeGenerator
 					throw new ArgumentException("An output path must be provided in command line arguments.");
 				}
 
-				ProcessFile("../SteamAudio/fmod/include/phonon/phonon.h", Path.GetFullPath(args[0]), "IPL.Generated.cs", "SteamAudio", "IPL");
+				ProcessFile("include/phonon.h", Path.GetFullPath(args[0]), "IPL.Generated.cs", "SteamAudio", "IPL");
 
 				Console.WriteLine("Success.");
 				Thread.Sleep(500);
