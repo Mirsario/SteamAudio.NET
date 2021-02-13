@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30524.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamAudio.NET", "Src\SteamAudio.NET.csproj", "{7F61E66B-82AA-4D49-9019-3D1BD0CABE81}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGenerator", "CodeGenerator\CodeGenerator.csproj", "{47153FCC-C1EA-4F18-9C65-5CFEA5F51284}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E355CF73-2792-4108-B5B6-C32AEB8C66D2}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7F61E66B-82AA-4D49-9019-3D1BD0CABE81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F61E66B-82AA-4D49-9019-3D1BD0CABE81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F61E66B-82AA-4D49-9019-3D1BD0CABE81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F61E66B-82AA-4D49-9019-3D1BD0CABE81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47153FCC-C1EA-4F18-9C65-5CFEA5F51284}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47153FCC-C1EA-4F18-9C65-5CFEA5F51284}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47153FCC-C1EA-4F18-9C65-5CFEA5F51284}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47153FCC-C1EA-4F18-9C65-5CFEA5F51284}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5FCAF60D-DA74-404C-8060-35C2CC5654E7}
+	EndGlobalSection
+EndGlobal
