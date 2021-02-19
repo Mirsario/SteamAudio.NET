@@ -267,7 +267,7 @@ namespace SteamAudio
             /// Also called Schmidt semi-normalized form. This is the
             /// normalization scheme used in the AmbiX format.
             /// </summary>
-            Sn3D,
+            SN3D,
             
             /// <summary>
             /// This normalization scheme is based on the mathematical

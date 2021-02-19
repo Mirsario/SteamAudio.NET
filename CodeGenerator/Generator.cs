@@ -126,7 +126,7 @@ namespace CodeGenerator
 							//Capitalize each part
 							for(int i = 0; i < splits.Length; i++) {
 								string split = splits[i];
-								var chars = split.ToCharArray();
+								char[] chars = split.ToCharArray();
 
 								for(int j = 0; j < chars.Length; j++) {
 									chars[j] = j == 0 ? char.ToUpper(chars[j]) : char.ToLower(chars[j]);
@@ -194,7 +194,7 @@ namespace CodeGenerator
 					e => e.Map<CppEnumItem>("ChannelLayout::Sevenpointone").Name("SevenPointOne"),
 					e => e.Map<CppEnumItem>("AmbisonicsOrdering::Fursemalham").Name("FurseMalham"),
 					e => e.Map<CppEnumItem>("AmbisonicsNormalization::Fursemalham").Name("FurseMalham"),
-					e => e.Map<CppEnumItem>("AmbisonicsNormalization::Sn3d").Name("Sn3D"),
+					e => e.Map<CppEnumItem>("AmbisonicsNormalization::Sn3d").Name("SN3D"),
 					e => e.Map<CppEnumItem>("AmbisonicsNormalization::N3d").Name("N3D"),
 					e => e.Map<CppEnumItem>("DistanceAttenuationModelType::Inversedistance").Name("InversedDistance"),
 					e => e.Map<CppEnumItem>("DirectOcclusionMode::Notransmission").Name("NoTransmission"),
