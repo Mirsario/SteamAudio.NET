@@ -142,15 +142,12 @@ namespace CodeGenerator
 					}),
 
 					//Fix weird 'ref void' parameters.
-					e => e.MapAll<CppParameter>().CppAction((converter, element) => {
-						var parameter = (CppParameter)element;
+					e => e.MapAll<CppParameter>().CSharpAction((converter, element) => {
+						var parameter = (CSharpParameter)element;
+						var parameterType = parameter.ParameterType;
 
-						if(parameter.Type is CppPointerType pointerType) {
-							var canonicalElementType = pointerType.ElementType.GetCanonicalType();
-
-							if(canonicalElementType is CppPrimitiveType primitiveType && primitiveType.Kind == CppPrimitiveKind.Void) {
-								parameter.Type = new CppPointerType(CppPrimitiveType.Char);
-							}
+						if(parameterType is CSharpRefType refType && refType.ElementType is CSharpPrimitiveType primitiveType && primitiveType.Kind == CSharpPrimitiveKind.Void) {
+							parameter.ParameterType = CSharpPrimitiveType.IntPtr;
 						}
 					}),
 
