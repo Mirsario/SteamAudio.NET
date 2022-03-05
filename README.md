@@ -1,5 +1,5 @@
 # SteamAudio.NET
-An auto-generated C#-friendly P/Invoke .NET wrapper for Valve Software's [Steam Audio](https://valvesoftware.github.io/steam-audio/) (also known as 'Phonon'.)
+An auto-generated C#-friendly P/Invoke .NET bindings for Valve Software's [Steam Audio](https://valvesoftware.github.io/steam-audio/) (also known as 'Phonon'.)
 
 # License
 All *C#* code in this repository is licensed under the MIT license, which you can read in [LICENSE.md](https://github.com/Mirsario/SteamAudio.NET/blob/master/LICENSE.md).
