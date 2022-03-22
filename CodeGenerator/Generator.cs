@@ -166,6 +166,15 @@ namespace CodeGenerator
 						csEnumItem.Name = StringUtils.SnakeCaseToCamelCase(csEnumItem.Name);
 					}),
 
+					// Capitalize C# fields
+					e => e.MapAll<CppField>().CSharpAction((_, csElement) => {
+						var csField = (CSharpField)csElement;
+
+						if (csField.Visibility == CSharpVisibility.Public) {
+							csField.Name = StringUtils.Capitalize(csField.Name);
+						}
+					}),
+
 					// Turn some 'ref' parameters to 'out' or 'in' based on \param documentation.
 					e => e.MapAll<CppParameter>().CSharpAction((converter, element) => {
 						var parameter = (CSharpParameter)element;
