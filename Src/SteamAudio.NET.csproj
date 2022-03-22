@@ -11,6 +11,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<IncludeContentInPack>true</IncludeContentInPack>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 	
 	<!-- Nuget -->
