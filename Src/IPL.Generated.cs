@@ -69,7 +69,7 @@ namespace SteamAudio
         /// <summary>
         /// SIMD instruction sets that Steam Audio can attempt to use.
         /// </summary>
-        public enum SIMDLevel : int
+        public enum SimdLevel : int
         {
             /// <summary>
             /// Intel Streaming SIMD Extensions 2. Up to 4 simultaneous floating-point operations.
@@ -203,7 +203,7 @@ namespace SteamAudio
             /// <summary>
             /// ACN channel ordering, orthonormal spherical harmonics.
             /// </summary>
-            N3d,
+            N3D,
             
             /// <summary>
             /// ACN channel ordering, semi-normalized spherical harmonics. AmbiX format.
@@ -224,18 +224,18 @@ namespace SteamAudio
             /// <summary>
             /// One or more samples of tail remain in the effect's internal buffers.
             /// </summary>
-            Tailremaining,
+            TailRemaining,
             
             /// <summary>
             /// No tail remains in the effect's internal buffers.
             /// </summary>
-            Tailcomplete,
+            TailComplete,
         }
         
         /// <summary>
         /// The type of HRTF to use.
         /// </summary>
-        public enum HRTFType : int
+        public enum HrtfType : int
         {
             /// <summary>
             /// The built-in HRTF.
@@ -252,7 +252,7 @@ namespace SteamAudio
         /// Techniques for interpolating HRTF data. This is used when rendering a point source whose position relative to
         /// the listener is not contained in the measured HRTF data.
         /// </summary>
-        public enum HRTFInterpolation : int
+        public enum HrtfInterpolation : int
         {
             /// <summary>
             /// Nearest-neighbor filtering, i.e., no interpolation. Selects the measurement location that is closest to 
@@ -277,27 +277,27 @@ namespace SteamAudio
             /// <summary>
             /// Apply frequency-independent distance attenuation.
             /// </summary>
-            Applydistanceattenuation = unchecked((int)1  << (int) 0),
+            ApplyDistanceAttenuation = unchecked((int)1  << (int) 0),
             
             /// <summary>
             /// Apply frequency-dependent air absorption as a function of distance.
             /// </summary>
-            Applyairabsorption = unchecked((int)1  << (int) 1),
+            ApplyAirAbsorption = unchecked((int)1  << (int) 1),
             
             /// <summary>
             /// Apply attenuation due to source directivity pattern.
             /// </summary>
-            Applydirectivity = unchecked((int)1  << (int) 2),
+            ApplyDirectivity = unchecked((int)1  << (int) 2),
             
             /// <summary>
             /// Apply occlusion.
             /// </summary>
-            Applyocclusion = unchecked((int)1  << (int) 3),
+            ApplyOcclusion = unchecked((int)1  << (int) 3),
             
             /// <summary>
             /// Apply transmission along with occlusion.
             /// </summary>
-            Applytransmission = unchecked((int)1  << (int) 4),
+            ApplyTransmission = unchecked((int)1  << (int) 4),
         }
         
         /// <summary>
@@ -308,12 +308,12 @@ namespace SteamAudio
             /// <summary>
             /// Transmission is frequency-independent.
             /// </summary>
-            Freqindependent,
+            FrequencyIndependent,
             
             /// <summary>
             /// Transmission is frequency-dependent.
             /// </summary>
-            Freqdependent,
+            FrequencyDependent,
         }
         
         /// <summary>
@@ -371,7 +371,7 @@ namespace SteamAudio
             /// the horizontal plane. This algorithm is not suitable for scenarios where the listener may fly into a region 
             /// with no probes; if this happens, the listener will not be influenced by any of the baked data.
             /// </summary>
-            Uniformfloor,
+            UniformFloor,
         }
         
         /// <summary>
@@ -392,14 +392,14 @@ namespace SteamAudio
             /// and the listener at the probe position. This is used for modeling reflections from a static source to any
             /// point within the probe batch.
             /// </summary>
-            Staticsource,
+            StaticSource,
             
             /// <summary>
             /// At each probe, baked data is calculated with the source at the probe position, and the listener at some
             /// fixed position (specified separately). This is used for modeling reflections from a moving source to a
             /// static listener.
             /// </summary>
-            Staticlistener,
+            StaticListener,
             
             /// <summary>
             /// Baked data is calculated for each pair of probes. For example, this is used for calculating paths between
@@ -434,12 +434,12 @@ namespace SteamAudio
             /// <summary>
             /// Bake impulse responses for @c IPL_REFLECTIONEFFECTTYPE_CONVOLUTION, @c IPL_REFLECTIONEFFECTTYPE_HYBRID, or @c IPL_REFLECTIONEFFECTTYPE_TAN.
             /// </summary>
-            Bakeconvolution = unchecked((int)1  << (int) 0),
+            BakeConvolution = unchecked((int)1  << (int) 0),
             
             /// <summary>
             /// Bake parametric reverb for @c IPL_REFLECTIONEFFECTTYPE_PARAMETRIC or @c IPL_REFLECTIONEFFECTTYPE_HYBRID.
             /// </summary>
-            Bakeparametric = unchecked((int)1  << (int) 1),
+            BakeParametric = unchecked((int)1  << (int) 1),
         }
         
         /// <summary>
@@ -474,12 +474,12 @@ namespace SteamAudio
             /// <summary>
             /// Enable distance attenuation calculations.
             /// </summary>
-            Distanceattenuation = unchecked((int)1  << (int) 0),
+            DistanceAttenuation = unchecked((int)1  << (int) 0),
             
             /// <summary>
             /// Enable air absorption calculations.
             /// </summary>
-            Airabsorption = unchecked((int)1  << (int) 1),
+            AirAbsorption = unchecked((int)1  << (int) 1),
             
             /// <summary>
             /// Enable directivity calculations.
@@ -512,7 +512,7 @@ namespace SteamAudio
             /// An inverse distance falloff. You can configure the minimum distance, within which distance attenuation is not
             /// applied.
             /// </summary>
-            InversedDistance,
+            InverseDistance,
             
             /// <summary>
             /// An arbitrary distance falloff function, defined by a callback function.
@@ -564,25 +564,25 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLContext_t : IEquatable<_IPLContext_t>
+        public readonly partial struct Context : IEquatable<Context>
         {
             private readonly IntPtr _handle;
             
-            public _IPLContext_t(IntPtr handle) => _handle = handle;
+            public Context(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLContext_t other) => _handle.Equals(other._handle);
+            public bool Equals(Context other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLContext_t other && Equals(other);
+            public override bool Equals(object obj) => obj is Context other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLContext_t left, _IPLContext_t right) => left.Equals(right);
+            public static bool operator ==(Context left, Context right) => left.Equals(right);
             
-            public static bool operator !=(_IPLContext_t left, _IPLContext_t right) => !left.Equals(right);
+            public static bool operator !=(Context left, Context right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -622,7 +622,7 @@ namespace SteamAudio
             /// in lower performance than expected. If you observe this in your application, set this
             /// parameter to `IPL_SIMDLEVEL_AVX2` or lower.
             /// </summary>
-            public IPL.SIMDLevel simdLevel;
+            public IPL.SimdLevel simdLevel;
         }
         
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -733,25 +733,25 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLSerializedObject_t : IEquatable<_IPLSerializedObject_t>
+        public readonly partial struct SerializedObject : IEquatable<SerializedObject>
         {
             private readonly IntPtr _handle;
             
-            public _IPLSerializedObject_t(IntPtr handle) => _handle = handle;
+            public SerializedObject(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLSerializedObject_t other) => _handle.Equals(other._handle);
+            public bool Equals(SerializedObject other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLSerializedObject_t other && Equals(other);
+            public override bool Equals(object obj) => obj is SerializedObject other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLSerializedObject_t left, _IPLSerializedObject_t right) => left.Equals(right);
+            public static bool operator ==(SerializedObject left, SerializedObject right) => left.Equals(right);
             
-            public static bool operator !=(_IPLSerializedObject_t left, _IPLSerializedObject_t right) => !left.Equals(right);
+            public static bool operator !=(SerializedObject left, SerializedObject right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -774,25 +774,25 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLEmbreeDevice_t : IEquatable<_IPLEmbreeDevice_t>
+        public readonly partial struct EmbreeDevice : IEquatable<EmbreeDevice>
         {
             private readonly IntPtr _handle;
             
-            public _IPLEmbreeDevice_t(IntPtr handle) => _handle = handle;
+            public EmbreeDevice(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLEmbreeDevice_t other) => _handle.Equals(other._handle);
+            public bool Equals(EmbreeDevice other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLEmbreeDevice_t other && Equals(other);
+            public override bool Equals(object obj) => obj is EmbreeDevice other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLEmbreeDevice_t left, _IPLEmbreeDevice_t right) => left.Equals(right);
+            public static bool operator ==(EmbreeDevice left, EmbreeDevice right) => left.Equals(right);
             
-            public static bool operator !=(_IPLEmbreeDevice_t left, _IPLEmbreeDevice_t right) => !left.Equals(right);
+            public static bool operator !=(EmbreeDevice left, EmbreeDevice right) => !left.Equals(right);
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -801,47 +801,47 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLOpenCLDeviceList_t : IEquatable<_IPLOpenCLDeviceList_t>
+        public readonly partial struct OpenCLDeviceList : IEquatable<OpenCLDeviceList>
         {
             private readonly IntPtr _handle;
             
-            public _IPLOpenCLDeviceList_t(IntPtr handle) => _handle = handle;
+            public OpenCLDeviceList(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLOpenCLDeviceList_t other) => _handle.Equals(other._handle);
+            public bool Equals(OpenCLDeviceList other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLOpenCLDeviceList_t other && Equals(other);
+            public override bool Equals(object obj) => obj is OpenCLDeviceList other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLOpenCLDeviceList_t left, _IPLOpenCLDeviceList_t right) => left.Equals(right);
+            public static bool operator ==(OpenCLDeviceList left, OpenCLDeviceList right) => left.Equals(right);
             
-            public static bool operator !=(_IPLOpenCLDeviceList_t left, _IPLOpenCLDeviceList_t right) => !left.Equals(right);
+            public static bool operator !=(OpenCLDeviceList left, OpenCLDeviceList right) => !left.Equals(right);
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLOpenCLDevice_t : IEquatable<_IPLOpenCLDevice_t>
+        public readonly partial struct OpenCLDevice : IEquatable<OpenCLDevice>
         {
             private readonly IntPtr _handle;
             
-            public _IPLOpenCLDevice_t(IntPtr handle) => _handle = handle;
+            public OpenCLDevice(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLOpenCLDevice_t other) => _handle.Equals(other._handle);
+            public bool Equals(OpenCLDevice other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLOpenCLDevice_t other && Equals(other);
+            public override bool Equals(object obj) => obj is OpenCLDevice other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLOpenCLDevice_t left, _IPLOpenCLDevice_t right) => left.Equals(right);
+            public static bool operator ==(OpenCLDevice left, OpenCLDevice right) => left.Equals(right);
             
-            public static bool operator !=(_IPLOpenCLDevice_t left, _IPLOpenCLDevice_t right) => !left.Equals(right);
+            public static bool operator !=(OpenCLDevice left, OpenCLDevice right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -973,25 +973,25 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLRadeonRaysDevice_t : IEquatable<_IPLRadeonRaysDevice_t>
+        public readonly partial struct RadeonRaysDevice : IEquatable<RadeonRaysDevice>
         {
             private readonly IntPtr _handle;
             
-            public _IPLRadeonRaysDevice_t(IntPtr handle) => _handle = handle;
+            public RadeonRaysDevice(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLRadeonRaysDevice_t other) => _handle.Equals(other._handle);
+            public bool Equals(RadeonRaysDevice other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLRadeonRaysDevice_t other && Equals(other);
+            public override bool Equals(object obj) => obj is RadeonRaysDevice other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLRadeonRaysDevice_t left, _IPLRadeonRaysDevice_t right) => left.Equals(right);
+            public static bool operator ==(RadeonRaysDevice left, RadeonRaysDevice right) => left.Equals(right);
             
-            public static bool operator !=(_IPLRadeonRaysDevice_t left, _IPLRadeonRaysDevice_t right) => !left.Equals(right);
+            public static bool operator !=(RadeonRaysDevice left, RadeonRaysDevice right) => !left.Equals(right);
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -1000,25 +1000,25 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLTrueAudioNextDevice_t : IEquatable<_IPLTrueAudioNextDevice_t>
+        public readonly partial struct TrueAudioNextDevice : IEquatable<TrueAudioNextDevice>
         {
             private readonly IntPtr _handle;
             
-            public _IPLTrueAudioNextDevice_t(IntPtr handle) => _handle = handle;
+            public TrueAudioNextDevice(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLTrueAudioNextDevice_t other) => _handle.Equals(other._handle);
+            public bool Equals(TrueAudioNextDevice other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLTrueAudioNextDevice_t other && Equals(other);
+            public override bool Equals(object obj) => obj is TrueAudioNextDevice other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLTrueAudioNextDevice_t left, _IPLTrueAudioNextDevice_t right) => left.Equals(right);
+            public static bool operator ==(TrueAudioNextDevice left, TrueAudioNextDevice right) => left.Equals(right);
             
-            public static bool operator !=(_IPLTrueAudioNextDevice_t left, _IPLTrueAudioNextDevice_t right) => !left.Equals(right);
+            public static bool operator !=(TrueAudioNextDevice left, TrueAudioNextDevice right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -1049,69 +1049,69 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLScene_t : IEquatable<_IPLScene_t>
+        public readonly partial struct Scene : IEquatable<Scene>
         {
             private readonly IntPtr _handle;
             
-            public _IPLScene_t(IntPtr handle) => _handle = handle;
+            public Scene(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLScene_t other) => _handle.Equals(other._handle);
+            public bool Equals(Scene other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLScene_t other && Equals(other);
+            public override bool Equals(object obj) => obj is Scene other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLScene_t left, _IPLScene_t right) => left.Equals(right);
+            public static bool operator ==(Scene left, Scene right) => left.Equals(right);
             
-            public static bool operator !=(_IPLScene_t left, _IPLScene_t right) => !left.Equals(right);
+            public static bool operator !=(Scene left, Scene right) => !left.Equals(right);
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLStaticMesh_t : IEquatable<_IPLStaticMesh_t>
+        public readonly partial struct StaticMesh : IEquatable<StaticMesh>
         {
             private readonly IntPtr _handle;
             
-            public _IPLStaticMesh_t(IntPtr handle) => _handle = handle;
+            public StaticMesh(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLStaticMesh_t other) => _handle.Equals(other._handle);
+            public bool Equals(StaticMesh other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLStaticMesh_t other && Equals(other);
+            public override bool Equals(object obj) => obj is StaticMesh other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLStaticMesh_t left, _IPLStaticMesh_t right) => left.Equals(right);
+            public static bool operator ==(StaticMesh left, StaticMesh right) => left.Equals(right);
             
-            public static bool operator !=(_IPLStaticMesh_t left, _IPLStaticMesh_t right) => !left.Equals(right);
+            public static bool operator !=(StaticMesh left, StaticMesh right) => !left.Equals(right);
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLInstancedMesh_t : IEquatable<_IPLInstancedMesh_t>
+        public readonly partial struct InstancedMesh : IEquatable<InstancedMesh>
         {
             private readonly IntPtr _handle;
             
-            public _IPLInstancedMesh_t(IntPtr handle) => _handle = handle;
+            public InstancedMesh(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLInstancedMesh_t other) => _handle.Equals(other._handle);
+            public bool Equals(InstancedMesh other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLInstancedMesh_t other && Equals(other);
+            public override bool Equals(object obj) => obj is InstancedMesh other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLInstancedMesh_t left, _IPLInstancedMesh_t right) => left.Equals(right);
+            public static bool operator ==(InstancedMesh left, InstancedMesh right) => left.Equals(right);
             
-            public static bool operator !=(_IPLInstancedMesh_t left, _IPLInstancedMesh_t right) => !left.Equals(right);
+            public static bool operator !=(InstancedMesh left, InstancedMesh right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -1270,12 +1270,12 @@ namespace SteamAudio
             /// <summary>
             /// Handle to an Embree device. Only for @c IPL_SCENETYPE_EMBREE.
             /// </summary>
-            public IPL._IPLEmbreeDevice_t embreeDevice;
+            public IPL.EmbreeDevice embreeDevice;
             
             /// <summary>
             /// Handle to a Radeon Rays device. Only for @c IPL_SCENETYPE_RADEONRAYS.
             /// </summary>
-            public IPL._IPLRadeonRaysDevice_t radeonRaysDevice;
+            public IPL.RadeonRaysDevice radeonRaysDevice;
         }
         
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -1341,7 +1341,7 @@ namespace SteamAudio
             /// <summary>
             /// Handle to the scene to be instantiated.
             /// </summary>
-            public IPL._IPLScene_t subScene;
+            public IPL.Scene subScene;
             
             /// <summary>
             /// Local-to-world transform that places the instance within the parent scene.
@@ -1411,37 +1411,37 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLHRTF_t : IEquatable<_IPLHRTF_t>
+        public readonly partial struct Hrtf : IEquatable<Hrtf>
         {
             private readonly IntPtr _handle;
             
-            public _IPLHRTF_t(IntPtr handle) => _handle = handle;
+            public Hrtf(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLHRTF_t other) => _handle.Equals(other._handle);
+            public bool Equals(Hrtf other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLHRTF_t other && Equals(other);
+            public override bool Equals(object obj) => obj is Hrtf other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLHRTF_t left, _IPLHRTF_t right) => left.Equals(right);
+            public static bool operator ==(Hrtf left, Hrtf right) => left.Equals(right);
             
-            public static bool operator !=(_IPLHRTF_t left, _IPLHRTF_t right) => !left.Equals(right);
+            public static bool operator !=(Hrtf left, Hrtf right) => !left.Equals(right);
         }
         
         /// <summary>
         /// Settings used to create an HRTF object.
         /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public partial struct HRTFSettings
+        public partial struct HrtfSettings
         {
             /// <summary>
             /// The type of HRTF to create.
             /// </summary>
-            public IPL.HRTFType type;
+            public IPL.HrtfType type;
             
             /// <summary>
             /// SOFA file from which to load HRTF data. Only for @c IPL_HRTFTYPE_SOFA.
@@ -1451,25 +1451,25 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLPanningEffect_t : IEquatable<_IPLPanningEffect_t>
+        public readonly partial struct PanningEffect : IEquatable<PanningEffect>
         {
             private readonly IntPtr _handle;
             
-            public _IPLPanningEffect_t(IntPtr handle) => _handle = handle;
+            public PanningEffect(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLPanningEffect_t other) => _handle.Equals(other._handle);
+            public bool Equals(PanningEffect other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLPanningEffect_t other && Equals(other);
+            public override bool Equals(object obj) => obj is PanningEffect other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLPanningEffect_t left, _IPLPanningEffect_t right) => left.Equals(right);
+            public static bool operator ==(PanningEffect left, PanningEffect right) => left.Equals(right);
             
-            public static bool operator !=(_IPLPanningEffect_t left, _IPLPanningEffect_t right) => !left.Equals(right);
+            public static bool operator !=(PanningEffect left, PanningEffect right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -1497,25 +1497,25 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLBinauralEffect_t : IEquatable<_IPLBinauralEffect_t>
+        public readonly partial struct BinauralEffect : IEquatable<BinauralEffect>
         {
             private readonly IntPtr _handle;
             
-            public _IPLBinauralEffect_t(IntPtr handle) => _handle = handle;
+            public BinauralEffect(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLBinauralEffect_t other) => _handle.Equals(other._handle);
+            public bool Equals(BinauralEffect other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLBinauralEffect_t other && Equals(other);
+            public override bool Equals(object obj) => obj is BinauralEffect other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLBinauralEffect_t left, _IPLBinauralEffect_t right) => left.Equals(right);
+            public static bool operator ==(BinauralEffect left, BinauralEffect right) => left.Equals(right);
             
-            public static bool operator !=(_IPLBinauralEffect_t left, _IPLBinauralEffect_t right) => !left.Equals(right);
+            public static bool operator !=(BinauralEffect left, BinauralEffect right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -1527,7 +1527,7 @@ namespace SteamAudio
             /// <summary>
             /// The HRTF to use.
             /// </summary>
-            public IPL._IPLHRTF_t hrtf;
+            public IPL.Hrtf hrtf;
         }
         
         /// <summary>
@@ -1544,7 +1544,7 @@ namespace SteamAudio
             /// <summary>
             /// The interpolation technique to use.
             /// </summary>
-            public IPL.HRTFInterpolation interpolation;
+            public IPL.HrtfInterpolation interpolation;
             
             /// <summary>
             /// Amount to blend input audio with spatialized audio. When set to 0, output audio is not spatialized at all 
@@ -1555,29 +1555,29 @@ namespace SteamAudio
             /// <summary>
             /// The HRTF to use.
             /// </summary>
-            public IPL._IPLHRTF_t hrtf;
+            public IPL.Hrtf hrtf;
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLVirtualSurroundEffect_t : IEquatable<_IPLVirtualSurroundEffect_t>
+        public readonly partial struct VirtualSurroundEffect : IEquatable<VirtualSurroundEffect>
         {
             private readonly IntPtr _handle;
             
-            public _IPLVirtualSurroundEffect_t(IntPtr handle) => _handle = handle;
+            public VirtualSurroundEffect(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLVirtualSurroundEffect_t other) => _handle.Equals(other._handle);
+            public bool Equals(VirtualSurroundEffect other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLVirtualSurroundEffect_t other && Equals(other);
+            public override bool Equals(object obj) => obj is VirtualSurroundEffect other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLVirtualSurroundEffect_t left, _IPLVirtualSurroundEffect_t right) => left.Equals(right);
+            public static bool operator ==(VirtualSurroundEffect left, VirtualSurroundEffect right) => left.Equals(right);
             
-            public static bool operator !=(_IPLVirtualSurroundEffect_t left, _IPLVirtualSurroundEffect_t right) => !left.Equals(right);
+            public static bool operator !=(VirtualSurroundEffect left, VirtualSurroundEffect right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -1594,7 +1594,7 @@ namespace SteamAudio
             /// <summary>
             /// The HRTF to use.
             /// </summary>
-            public IPL._IPLHRTF_t hrtf;
+            public IPL.Hrtf hrtf;
         }
         
         /// <summary>
@@ -1606,29 +1606,29 @@ namespace SteamAudio
             /// <summary>
             /// The HRTF to use.
             /// </summary>
-            public IPL._IPLHRTF_t hrtf;
+            public IPL.Hrtf hrtf;
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLAmbisonicsEncodeEffect_t : IEquatable<_IPLAmbisonicsEncodeEffect_t>
+        public readonly partial struct AmbisonicsEncodeEffect : IEquatable<AmbisonicsEncodeEffect>
         {
             private readonly IntPtr _handle;
             
-            public _IPLAmbisonicsEncodeEffect_t(IntPtr handle) => _handle = handle;
+            public AmbisonicsEncodeEffect(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLAmbisonicsEncodeEffect_t other) => _handle.Equals(other._handle);
+            public bool Equals(AmbisonicsEncodeEffect other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLAmbisonicsEncodeEffect_t other && Equals(other);
+            public override bool Equals(object obj) => obj is AmbisonicsEncodeEffect other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLAmbisonicsEncodeEffect_t left, _IPLAmbisonicsEncodeEffect_t right) => left.Equals(right);
+            public static bool operator ==(AmbisonicsEncodeEffect left, AmbisonicsEncodeEffect right) => left.Equals(right);
             
-            public static bool operator !=(_IPLAmbisonicsEncodeEffect_t left, _IPLAmbisonicsEncodeEffect_t right) => !left.Equals(right);
+            public static bool operator !=(AmbisonicsEncodeEffect left, AmbisonicsEncodeEffect right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -1662,25 +1662,25 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLAmbisonicsPanningEffect_t : IEquatable<_IPLAmbisonicsPanningEffect_t>
+        public readonly partial struct AmbisonicsPanningEffect : IEquatable<AmbisonicsPanningEffect>
         {
             private readonly IntPtr _handle;
             
-            public _IPLAmbisonicsPanningEffect_t(IntPtr handle) => _handle = handle;
+            public AmbisonicsPanningEffect(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLAmbisonicsPanningEffect_t other) => _handle.Equals(other._handle);
+            public bool Equals(AmbisonicsPanningEffect other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLAmbisonicsPanningEffect_t other && Equals(other);
+            public override bool Equals(object obj) => obj is AmbisonicsPanningEffect other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLAmbisonicsPanningEffect_t left, _IPLAmbisonicsPanningEffect_t right) => left.Equals(right);
+            public static bool operator ==(AmbisonicsPanningEffect left, AmbisonicsPanningEffect right) => left.Equals(right);
             
-            public static bool operator !=(_IPLAmbisonicsPanningEffect_t left, _IPLAmbisonicsPanningEffect_t right) => !left.Equals(right);
+            public static bool operator !=(AmbisonicsPanningEffect left, AmbisonicsPanningEffect right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -1714,25 +1714,25 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLAmbisonicsBinauralEffect_t : IEquatable<_IPLAmbisonicsBinauralEffect_t>
+        public readonly partial struct AmbisonicsBinauralEffect : IEquatable<AmbisonicsBinauralEffect>
         {
             private readonly IntPtr _handle;
             
-            public _IPLAmbisonicsBinauralEffect_t(IntPtr handle) => _handle = handle;
+            public AmbisonicsBinauralEffect(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLAmbisonicsBinauralEffect_t other) => _handle.Equals(other._handle);
+            public bool Equals(AmbisonicsBinauralEffect other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLAmbisonicsBinauralEffect_t other && Equals(other);
+            public override bool Equals(object obj) => obj is AmbisonicsBinauralEffect other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLAmbisonicsBinauralEffect_t left, _IPLAmbisonicsBinauralEffect_t right) => left.Equals(right);
+            public static bool operator ==(AmbisonicsBinauralEffect left, AmbisonicsBinauralEffect right) => left.Equals(right);
             
-            public static bool operator !=(_IPLAmbisonicsBinauralEffect_t left, _IPLAmbisonicsBinauralEffect_t right) => !left.Equals(right);
+            public static bool operator !=(AmbisonicsBinauralEffect left, AmbisonicsBinauralEffect right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -1744,7 +1744,7 @@ namespace SteamAudio
             /// <summary>
             /// The HRTF to use.
             /// </summary>
-            public IPL._IPLHRTF_t hrtf;
+            public IPL.Hrtf hrtf;
             
             /// <summary>
             /// The maximum Ambisonics order that will be used by input audio buffers.
@@ -1761,7 +1761,7 @@ namespace SteamAudio
             /// <summary>
             /// The HRTF to use.
             /// </summary>
-            public IPL._IPLHRTF_t hrtf;
+            public IPL.Hrtf hrtf;
             
             /// <summary>
             /// Ambisonic order of the input buffer. May be less than the @c maxOrder specified when creating the effect,
@@ -1771,25 +1771,25 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLAmbisonicsRotationEffect_t : IEquatable<_IPLAmbisonicsRotationEffect_t>
+        public readonly partial struct AmbisonicsRotationEffect : IEquatable<AmbisonicsRotationEffect>
         {
             private readonly IntPtr _handle;
             
-            public _IPLAmbisonicsRotationEffect_t(IntPtr handle) => _handle = handle;
+            public AmbisonicsRotationEffect(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLAmbisonicsRotationEffect_t other) => _handle.Equals(other._handle);
+            public bool Equals(AmbisonicsRotationEffect other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLAmbisonicsRotationEffect_t other && Equals(other);
+            public override bool Equals(object obj) => obj is AmbisonicsRotationEffect other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLAmbisonicsRotationEffect_t left, _IPLAmbisonicsRotationEffect_t right) => left.Equals(right);
+            public static bool operator ==(AmbisonicsRotationEffect left, AmbisonicsRotationEffect right) => left.Equals(right);
             
-            public static bool operator !=(_IPLAmbisonicsRotationEffect_t left, _IPLAmbisonicsRotationEffect_t right) => !left.Equals(right);
+            public static bool operator !=(AmbisonicsRotationEffect left, AmbisonicsRotationEffect right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -1823,25 +1823,25 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLAmbisonicsDecodeEffect_t : IEquatable<_IPLAmbisonicsDecodeEffect_t>
+        public readonly partial struct AmbisonicsDecodeEffect : IEquatable<AmbisonicsDecodeEffect>
         {
             private readonly IntPtr _handle;
             
-            public _IPLAmbisonicsDecodeEffect_t(IntPtr handle) => _handle = handle;
+            public AmbisonicsDecodeEffect(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLAmbisonicsDecodeEffect_t other) => _handle.Equals(other._handle);
+            public bool Equals(AmbisonicsDecodeEffect other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLAmbisonicsDecodeEffect_t other && Equals(other);
+            public override bool Equals(object obj) => obj is AmbisonicsDecodeEffect other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLAmbisonicsDecodeEffect_t left, _IPLAmbisonicsDecodeEffect_t right) => left.Equals(right);
+            public static bool operator ==(AmbisonicsDecodeEffect left, AmbisonicsDecodeEffect right) => left.Equals(right);
             
-            public static bool operator !=(_IPLAmbisonicsDecodeEffect_t left, _IPLAmbisonicsDecodeEffect_t right) => !left.Equals(right);
+            public static bool operator !=(AmbisonicsDecodeEffect left, AmbisonicsDecodeEffect right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -1858,7 +1858,7 @@ namespace SteamAudio
             /// <summary>
             /// The HRTF to use.
             /// </summary>
-            public IPL._IPLHRTF_t hrtf;
+            public IPL.Hrtf hrtf;
             
             /// <summary>
             /// The maximum Ambisonics order that will be used by input audio buffers.
@@ -1881,7 +1881,7 @@ namespace SteamAudio
             /// <summary>
             /// The HRTF to use.
             /// </summary>
-            public IPL._IPLHRTF_t hrtf;
+            public IPL.Hrtf hrtf;
             
             /// <summary>
             /// The orientation of the listener.
@@ -1896,25 +1896,25 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLDirectEffect_t : IEquatable<_IPLDirectEffect_t>
+        public readonly partial struct DirectEffect : IEquatable<DirectEffect>
         {
             private readonly IntPtr _handle;
             
-            public _IPLDirectEffect_t(IntPtr handle) => _handle = handle;
+            public DirectEffect(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLDirectEffect_t other) => _handle.Equals(other._handle);
+            public bool Equals(DirectEffect other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLDirectEffect_t other && Equals(other);
+            public override bool Equals(object obj) => obj is DirectEffect other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLDirectEffect_t left, _IPLDirectEffect_t right) => left.Equals(right);
+            public static bool operator ==(DirectEffect left, DirectEffect right) => left.Equals(right);
             
-            public static bool operator !=(_IPLDirectEffect_t left, _IPLDirectEffect_t right) => !left.Equals(right);
+            public static bool operator !=(DirectEffect left, DirectEffect right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -1972,69 +1972,69 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLReflectionEffectIR_t : IEquatable<_IPLReflectionEffectIR_t>
+        public readonly partial struct ReflectionEffectIR : IEquatable<ReflectionEffectIR>
         {
             private readonly IntPtr _handle;
             
-            public _IPLReflectionEffectIR_t(IntPtr handle) => _handle = handle;
+            public ReflectionEffectIR(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLReflectionEffectIR_t other) => _handle.Equals(other._handle);
+            public bool Equals(ReflectionEffectIR other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLReflectionEffectIR_t other && Equals(other);
+            public override bool Equals(object obj) => obj is ReflectionEffectIR other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLReflectionEffectIR_t left, _IPLReflectionEffectIR_t right) => left.Equals(right);
+            public static bool operator ==(ReflectionEffectIR left, ReflectionEffectIR right) => left.Equals(right);
             
-            public static bool operator !=(_IPLReflectionEffectIR_t left, _IPLReflectionEffectIR_t right) => !left.Equals(right);
+            public static bool operator !=(ReflectionEffectIR left, ReflectionEffectIR right) => !left.Equals(right);
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLReflectionEffect_t : IEquatable<_IPLReflectionEffect_t>
+        public readonly partial struct ReflectionEffect : IEquatable<ReflectionEffect>
         {
             private readonly IntPtr _handle;
             
-            public _IPLReflectionEffect_t(IntPtr handle) => _handle = handle;
+            public ReflectionEffect(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLReflectionEffect_t other) => _handle.Equals(other._handle);
+            public bool Equals(ReflectionEffect other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLReflectionEffect_t other && Equals(other);
+            public override bool Equals(object obj) => obj is ReflectionEffect other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLReflectionEffect_t left, _IPLReflectionEffect_t right) => left.Equals(right);
+            public static bool operator ==(ReflectionEffect left, ReflectionEffect right) => left.Equals(right);
             
-            public static bool operator !=(_IPLReflectionEffect_t left, _IPLReflectionEffect_t right) => !left.Equals(right);
+            public static bool operator !=(ReflectionEffect left, ReflectionEffect right) => !left.Equals(right);
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLReflectionMixer_t : IEquatable<_IPLReflectionMixer_t>
+        public readonly partial struct ReflectionMixer : IEquatable<ReflectionMixer>
         {
             private readonly IntPtr _handle;
             
-            public _IPLReflectionMixer_t(IntPtr handle) => _handle = handle;
+            public ReflectionMixer(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLReflectionMixer_t other) => _handle.Equals(other._handle);
+            public bool Equals(ReflectionMixer other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLReflectionMixer_t other && Equals(other);
+            public override bool Equals(object obj) => obj is ReflectionMixer other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLReflectionMixer_t left, _IPLReflectionMixer_t right) => left.Equals(right);
+            public static bool operator ==(ReflectionMixer left, ReflectionMixer right) => left.Equals(right);
             
-            public static bool operator !=(_IPLReflectionMixer_t left, _IPLReflectionMixer_t right) => !left.Equals(right);
+            public static bool operator !=(ReflectionMixer left, ReflectionMixer right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -2073,7 +2073,7 @@ namespace SteamAudio
             /// <summary>
             /// The impulse response. For @c IPL_REFLECTIONEFFECTTYPE_CONVOLUTION or @c IPL_REFLECTIONEFFECTTYPE_HYBRID.
             /// </summary>
-            public IPL._IPLReflectionEffectIR_t ir;
+            public IPL.ReflectionEffectIR ir;
             
             /// <summary>
             /// 3-band reverb decay times (RT60). For @c IPL_REFLECTIONEFFECTTYPE_PARAMETRIC or 
@@ -2107,7 +2107,7 @@ namespace SteamAudio
             /// <summary>
             /// The TrueAudio Next device to use for convolution processing. For @c IPL_REFLECTIONEFFECTTYPE_TAN.
             /// </summary>
-            public IPL._IPLTrueAudioNextDevice_t tanDevice;
+            public IPL.TrueAudioNextDevice tanDevice;
             
             /// <summary>
             /// The TrueAudio Next slot index to use for convolution processing. The slot identifies the IR to use. For
@@ -2117,25 +2117,25 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLPathEffect_t : IEquatable<_IPLPathEffect_t>
+        public readonly partial struct PathEffect : IEquatable<PathEffect>
         {
             private readonly IntPtr _handle;
             
-            public _IPLPathEffect_t(IntPtr handle) => _handle = handle;
+            public PathEffect(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLPathEffect_t other) => _handle.Equals(other._handle);
+            public bool Equals(PathEffect other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLPathEffect_t other && Equals(other);
+            public override bool Equals(object obj) => obj is PathEffect other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLPathEffect_t left, _IPLPathEffect_t right) => left.Equals(right);
+            public static bool operator ==(PathEffect left, PathEffect right) => left.Equals(right);
             
-            public static bool operator !=(_IPLPathEffect_t left, _IPLPathEffect_t right) => !left.Equals(right);
+            public static bool operator !=(PathEffect left, PathEffect right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -2177,47 +2177,47 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLProbeArray_t : IEquatable<_IPLProbeArray_t>
+        public readonly partial struct ProbeArray : IEquatable<ProbeArray>
         {
             private readonly IntPtr _handle;
             
-            public _IPLProbeArray_t(IntPtr handle) => _handle = handle;
+            public ProbeArray(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLProbeArray_t other) => _handle.Equals(other._handle);
+            public bool Equals(ProbeArray other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLProbeArray_t other && Equals(other);
+            public override bool Equals(object obj) => obj is ProbeArray other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLProbeArray_t left, _IPLProbeArray_t right) => left.Equals(right);
+            public static bool operator ==(ProbeArray left, ProbeArray right) => left.Equals(right);
             
-            public static bool operator !=(_IPLProbeArray_t left, _IPLProbeArray_t right) => !left.Equals(right);
+            public static bool operator !=(ProbeArray left, ProbeArray right) => !left.Equals(right);
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLProbeBatch_t : IEquatable<_IPLProbeBatch_t>
+        public readonly partial struct ProbeBatch : IEquatable<ProbeBatch>
         {
             private readonly IntPtr _handle;
             
-            public _IPLProbeBatch_t(IntPtr handle) => _handle = handle;
+            public ProbeBatch(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLProbeBatch_t other) => _handle.Equals(other._handle);
+            public bool Equals(ProbeBatch other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLProbeBatch_t other && Equals(other);
+            public override bool Equals(object obj) => obj is ProbeBatch other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLProbeBatch_t left, _IPLProbeBatch_t right) => left.Equals(right);
+            public static bool operator ==(ProbeBatch left, ProbeBatch right) => left.Equals(right);
             
-            public static bool operator !=(_IPLProbeBatch_t left, _IPLProbeBatch_t right) => !left.Equals(right);
+            public static bool operator !=(ProbeBatch left, ProbeBatch right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -2284,12 +2284,12 @@ namespace SteamAudio
             /// <summary>
             /// The scene in which the probes exist.
             /// </summary>
-            public IPL._IPLScene_t scene;
+            public IPL.Scene scene;
             
             /// <summary>
             /// A probe batch containing the probes at which reflections data should be baked.
             /// </summary>
-            public IPL._IPLProbeBatch_t probeBatch;
+            public IPL.ProbeBatch probeBatch;
             
             /// <summary>
             /// The type of scene being used.
@@ -2376,12 +2376,12 @@ namespace SteamAudio
             /// <summary>
             /// The OpenCL device, if using Radeon Rays.
             /// </summary>
-            public IPL._IPLOpenCLDevice_t openCLDevice;
+            public IPL.OpenCLDevice openCLDevice;
             
             /// <summary>
             /// The Radeon Rays device, if using Radeon Rays.
             /// </summary>
-            public IPL._IPLRadeonRaysDevice_t radeonRaysDevice;
+            public IPL.RadeonRaysDevice radeonRaysDevice;
         }
         
         /// <summary>
@@ -2393,12 +2393,12 @@ namespace SteamAudio
             /// <summary>
             /// The scene in which the probes exist.
             /// </summary>
-            public IPL._IPLScene_t scene;
+            public IPL.Scene scene;
             
             /// <summary>
             /// A probe batch containing the probes for which pathing data should be baked.
             /// </summary>
-            public IPL._IPLProbeBatch_t probeBatch;
+            public IPL.ProbeBatch probeBatch;
             
             /// <summary>
             /// An identifier for the data layer that should be baked. The identifier determines what data is simulated and
@@ -2446,47 +2446,47 @@ namespace SteamAudio
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLSource_t : IEquatable<_IPLSource_t>
+        public readonly partial struct Source : IEquatable<Source>
         {
             private readonly IntPtr _handle;
             
-            public _IPLSource_t(IntPtr handle) => _handle = handle;
+            public Source(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLSource_t other) => _handle.Equals(other._handle);
+            public bool Equals(Source other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLSource_t other && Equals(other);
+            public override bool Equals(object obj) => obj is Source other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLSource_t left, _IPLSource_t right) => left.Equals(right);
+            public static bool operator ==(Source left, Source right) => left.Equals(right);
             
-            public static bool operator !=(_IPLSource_t left, _IPLSource_t right) => !left.Equals(right);
+            public static bool operator !=(Source left, Source right) => !left.Equals(right);
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public readonly partial struct _IPLSimulator_t : IEquatable<_IPLSimulator_t>
+        public readonly partial struct Simulator : IEquatable<Simulator>
         {
             private readonly IntPtr _handle;
             
-            public _IPLSimulator_t(IntPtr handle) => _handle = handle;
+            public Simulator(IntPtr handle) => _handle = handle;
             
             public IntPtr Handle => _handle;
             
-            public bool Equals(_IPLSimulator_t other) => _handle.Equals(other._handle);
+            public bool Equals(Simulator other) => _handle.Equals(other._handle);
             
-            public override bool Equals(object obj) => obj is _IPLSimulator_t other && Equals(other);
+            public override bool Equals(object obj) => obj is Simulator other && Equals(other);
             
             public override int GetHashCode() => _handle.GetHashCode();
             
             public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
             
-            public static bool operator ==(_IPLSimulator_t left, _IPLSimulator_t right) => left.Equals(right);
+            public static bool operator ==(Simulator left, Simulator right) => left.Equals(right);
             
-            public static bool operator !=(_IPLSimulator_t left, _IPLSimulator_t right) => !left.Equals(right);
+            public static bool operator !=(Simulator left, Simulator right) => !left.Equals(right);
         }
         
         /// <summary>
@@ -2711,17 +2711,17 @@ namespace SteamAudio
             /// <summary>
             /// The OpenCL device being used. Only necessary if @sceneType is @c IPL_SCENETYPE_RADEONRAYS, or @c reflectionType is @c IPL_REFLECTIONEFFECTTYPE_TAN.
             /// </summary>
-            public IPL._IPLOpenCLDevice_t openCLDevice;
+            public IPL.OpenCLDevice openCLDevice;
             
             /// <summary>
             /// The Radeon Rays device being used. Only necessary if @sceneType is @c IPL_SCENETYPE_RADEONRAYS.
             /// </summary>
-            public IPL._IPLRadeonRaysDevice_t radeonRaysDevice;
+            public IPL.RadeonRaysDevice radeonRaysDevice;
             
             /// <summary>
             /// The TrueAudio Next device being used. Only necessary if @c reflectionType is @c IPL_REFLECTIONEFFECTTYPE_TAN.
             /// </summary>
-            public IPL._IPLTrueAudioNextDevice_t tanDevice;
+            public IPL.TrueAudioNextDevice tanDevice;
         }
         
         /// <summary>
@@ -2829,7 +2829,7 @@ namespace SteamAudio
             /// <summary>
             /// The probe batch within which to find paths from this source to the listener.
             /// </summary>
-            public IPL._IPLProbeBatch_t pathingProbes;
+            public IPL.ProbeBatch pathingProbes;
             
             /// <summary>
             /// When testing for mutual visibility between a pair of probes, each probe is treated as a sphere of
@@ -2950,7 +2950,7 @@ namespace SteamAudio
         /// <param name="context">[out] Handle to the created context object.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplContextCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error ContextCreate(ref IPL.ContextSettings settings, out IPL._IPLContext_t context);
+        public static extern IPL.Error ContextCreate(ref IPL.ContextSettings settings, out IPL.Context context);
         
         /// <summary>
         /// Retains an additional reference to a context. The context will not be destroyed until all references are
@@ -2959,14 +2959,14 @@ namespace SteamAudio
         /// <param name="context">The context to retain a reference to.</param>
         /// <returns>The additional reference to the context.</returns>
         [DllImport(Library, EntryPoint = "iplContextRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLContext_t ContextRetain(IPL._IPLContext_t context);
+        public static extern IPL.Context ContextRetain(IPL.Context context);
         
         /// <summary>
         /// Releases a reference to a context. The context will not be destroyed until all references are released.
         /// </summary>
         /// <param name="context">[in, out] The context to release.</param>
         [DllImport(Library, EntryPoint = "iplContextRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ContextRelease(ref IPL._IPLContext_t context);
+        public static extern void ContextRelease(ref IPL.Context context);
         
         /// <summary>
         /// Calculates the relative direction from the listener to a sound source. The returned direction
@@ -2979,7 +2979,7 @@ namespace SteamAudio
         /// <param name="listenerUp">World-space unit-length vector pointing up relative to the listener.</param>
         /// <returns>A unit-length vector in the listener's coordinate space, pointing from the listener to the source.</returns>
         [DllImport(Library, EntryPoint = "iplCalculateRelativeDirection", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Vector3 CalculateRelativeDirection(IPL._IPLContext_t context, IPL.Vector3 sourcePosition, IPL.Vector3 listenerPosition, IPL.Vector3 listenerAhead, IPL.Vector3 listenerUp);
+        public static extern IPL.Vector3 CalculateRelativeDirection(IPL.Context context, IPL.Vector3 sourcePosition, IPL.Vector3 listenerPosition, IPL.Vector3 listenerAhead, IPL.Vector3 listenerUp);
         
         /// <summary>
         /// Creates a serialized object.
@@ -2989,7 +2989,7 @@ namespace SteamAudio
         /// <param name="serializedObject">[out] The created serialized object.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplSerializedObjectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error SerializedObjectCreate(IPL._IPLContext_t context, ref IPL.SerializedObjectSettings settings, out IPL._IPLSerializedObject_t serializedObject);
+        public static extern IPL.Error SerializedObjectCreate(IPL.Context context, ref IPL.SerializedObjectSettings settings, out IPL.SerializedObject serializedObject);
         
         /// <summary>
         /// Retains an additional reference to a serialized object.
@@ -2997,14 +2997,14 @@ namespace SteamAudio
         /// <param name="serializedObject">The serialized object to retain a reference to.</param>
         /// <returns>The additional reference to the serialized object.</returns>
         [DllImport(Library, EntryPoint = "iplSerializedObjectRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLSerializedObject_t SerializedObjectRetain(IPL._IPLSerializedObject_t serializedObject);
+        public static extern IPL.SerializedObject SerializedObjectRetain(IPL.SerializedObject serializedObject);
         
         /// <summary>
         /// Releases a reference to a serialized object.
         /// </summary>
         /// <param name="serializedObject">The serialized object to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplSerializedObjectRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SerializedObjectRelease(ref IPL._IPLSerializedObject_t serializedObject);
+        public static extern void SerializedObjectRelease(ref IPL.SerializedObject serializedObject);
         
         /// <summary>
         /// 
@@ -3012,7 +3012,7 @@ namespace SteamAudio
         /// <returns>The size in bytes of the serialized data contained in a serialized object.</returns>
         /// <param name="serializedObject">The serialized object.</param>
         [DllImport(Library, EntryPoint = "iplSerializedObjectGetSize", CallingConvention = CallingConvention.Cdecl)]
-        public static extern ulong SerializedObjectGetSize(IPL._IPLSerializedObject_t serializedObject);
+        public static extern ulong SerializedObjectGetSize(IPL.SerializedObject serializedObject);
         
         /// <summary>
         /// 
@@ -3020,7 +3020,7 @@ namespace SteamAudio
         /// <returns>A pointer to a byte array of serialized data contained in a serialized object.</returns>
         /// <param name="serializedObject">The serialized object.</param>
         [DllImport(Library, EntryPoint = "iplSerializedObjectGetData", CallingConvention = CallingConvention.Cdecl)]
-        public static extern ref byte SerializedObjectGetData(IPL._IPLSerializedObject_t serializedObject);
+        public static extern ref byte SerializedObjectGetData(IPL.SerializedObject serializedObject);
         
         /// <summary>
         /// Creates an Embree device.
@@ -3030,7 +3030,7 @@ namespace SteamAudio
         /// <param name="device">[out] The created Embree device.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplEmbreeDeviceCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error EmbreeDeviceCreate(IPL._IPLContext_t context, ref IPL.EmbreeDeviceSettings settings, out IPL._IPLEmbreeDevice_t device);
+        public static extern IPL.Error EmbreeDeviceCreate(IPL.Context context, ref IPL.EmbreeDeviceSettings settings, out IPL.EmbreeDevice device);
         
         /// <summary>
         /// Retains an additional reference to an Embree device.
@@ -3038,14 +3038,14 @@ namespace SteamAudio
         /// <param name="device">The Embree device to retain a reference to.</param>
         /// <returns>The additional reference to the Embree device.</returns>
         [DllImport(Library, EntryPoint = "iplEmbreeDeviceRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLEmbreeDevice_t EmbreeDeviceRetain(IPL._IPLEmbreeDevice_t device);
+        public static extern IPL.EmbreeDevice EmbreeDeviceRetain(IPL.EmbreeDevice device);
         
         /// <summary>
         /// Releases a reference to an Embree device.
         /// </summary>
         /// <param name="device">The Embree device to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplEmbreeDeviceRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void EmbreeDeviceRelease(ref IPL._IPLEmbreeDevice_t device);
+        public static extern void EmbreeDeviceRelease(ref IPL.EmbreeDevice device);
         
         /// <summary>
         /// Creates an OpenCL device list. This involves listing all available OpenCL devices on the user's system.
@@ -3055,7 +3055,7 @@ namespace SteamAudio
         /// <param name="deviceList">[out] The created OpenCL device list.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplOpenCLDeviceListCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error OpenCLDeviceListCreate(IPL._IPLContext_t context, ref IPL.OpenCLDeviceSettings settings, out IPL._IPLOpenCLDeviceList_t deviceList);
+        public static extern IPL.Error OpenCLDeviceListCreate(IPL.Context context, ref IPL.OpenCLDeviceSettings settings, out IPL.OpenCLDeviceList deviceList);
         
         /// <summary>
         /// Retains an additional reference to an OpenCL device list.
@@ -3063,14 +3063,14 @@ namespace SteamAudio
         /// <param name="deviceList">The OpenCL device list to retain a reference to.</param>
         /// <returns>The additional reference to the OpenCL device list.</returns>
         [DllImport(Library, EntryPoint = "iplOpenCLDeviceListRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLOpenCLDeviceList_t OpenCLDeviceListRetain(IPL._IPLOpenCLDeviceList_t deviceList);
+        public static extern IPL.OpenCLDeviceList OpenCLDeviceListRetain(IPL.OpenCLDeviceList deviceList);
         
         /// <summary>
         /// Releases a reference to an OpenCL device list.
         /// </summary>
         /// <param name="deviceList">The OpenCL device list to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplOpenCLDeviceListRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void OpenCLDeviceListRelease(ref IPL._IPLOpenCLDeviceList_t deviceList);
+        public static extern void OpenCLDeviceListRelease(ref IPL.OpenCLDeviceList deviceList);
         
         /// <summary>
         /// 
@@ -3078,7 +3078,7 @@ namespace SteamAudio
         /// <returns>The number of devices in an OpenCL device list.</returns>
         /// <param name="deviceList">The OpenCL device list.</param>
         [DllImport(Library, EntryPoint = "iplOpenCLDeviceListGetNumDevices", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int OpenCLDeviceListGetNumDevices(IPL._IPLOpenCLDeviceList_t deviceList);
+        public static extern int OpenCLDeviceListGetNumDevices(IPL.OpenCLDeviceList deviceList);
         
         /// <summary>
         /// Retrieves information about a specific device in an OpenCL device list.
@@ -3087,7 +3087,7 @@ namespace SteamAudio
         /// <param name="index">The index of the device within the list.</param>
         /// <param name="deviceDesc">[out] A descriptor for the properties of the specified OpenCL device.</param>
         [DllImport(Library, EntryPoint = "iplOpenCLDeviceListGetDeviceDesc", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void OpenCLDeviceListGetDeviceDesc(IPL._IPLOpenCLDeviceList_t deviceList, int index, out IPL.OpenCLDeviceDesc deviceDesc);
+        public static extern void OpenCLDeviceListGetDeviceDesc(IPL.OpenCLDeviceList deviceList, int index, out IPL.OpenCLDeviceDesc deviceDesc);
         
         /// <summary>
         /// Creates an OpenCL device. The device is specified as an index into an OpenCL device list.
@@ -3098,7 +3098,7 @@ namespace SteamAudio
         /// <param name="device">[out] The created OpenCL device.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplOpenCLDeviceCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error OpenCLDeviceCreate(IPL._IPLContext_t context, IPL._IPLOpenCLDeviceList_t deviceList, int index, out IPL._IPLOpenCLDevice_t device);
+        public static extern IPL.Error OpenCLDeviceCreate(IPL.Context context, IPL.OpenCLDeviceList deviceList, int index, out IPL.OpenCLDevice device);
         
         /// <summary>
         /// Creates an OpenCL device from an existing OpenCL device created by your application. Steam Audio will
@@ -3110,7 +3110,7 @@ namespace SteamAudio
         /// <param name="device">[out] The created OpenCL device.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplOpenCLDeviceCreateFromExisting", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error OpenCLDeviceCreateFromExisting(IPL._IPLContext_t context, IntPtr convolutionQueue, IntPtr irUpdateQueue, out IPL._IPLOpenCLDevice_t device);
+        public static extern IPL.Error OpenCLDeviceCreateFromExisting(IPL.Context context, IntPtr convolutionQueue, IntPtr irUpdateQueue, out IPL.OpenCLDevice device);
         
         /// <summary>
         /// Retains an additional reference to an OpenCL device.
@@ -3118,14 +3118,14 @@ namespace SteamAudio
         /// <param name="device">The OpenCL device to retain a reference to.</param>
         /// <returns>The additional reference to the OpenCL device.</returns>
         [DllImport(Library, EntryPoint = "iplOpenCLDeviceRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLOpenCLDevice_t OpenCLDeviceRetain(IPL._IPLOpenCLDevice_t device);
+        public static extern IPL.OpenCLDevice OpenCLDeviceRetain(IPL.OpenCLDevice device);
         
         /// <summary>
         /// Releases a reference to an OpenCL device.
         /// </summary>
         /// <param name="device">The OpenCL device to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplOpenCLDeviceRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void OpenCLDeviceRelease(ref IPL._IPLOpenCLDevice_t device);
+        public static extern void OpenCLDeviceRelease(ref IPL.OpenCLDevice device);
         
         /// <summary>
         /// Creates a Radeon Rays device.
@@ -3135,7 +3135,7 @@ namespace SteamAudio
         /// <param name="rrDevice">[out] The created Radeon Rays device.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplRadeonRaysDeviceCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error RadeonRaysDeviceCreate(IPL._IPLOpenCLDevice_t openCLDevice, ref IPL.RadeonRaysDeviceSettings settings, out IPL._IPLRadeonRaysDevice_t rrDevice);
+        public static extern IPL.Error RadeonRaysDeviceCreate(IPL.OpenCLDevice openCLDevice, ref IPL.RadeonRaysDeviceSettings settings, out IPL.RadeonRaysDevice rrDevice);
         
         /// <summary>
         /// Retains an additional reference to a Radeon Rays device.
@@ -3143,14 +3143,14 @@ namespace SteamAudio
         /// <param name="device">The Radeon Rays device to retain a reference to.</param>
         /// <returns>The additional reference to the Radeon Rays device.</returns>
         [DllImport(Library, EntryPoint = "iplRadeonRaysDeviceRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLRadeonRaysDevice_t RadeonRaysDeviceRetain(IPL._IPLRadeonRaysDevice_t device);
+        public static extern IPL.RadeonRaysDevice RadeonRaysDeviceRetain(IPL.RadeonRaysDevice device);
         
         /// <summary>
         /// Releases a reference to a Radeon Rays device.
         /// </summary>
         /// <param name="device">The Radeon Rays device to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplRadeonRaysDeviceRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void RadeonRaysDeviceRelease(ref IPL._IPLRadeonRaysDevice_t device);
+        public static extern void RadeonRaysDeviceRelease(ref IPL.RadeonRaysDevice device);
         
         /// <summary>
         /// Creates a TrueAudio Next device.
@@ -3160,7 +3160,7 @@ namespace SteamAudio
         /// <param name="tanDevice">[out] The created TrueAudio Next device.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplTrueAudioNextDeviceCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error TrueAudioNextDeviceCreate(IPL._IPLOpenCLDevice_t openCLDevice, ref IPL.TrueAudioNextDeviceSettings settings, out IPL._IPLTrueAudioNextDevice_t tanDevice);
+        public static extern IPL.Error TrueAudioNextDeviceCreate(IPL.OpenCLDevice openCLDevice, ref IPL.TrueAudioNextDeviceSettings settings, out IPL.TrueAudioNextDevice tanDevice);
         
         /// <summary>
         /// Retains an additional reference to a TrueAudio Next device.
@@ -3168,14 +3168,14 @@ namespace SteamAudio
         /// <param name="device">The TrueAudio Next device to retain a reference to.</param>
         /// <returns>The additional reference to the TrueAudio Next device.</returns>
         [DllImport(Library, EntryPoint = "iplTrueAudioNextDeviceRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLTrueAudioNextDevice_t TrueAudioNextDeviceRetain(IPL._IPLTrueAudioNextDevice_t device);
+        public static extern IPL.TrueAudioNextDevice TrueAudioNextDeviceRetain(IPL.TrueAudioNextDevice device);
         
         /// <summary>
         /// Releases a reference to a TrueAudio Next device.
         /// </summary>
         /// <param name="device">The TrueAudio Next device to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplTrueAudioNextDeviceRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void TrueAudioNextDeviceRelease(ref IPL._IPLTrueAudioNextDevice_t device);
+        public static extern void TrueAudioNextDeviceRelease(ref IPL.TrueAudioNextDevice device);
         
         /// <summary>
         /// Creates a scene.
@@ -3189,7 +3189,7 @@ namespace SteamAudio
         /// static meshes or instanced meshes and add them to the scene.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSceneCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error SceneCreate(IPL._IPLContext_t context, ref IPL.SceneSettings settings, out IPL._IPLScene_t scene);
+        public static extern IPL.Error SceneCreate(IPL.Context context, ref IPL.SceneSettings settings, out IPL.Scene scene);
         
         /// <summary>
         /// Retains an additional reference to a scene.
@@ -3197,14 +3197,14 @@ namespace SteamAudio
         /// <param name="scene">The scene to retain a reference to.</param>
         /// <returns>The additional reference to the scene.</returns>
         [DllImport(Library, EntryPoint = "iplSceneRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLScene_t SceneRetain(IPL._IPLScene_t scene);
+        public static extern IPL.Scene SceneRetain(IPL.Scene scene);
         
         /// <summary>
         /// Releases a reference to a scene.
         /// </summary>
         /// <param name="scene">The scene to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplSceneRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SceneRelease(ref IPL._IPLScene_t scene);
+        public static extern void SceneRelease(ref IPL.Scene scene);
         
         /// <summary>
         /// Loads a scene from a serialized object. Typically, the serialized object will be created from a byte array
@@ -3218,7 +3218,7 @@ namespace SteamAudio
         /// <param name="scene">[out] The created scene.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplSceneLoad", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error SceneLoad(IPL._IPLContext_t context, ref IPL.SceneSettings settings, IPL._IPLSerializedObject_t serializedObject, IPL.ProgressCallback progressCallback, IntPtr progressCallbackUserData, out IPL._IPLScene_t scene);
+        public static extern IPL.Error SceneLoad(IPL.Context context, ref IPL.SceneSettings settings, IPL.SerializedObject serializedObject, IPL.ProgressCallback progressCallback, IntPtr progressCallbackUserData, out IPL.Scene scene);
         
         /// <summary>
         /// Saves a scene to a serialized object. Typically, the serialized object will then be saved to disk.
@@ -3229,7 +3229,7 @@ namespace SteamAudio
         /// *This function can only be called on a scene created with @c IPL_SCENETYPE_DEFAULT.**
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSceneSave", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SceneSave(IPL._IPLScene_t scene, IPL._IPLSerializedObject_t serializedObject);
+        public static extern void SceneSave(IPL.Scene scene, IPL.SerializedObject serializedObject);
         
         /// <summary>
         /// Saves a scene to an OBJ file.
@@ -3242,7 +3242,7 @@ namespace SteamAudio
         /// occur when exporting scene data from your application to Steam Audio.*This function can only be called on a scene created with @c IPL_SCENETYPE_DEFAULT or @c IPL_SCENETYPE_EMBREE.**
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSceneSaveOBJ", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SceneSaveOBJ(IPL._IPLScene_t scene, [MarshalAs(UnmanagedType.LPStr)] string fileBaseName);
+        public static extern void SceneSaveOBJ(IPL.Scene scene, [MarshalAs(UnmanagedType.LPStr)] string fileBaseName);
         
         /// <summary>
         /// Commits any changes to the scene.
@@ -3252,7 +3252,7 @@ namespace SteamAudio
         /// This function should be called after any calls to the following functions, for the changes to take effect:-   @c iplStaticMeshAdd -   @c iplStaticMeshRemove -   @c iplInstancedMeshAdd -   @c iplInstancedMeshRemove -   @c iplInstancedMeshUpdateTransform For best performance, call this function once after all changes have been made for a given frame.*This function cannot be called concurrently with any simulation functions.**
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSceneCommit", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SceneCommit(IPL._IPLScene_t scene);
+        public static extern void SceneCommit(IPL.Scene scene);
         
         /// <summary>
         /// Creates a static mesh.
@@ -3269,7 +3269,7 @@ namespace SteamAudio
         /// is sufficient.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplStaticMeshCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error StaticMeshCreate(IPL._IPLScene_t scene, ref IPL.StaticMeshSettings settings, out IPL._IPLStaticMesh_t staticMesh);
+        public static extern IPL.Error StaticMeshCreate(IPL.Scene scene, ref IPL.StaticMeshSettings settings, out IPL.StaticMesh staticMesh);
         
         /// <summary>
         /// Retains an additional reference to a static mesh.
@@ -3277,14 +3277,14 @@ namespace SteamAudio
         /// <param name="staticMesh">The static mesh to retain a reference to.</param>
         /// <returns>The additional reference to the static mesh.</returns>
         [DllImport(Library, EntryPoint = "iplStaticMeshRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLStaticMesh_t StaticMeshRetain(IPL._IPLStaticMesh_t staticMesh);
+        public static extern IPL.StaticMesh StaticMeshRetain(IPL.StaticMesh staticMesh);
         
         /// <summary>
         /// Releases a reference to a static mesh.
         /// </summary>
         /// <param name="staticMesh">The static mesh to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplStaticMeshRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void StaticMeshRelease(ref IPL._IPLStaticMesh_t staticMesh);
+        public static extern void StaticMeshRelease(ref IPL.StaticMesh staticMesh);
         
         /// <summary>
         /// Loads a static mesh from a serialized object. Typically, the serialized object will be created from a byte array
@@ -3297,7 +3297,7 @@ namespace SteamAudio
         /// <param name="staticMesh">[out] The created static mesh.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplStaticMeshLoad", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error StaticMeshLoad(IPL._IPLScene_t scene, IPL._IPLSerializedObject_t serializedObject, IPL.ProgressCallback progressCallback, IntPtr progressCallbackUserData, out IPL._IPLStaticMesh_t staticMesh);
+        public static extern IPL.Error StaticMeshLoad(IPL.Scene scene, IPL.SerializedObject serializedObject, IPL.ProgressCallback progressCallback, IntPtr progressCallbackUserData, out IPL.StaticMesh staticMesh);
         
         /// <summary>
         /// Saves a static mesh to a serialized object. Typically, the serialized object will then be saved to disk.
@@ -3308,7 +3308,7 @@ namespace SteamAudio
         /// This function can only be called on a static mesh that is part of a scene created with @c IPL_SCENETYPE_DEFAULT.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplStaticMeshSave", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void StaticMeshSave(IPL._IPLStaticMesh_t staticMesh, IPL._IPLSerializedObject_t serializedObject);
+        public static extern void StaticMeshSave(IPL.StaticMesh staticMesh, IPL.SerializedObject serializedObject);
         
         /// <summary>
         /// Adds a static mesh to a scene.
@@ -3320,7 +3320,7 @@ namespace SteamAudio
         /// This function should be called after @c iplStaticMeshCreate, or at any point after @c iplStaticMeshRemove, for the static mesh to start affecting sound propagation.After calling this function, @c iplSceneCommit must be called for the changes to take effect.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplStaticMeshAdd", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void StaticMeshAdd(IPL._IPLStaticMesh_t staticMesh, IPL._IPLScene_t scene);
+        public static extern void StaticMeshAdd(IPL.StaticMesh staticMesh, IPL.Scene scene);
         
         /// <summary>
         /// Removes a static mesh from a scene.
@@ -3333,7 +3333,7 @@ namespace SteamAudio
         /// added back using @c iplStaticMeshAdd.After calling this function, @c iplSceneCommit must be called for the changes to take effect.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplStaticMeshRemove", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void StaticMeshRemove(IPL._IPLStaticMesh_t staticMesh, IPL._IPLScene_t scene);
+        public static extern void StaticMeshRemove(IPL.StaticMesh staticMesh, IPL.Scene scene);
         
         /// <summary>
         /// Creates an instanced mesh.
@@ -3349,7 +3349,7 @@ namespace SteamAudio
         /// dynamic objects whose motion can be described purely in terms of rigid-body transformations.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplInstancedMeshCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error InstancedMeshCreate(IPL._IPLScene_t scene, ref IPL.InstancedMeshSettings settings, out IPL._IPLInstancedMesh_t instancedMesh);
+        public static extern IPL.Error InstancedMeshCreate(IPL.Scene scene, ref IPL.InstancedMeshSettings settings, out IPL.InstancedMesh instancedMesh);
         
         /// <summary>
         /// Retains an additional reference to a instanced mesh.
@@ -3357,14 +3357,14 @@ namespace SteamAudio
         /// <param name="instancedMesh">The instanced mesh to retain a reference to.</param>
         /// <returns>The additional reference to the instanced mesh.</returns>
         [DllImport(Library, EntryPoint = "iplInstancedMeshRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLInstancedMesh_t InstancedMeshRetain(IPL._IPLInstancedMesh_t instancedMesh);
+        public static extern IPL.InstancedMesh InstancedMeshRetain(IPL.InstancedMesh instancedMesh);
         
         /// <summary>
         /// Releases a reference to a instanced mesh.
         /// </summary>
         /// <param name="instancedMesh">The instanced mesh to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplInstancedMeshRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void InstancedMeshRelease(ref IPL._IPLInstancedMesh_t instancedMesh);
+        public static extern void InstancedMeshRelease(ref IPL.InstancedMesh instancedMesh);
         
         /// <summary>
         /// Adds an instanced mesh to a scene.
@@ -3376,7 +3376,7 @@ namespace SteamAudio
         /// This function should be called after @c iplInstancedMeshCreate, or at any point after @c iplInstancedMeshRemove, for the instanced mesh to start affecting sound propagation.After calling this function, @c iplSceneCommit must be called for the changes to take effect.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplInstancedMeshAdd", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void InstancedMeshAdd(IPL._IPLInstancedMesh_t instancedMesh, IPL._IPLScene_t scene);
+        public static extern void InstancedMeshAdd(IPL.InstancedMesh instancedMesh, IPL.Scene scene);
         
         /// <summary>
         /// Removes an instanced mesh from a scene.
@@ -3389,7 +3389,7 @@ namespace SteamAudio
         /// added back using @c iplInstancedMeshAdd.After calling this function, @c iplSceneCommit must be called for the changes to take effect.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplInstancedMeshRemove", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void InstancedMeshRemove(IPL._IPLInstancedMesh_t instancedMesh, IPL._IPLScene_t scene);
+        public static extern void InstancedMeshRemove(IPL.InstancedMesh instancedMesh, IPL.Scene scene);
         
         /// <summary>
         /// Updates the local-to-world transform of an instanced mesh within its parent scene.
@@ -3401,7 +3401,7 @@ namespace SteamAudio
         /// This function allows the instanced mesh to be moved, rotated, and scaled dynamically.After calling this function, @c iplSceneCommit must be called for the changes to take effect.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplInstancedMeshUpdateTransform", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void InstancedMeshUpdateTransform(IPL._IPLInstancedMesh_t instancedMesh, IPL._IPLScene_t scene, IPL.Matrix4x4 transform);
+        public static extern void InstancedMeshUpdateTransform(IPL.InstancedMesh instancedMesh, IPL.Scene scene, IPL.Matrix4x4 transform);
         
         /// <summary>
         /// Allocates an audio buffer.
@@ -3418,7 +3418,7 @@ namespace SteamAudio
         /// pass them directly using @c IPLAudioBuffer, thus avoiding the processing and memory overhead of an extra audio buffer.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplAudioBufferAllocate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error AudioBufferAllocate(IPL._IPLContext_t context, int numChannels, int numSamples, ref IPL.AudioBuffer audioBuffer);
+        public static extern IPL.Error AudioBufferAllocate(IPL.Context context, int numChannels, int numSamples, ref IPL.AudioBuffer audioBuffer);
         
         /// <summary>
         /// Frees an audio buffer.
@@ -3426,7 +3426,7 @@ namespace SteamAudio
         /// <param name="context">The context used to initialize Steam Audio.</param>
         /// <param name="audioBuffer">The audio buffer to free.</param>
         [DllImport(Library, EntryPoint = "iplAudioBufferFree", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AudioBufferFree(IPL._IPLContext_t context, ref IPL.AudioBuffer audioBuffer);
+        public static extern void AudioBufferFree(IPL.Context context, ref IPL.AudioBuffer audioBuffer);
         
         /// <summary>
         /// Reads samples from an audio buffer and interleaves them into a user-provided array.
@@ -3435,7 +3435,7 @@ namespace SteamAudio
         /// <param name="src">The audio buffer to read from.</param>
         /// <param name="dst">The interleaved array to write into.</param>
         [DllImport(Library, EntryPoint = "iplAudioBufferInterleave", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AudioBufferInterleave(IPL._IPLContext_t context, ref IPL.AudioBuffer src, ref float dst);
+        public static extern void AudioBufferInterleave(IPL.Context context, ref IPL.AudioBuffer src, ref float dst);
         
         /// <summary>
         /// Writes interleaved samples from a user-provided array into an audio buffer.
@@ -3444,7 +3444,7 @@ namespace SteamAudio
         /// <param name="src">The interleaved array to read from.</param>
         /// <param name="dst">The audio buffer to write into.</param>
         [DllImport(Library, EntryPoint = "iplAudioBufferDeinterleave", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AudioBufferDeinterleave(IPL._IPLContext_t context, ref float src, ref IPL.AudioBuffer dst);
+        public static extern void AudioBufferDeinterleave(IPL.Context context, ref float src, ref IPL.AudioBuffer dst);
         
         /// <summary>
         /// Mixes one audio buffer into another.
@@ -3456,7 +3456,7 @@ namespace SteamAudio
         /// Both audio buffers must have the same number of channels and samples.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplAudioBufferMix", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AudioBufferMix(IPL._IPLContext_t context, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer mix);
+        public static extern void AudioBufferMix(IPL.Context context, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer mix);
         
         /// <summary>
         /// Downmixes a multi-channel audio buffer into a mono audio buffer.
@@ -3470,7 +3470,7 @@ namespace SteamAudio
         /// that downmixing be performed manually.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplAudioBufferDownmix", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AudioBufferDownmix(IPL._IPLContext_t context, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        public static extern void AudioBufferDownmix(IPL.Context context, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Converts an Ambisonic audio buffer from one Ambisonic format to another.
@@ -3486,7 +3486,7 @@ namespace SteamAudio
         /// Ambisonic data in N3D format except when exchanging data with your audio engine.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplAudioBufferConvertAmbisonics", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AudioBufferConvertAmbisonics(IPL._IPLContext_t context, IPL.AmbisonicsType inType, IPL.AmbisonicsType outType, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        public static extern void AudioBufferConvertAmbisonics(IPL.Context context, IPL.AmbisonicsType inType, IPL.AmbisonicsType outType, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates an HRTF.
@@ -3501,7 +3501,7 @@ namespace SteamAudio
         /// if possible.This function is not thread-safe. Do not simultaneously call it from multiple threads.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplHRTFCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error HRTFCreate(IPL._IPLContext_t context, ref IPL.AudioSettings audioSettings, ref IPL.HRTFSettings hrtfSettings, out IPL._IPLHRTF_t hrtf);
+        public static extern IPL.Error HRTFCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.HrtfSettings hrtfSettings, out IPL.Hrtf hrtf);
         
         /// <summary>
         /// Retains an additional reference to an HRTF object.
@@ -3509,14 +3509,14 @@ namespace SteamAudio
         /// <param name="hrtf">The HRTF object to retain a reference to.</param>
         /// <returns>The additional reference to the HRTF object.</returns>
         [DllImport(Library, EntryPoint = "iplHRTFRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLHRTF_t HRTFRetain(IPL._IPLHRTF_t hrtf);
+        public static extern IPL.Hrtf HRTFRetain(IPL.Hrtf hrtf);
         
         /// <summary>
         /// Releases a reference to an HRTF object.
         /// </summary>
         /// <param name="hrtf">The HRTF object to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplHRTFRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void HRTFRelease(ref IPL._IPLHRTF_t hrtf);
+        public static extern void HRTFRelease(ref IPL.Hrtf hrtf);
         
         /// <summary>
         /// Creates a panning effect.
@@ -3527,7 +3527,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created panning effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplPanningEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error PanningEffectCreate(IPL._IPLContext_t context, ref IPL.AudioSettings audioSettings, ref IPL.PanningEffectSettings effectSettings, out IPL._IPLPanningEffect_t effect);
+        public static extern IPL.Error PanningEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.PanningEffectSettings effectSettings, out IPL.PanningEffect effect);
         
         /// <summary>
         /// Retains an additional reference to a panning effect.
@@ -3535,21 +3535,21 @@ namespace SteamAudio
         /// <param name="effect">The panning effect to retain a reference to.</param>
         /// <returns>The additional reference to the panning effect.</returns>
         [DllImport(Library, EntryPoint = "iplPanningEffectRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLPanningEffect_t PanningEffectRetain(IPL._IPLPanningEffect_t effect);
+        public static extern IPL.PanningEffect PanningEffectRetain(IPL.PanningEffect effect);
         
         /// <summary>
         /// Releases a reference to a panning effect.
         /// </summary>
         /// <param name="effect">The panning effect to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplPanningEffectRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void PanningEffectRelease(ref IPL._IPLPanningEffect_t effect);
+        public static extern void PanningEffectRelease(ref IPL.PanningEffect effect);
         
         /// <summary>
         /// Resets the internal processing state of a panning effect.
         /// </summary>
         /// <param name="effect">The panning effect to reset.</param>
         [DllImport(Library, EntryPoint = "iplPanningEffectReset", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void PanningEffectReset(IPL._IPLPanningEffect_t effect);
+        public static extern void PanningEffectReset(IPL.PanningEffect effect);
         
         /// <summary>
         /// Applies a panning effect to an audio buffer.
@@ -3565,7 +3565,7 @@ namespace SteamAudio
         /// This effect CANNOT be applied in-place.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplPanningEffectApply", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.AudioEffectState PanningEffectApply(IPL._IPLPanningEffect_t effect, ref IPL.PanningEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        public static extern IPL.AudioEffectState PanningEffectApply(IPL.PanningEffect effect, ref IPL.PanningEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates a binaural effect.
@@ -3576,7 +3576,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created binaural effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplBinauralEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error BinauralEffectCreate(IPL._IPLContext_t context, ref IPL.AudioSettings audioSettings, ref IPL.BinauralEffectSettings effectSettings, out IPL._IPLBinauralEffect_t effect);
+        public static extern IPL.Error BinauralEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.BinauralEffectSettings effectSettings, out IPL.BinauralEffect effect);
         
         /// <summary>
         /// Retains an additional reference to a binaural effect.
@@ -3584,21 +3584,21 @@ namespace SteamAudio
         /// <param name="effect">The binaural effect to retain a reference to.</param>
         /// <returns>The additional reference to the binaural effect.</returns>
         [DllImport(Library, EntryPoint = "iplBinauralEffectRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLBinauralEffect_t BinauralEffectRetain(IPL._IPLBinauralEffect_t effect);
+        public static extern IPL.BinauralEffect BinauralEffectRetain(IPL.BinauralEffect effect);
         
         /// <summary>
         /// Releases a reference to a binaural effect.
         /// </summary>
         /// <param name="effect">The binaural effect to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplBinauralEffectRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void BinauralEffectRelease(ref IPL._IPLBinauralEffect_t effect);
+        public static extern void BinauralEffectRelease(ref IPL.BinauralEffect effect);
         
         /// <summary>
         /// Resets the internal processing state of a binaural effect.
         /// </summary>
         /// <param name="effect">The binaural effect to reset.</param>
         [DllImport(Library, EntryPoint = "iplBinauralEffectReset", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void BinauralEffectReset(IPL._IPLBinauralEffect_t effect);
+        public static extern void BinauralEffectReset(IPL.BinauralEffect effect);
         
         /// <summary>
         /// Applies a binaural effect to an audio buffer.
@@ -3613,7 +3613,7 @@ namespace SteamAudio
         /// This effect CANNOT be applied in-place.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplBinauralEffectApply", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.AudioEffectState BinauralEffectApply(IPL._IPLBinauralEffect_t effect, ref IPL.BinauralEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        public static extern IPL.AudioEffectState BinauralEffectApply(IPL.BinauralEffect effect, ref IPL.BinauralEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates a virtual surround effect.
@@ -3624,7 +3624,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created virtual surround effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplVirtualSurroundEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error VirtualSurroundEffectCreate(IPL._IPLContext_t context, ref IPL.AudioSettings audioSettings, ref IPL.VirtualSurroundEffectSettings effectSettings, out IPL._IPLVirtualSurroundEffect_t effect);
+        public static extern IPL.Error VirtualSurroundEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.VirtualSurroundEffectSettings effectSettings, out IPL.VirtualSurroundEffect effect);
         
         /// <summary>
         /// Retains an additional reference to a virtual surround effect.
@@ -3632,21 +3632,21 @@ namespace SteamAudio
         /// <param name="effect">The virtual surround effect to retain a reference to.</param>
         /// <returns>The additional reference to the virtual surround effect.</returns>
         [DllImport(Library, EntryPoint = "iplVirtualSurroundEffectRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLVirtualSurroundEffect_t VirtualSurroundEffectRetain(IPL._IPLVirtualSurroundEffect_t effect);
+        public static extern IPL.VirtualSurroundEffect VirtualSurroundEffectRetain(IPL.VirtualSurroundEffect effect);
         
         /// <summary>
         /// Releases a reference to a virtual surround effect.
         /// </summary>
         /// <param name="effect">The virtual surround effect to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplVirtualSurroundEffectRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void VirtualSurroundEffectRelease(ref IPL._IPLVirtualSurroundEffect_t effect);
+        public static extern void VirtualSurroundEffectRelease(ref IPL.VirtualSurroundEffect effect);
         
         /// <summary>
         /// Resets the internal processing state of a virtual surround effect.
         /// </summary>
         /// <param name="effect">The virtual surround effect to reset.</param>
         [DllImport(Library, EntryPoint = "iplVirtualSurroundEffectReset", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void VirtualSurroundEffectReset(IPL._IPLVirtualSurroundEffect_t effect);
+        public static extern void VirtualSurroundEffectReset(IPL.VirtualSurroundEffect effect);
         
         /// <summary>
         /// Applies a virtual surround effect to an audio buffer.
@@ -3662,7 +3662,7 @@ namespace SteamAudio
         /// This effect CANNOT be applied in-place.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplVirtualSurroundEffectApply", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.AudioEffectState VirtualSurroundEffectApply(IPL._IPLVirtualSurroundEffect_t effect, ref IPL.VirtualSurroundEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        public static extern IPL.AudioEffectState VirtualSurroundEffectApply(IPL.VirtualSurroundEffect effect, ref IPL.VirtualSurroundEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates an Ambisonics encode effect.
@@ -3673,7 +3673,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created Ambisonics encode effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsEncodeEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error AmbisonicsEncodeEffectCreate(IPL._IPLContext_t context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsEncodeEffectSettings effectSettings, out IPL._IPLAmbisonicsEncodeEffect_t effect);
+        public static extern IPL.Error AmbisonicsEncodeEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsEncodeEffectSettings effectSettings, out IPL.AmbisonicsEncodeEffect effect);
         
         /// <summary>
         /// Retains an additional reference to an Ambisonics encode effect.
@@ -3681,21 +3681,21 @@ namespace SteamAudio
         /// <param name="effect">The Ambisonics encode effect to retain a reference to.</param>
         /// <returns>The additional reference to the Ambisonics encode effect.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsEncodeEffectRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLAmbisonicsEncodeEffect_t AmbisonicsEncodeEffectRetain(IPL._IPLAmbisonicsEncodeEffect_t effect);
+        public static extern IPL.AmbisonicsEncodeEffect AmbisonicsEncodeEffectRetain(IPL.AmbisonicsEncodeEffect effect);
         
         /// <summary>
         /// Releases a reference to an Ambisonics encode effect.
         /// </summary>
         /// <param name="effect">The Ambisonics encode effect to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplAmbisonicsEncodeEffectRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AmbisonicsEncodeEffectRelease(ref IPL._IPLAmbisonicsEncodeEffect_t effect);
+        public static extern void AmbisonicsEncodeEffectRelease(ref IPL.AmbisonicsEncodeEffect effect);
         
         /// <summary>
         /// Resets the internal processing state of an Ambisonics encode effect.
         /// </summary>
         /// <param name="effect">The Ambisonics encode effect to reset.</param>
         [DllImport(Library, EntryPoint = "iplAmbisonicsEncodeEffectReset", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AmbisonicsEncodeEffectReset(IPL._IPLAmbisonicsEncodeEffect_t effect);
+        public static extern void AmbisonicsEncodeEffectReset(IPL.AmbisonicsEncodeEffect effect);
         
         /// <summary>
         /// Applies an Ambisonics encode effect to an audio buffer.
@@ -3710,7 +3710,7 @@ namespace SteamAudio
         /// This effect CANNOT be applied in-place.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplAmbisonicsEncodeEffectApply", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.AudioEffectState AmbisonicsEncodeEffectApply(IPL._IPLAmbisonicsEncodeEffect_t effect, ref IPL.AmbisonicsEncodeEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        public static extern IPL.AudioEffectState AmbisonicsEncodeEffectApply(IPL.AmbisonicsEncodeEffect effect, ref IPL.AmbisonicsEncodeEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates an Ambisonics panning effect.
@@ -3721,7 +3721,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created Ambisonics panning effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsPanningEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error AmbisonicsPanningEffectCreate(IPL._IPLContext_t context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsPanningEffectSettings effectSettings, out IPL._IPLAmbisonicsPanningEffect_t effect);
+        public static extern IPL.Error AmbisonicsPanningEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsPanningEffectSettings effectSettings, out IPL.AmbisonicsPanningEffect effect);
         
         /// <summary>
         /// Retains an additional reference to an Ambisonics panning effect.
@@ -3729,21 +3729,21 @@ namespace SteamAudio
         /// <param name="effect">The Ambisonics panning effect to retain a reference to.</param>
         /// <returns>The additional reference to the Ambisonics panning effect.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsPanningEffectRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLAmbisonicsPanningEffect_t AmbisonicsPanningEffectRetain(IPL._IPLAmbisonicsPanningEffect_t effect);
+        public static extern IPL.AmbisonicsPanningEffect AmbisonicsPanningEffectRetain(IPL.AmbisonicsPanningEffect effect);
         
         /// <summary>
         /// Releases a reference to an Ambisonics panning effect.
         /// </summary>
         /// <param name="effect">The Ambisonics panning effect to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplAmbisonicsPanningEffectRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AmbisonicsPanningEffectRelease(ref IPL._IPLAmbisonicsPanningEffect_t effect);
+        public static extern void AmbisonicsPanningEffectRelease(ref IPL.AmbisonicsPanningEffect effect);
         
         /// <summary>
         /// Resets the internal processing state of an Ambisonics panning effect.
         /// </summary>
         /// <param name="effect">The Ambisonics panning effect to reset.</param>
         [DllImport(Library, EntryPoint = "iplAmbisonicsPanningEffectReset", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AmbisonicsPanningEffectReset(IPL._IPLAmbisonicsPanningEffect_t effect);
+        public static extern void AmbisonicsPanningEffectReset(IPL.AmbisonicsPanningEffect effect);
         
         /// <summary>
         /// Applies an Ambisonics panning effect to an audio buffer.
@@ -3759,7 +3759,7 @@ namespace SteamAudio
         /// This effect CANNOT be applied in-place.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplAmbisonicsPanningEffectApply", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.AudioEffectState AmbisonicsPanningEffectApply(IPL._IPLAmbisonicsPanningEffect_t effect, ref IPL.AmbisonicsPanningEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        public static extern IPL.AudioEffectState AmbisonicsPanningEffectApply(IPL.AmbisonicsPanningEffect effect, ref IPL.AmbisonicsPanningEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates an Ambisonics binaural effect.
@@ -3770,7 +3770,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created Ambisonics binaural effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsBinauralEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error AmbisonicsBinauralEffectCreate(IPL._IPLContext_t context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsBinauralEffectSettings effectSettings, out IPL._IPLAmbisonicsBinauralEffect_t effect);
+        public static extern IPL.Error AmbisonicsBinauralEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsBinauralEffectSettings effectSettings, out IPL.AmbisonicsBinauralEffect effect);
         
         /// <summary>
         /// Retains an additional reference to an Ambisonics binaural effect.
@@ -3778,21 +3778,21 @@ namespace SteamAudio
         /// <param name="effect">The Ambisonics binaural effect to retain a reference to.</param>
         /// <returns>The additional reference to the Ambisonics binaural effect.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsBinauralEffectRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLAmbisonicsBinauralEffect_t AmbisonicsBinauralEffectRetain(IPL._IPLAmbisonicsBinauralEffect_t effect);
+        public static extern IPL.AmbisonicsBinauralEffect AmbisonicsBinauralEffectRetain(IPL.AmbisonicsBinauralEffect effect);
         
         /// <summary>
         /// Releases a reference to an Ambisonics binaural effect.
         /// </summary>
         /// <param name="effect">The Ambisonics binaural effect to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplAmbisonicsBinauralEffectRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AmbisonicsBinauralEffectRelease(ref IPL._IPLAmbisonicsBinauralEffect_t effect);
+        public static extern void AmbisonicsBinauralEffectRelease(ref IPL.AmbisonicsBinauralEffect effect);
         
         /// <summary>
         /// Resets the internal processing state of an Ambisonics binaural effect.
         /// </summary>
         /// <param name="effect">The Ambisonics binaural effect to reset.</param>
         [DllImport(Library, EntryPoint = "iplAmbisonicsBinauralEffectReset", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AmbisonicsBinauralEffectReset(IPL._IPLAmbisonicsBinauralEffect_t effect);
+        public static extern void AmbisonicsBinauralEffectReset(IPL.AmbisonicsBinauralEffect effect);
         
         /// <summary>
         /// Applies an Ambisonics binaural effect to an audio buffer.
@@ -3808,7 +3808,7 @@ namespace SteamAudio
         /// This effect CANNOT be applied in-place.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplAmbisonicsBinauralEffectApply", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.AudioEffectState AmbisonicsBinauralEffectApply(IPL._IPLAmbisonicsBinauralEffect_t effect, ref IPL.AmbisonicsBinauralEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        public static extern IPL.AudioEffectState AmbisonicsBinauralEffectApply(IPL.AmbisonicsBinauralEffect effect, ref IPL.AmbisonicsBinauralEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates an Ambisonics rotation effect.
@@ -3819,7 +3819,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created Ambisonics rotation effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsRotationEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error AmbisonicsRotationEffectCreate(IPL._IPLContext_t context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsRotationEffectSettings effectSettings, out IPL._IPLAmbisonicsRotationEffect_t effect);
+        public static extern IPL.Error AmbisonicsRotationEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsRotationEffectSettings effectSettings, out IPL.AmbisonicsRotationEffect effect);
         
         /// <summary>
         /// Retains an additional reference to an Ambisonics rotation effect.
@@ -3827,21 +3827,21 @@ namespace SteamAudio
         /// <param name="effect">The Ambisonics rotation effect to retain a reference to.</param>
         /// <returns>The additional reference to the Ambisonics rotation effect.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsRotationEffectRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLAmbisonicsRotationEffect_t AmbisonicsRotationEffectRetain(IPL._IPLAmbisonicsRotationEffect_t effect);
+        public static extern IPL.AmbisonicsRotationEffect AmbisonicsRotationEffectRetain(IPL.AmbisonicsRotationEffect effect);
         
         /// <summary>
         /// Releases a reference to an Ambisonics rotation effect.
         /// </summary>
         /// <param name="effect">The Ambisonics rotation effect to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplAmbisonicsRotationEffectRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AmbisonicsRotationEffectRelease(ref IPL._IPLAmbisonicsRotationEffect_t effect);
+        public static extern void AmbisonicsRotationEffectRelease(ref IPL.AmbisonicsRotationEffect effect);
         
         /// <summary>
         /// Resets the internal processing state of an Ambisonics rotation effect.
         /// </summary>
         /// <param name="effect">The Ambisonics rotation effect to reset.</param>
         [DllImport(Library, EntryPoint = "iplAmbisonicsRotationEffectReset", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AmbisonicsRotationEffectReset(IPL._IPLAmbisonicsRotationEffect_t effect);
+        public static extern void AmbisonicsRotationEffectReset(IPL.AmbisonicsRotationEffect effect);
         
         /// <summary>
         /// Applies an Ambisonics rotation effect to an audio buffer.
@@ -3857,7 +3857,7 @@ namespace SteamAudio
         /// This effect CANNOT be applied in-place.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplAmbisonicsRotationEffectApply", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.AudioEffectState AmbisonicsRotationEffectApply(IPL._IPLAmbisonicsRotationEffect_t effect, ref IPL.AmbisonicsRotationEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        public static extern IPL.AudioEffectState AmbisonicsRotationEffectApply(IPL.AmbisonicsRotationEffect effect, ref IPL.AmbisonicsRotationEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates an Ambisonics rotation effect.
@@ -3868,7 +3868,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created Ambisonics rotation effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsDecodeEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error AmbisonicsDecodeEffectCreate(IPL._IPLContext_t context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsDecodeEffectSettings effectSettings, out IPL._IPLAmbisonicsDecodeEffect_t effect);
+        public static extern IPL.Error AmbisonicsDecodeEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsDecodeEffectSettings effectSettings, out IPL.AmbisonicsDecodeEffect effect);
         
         /// <summary>
         /// Retains an additional reference to an Ambisonics rotation effect.
@@ -3876,21 +3876,21 @@ namespace SteamAudio
         /// <param name="effect">The Ambisonics rotation effect to retain a reference to.</param>
         /// <returns>The additional reference to the Ambisonics rotation effect.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsDecodeEffectRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLAmbisonicsDecodeEffect_t AmbisonicsDecodeEffectRetain(IPL._IPLAmbisonicsDecodeEffect_t effect);
+        public static extern IPL.AmbisonicsDecodeEffect AmbisonicsDecodeEffectRetain(IPL.AmbisonicsDecodeEffect effect);
         
         /// <summary>
         /// Releases a reference to an Ambisonics rotation effect.
         /// </summary>
         /// <param name="effect">The Ambisonics rotation effect to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplAmbisonicsDecodeEffectRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AmbisonicsDecodeEffectRelease(ref IPL._IPLAmbisonicsDecodeEffect_t effect);
+        public static extern void AmbisonicsDecodeEffectRelease(ref IPL.AmbisonicsDecodeEffect effect);
         
         /// <summary>
         /// Resets the internal processing state of an Ambisonics rotation effect.
         /// </summary>
         /// <param name="effect">The Ambisonics rotation effect to reset.</param>
         [DllImport(Library, EntryPoint = "iplAmbisonicsDecodeEffectReset", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AmbisonicsDecodeEffectReset(IPL._IPLAmbisonicsDecodeEffect_t effect);
+        public static extern void AmbisonicsDecodeEffectReset(IPL.AmbisonicsDecodeEffect effect);
         
         /// <summary>
         /// Applies an Ambisonics decode effect to an audio buffer.
@@ -3908,7 +3908,7 @@ namespace SteamAudio
         /// This effect CANNOT be applied in-place.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplAmbisonicsDecodeEffectApply", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.AudioEffectState AmbisonicsDecodeEffectApply(IPL._IPLAmbisonicsDecodeEffect_t effect, ref IPL.AmbisonicsDecodeEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        public static extern IPL.AudioEffectState AmbisonicsDecodeEffectApply(IPL.AmbisonicsDecodeEffect effect, ref IPL.AmbisonicsDecodeEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates a direct effect.
@@ -3919,7 +3919,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created direct effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplDirectEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error DirectEffectCreate(IPL._IPLContext_t context, ref IPL.AudioSettings audioSettings, ref IPL.DirectEffectSettings effectSettings, out IPL._IPLDirectEffect_t effect);
+        public static extern IPL.Error DirectEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.DirectEffectSettings effectSettings, out IPL.DirectEffect effect);
         
         /// <summary>
         /// Retains an additional reference to a direct effect.
@@ -3927,21 +3927,21 @@ namespace SteamAudio
         /// <param name="effect">The direct effect to retain a reference to.</param>
         /// <returns>The additional reference to the direct effect.</returns>
         [DllImport(Library, EntryPoint = "iplDirectEffectRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLDirectEffect_t DirectEffectRetain(IPL._IPLDirectEffect_t effect);
+        public static extern IPL.DirectEffect DirectEffectRetain(IPL.DirectEffect effect);
         
         /// <summary>
         /// Releases a reference to a direct effect.
         /// </summary>
         /// <param name="effect">The direct effect to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplDirectEffectRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void DirectEffectRelease(ref IPL._IPLDirectEffect_t effect);
+        public static extern void DirectEffectRelease(ref IPL.DirectEffect effect);
         
         /// <summary>
         /// Resets the internal processing state of a direct effect.
         /// </summary>
         /// <param name="effect">The direct effect to reset.</param>
         [DllImport(Library, EntryPoint = "iplDirectEffectReset", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void DirectEffectReset(IPL._IPLDirectEffect_t effect);
+        public static extern void DirectEffectReset(IPL.DirectEffect effect);
         
         /// <summary>
         /// Applies a direct effect to an audio buffer.
@@ -3956,7 +3956,7 @@ namespace SteamAudio
         /// This effect CAN be applied in-place.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplDirectEffectApply", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.AudioEffectState DirectEffectApply(IPL._IPLDirectEffect_t effect, ref IPL.DirectEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        public static extern IPL.AudioEffectState DirectEffectApply(IPL.DirectEffect effect, ref IPL.DirectEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates a reflection effect.
@@ -3967,7 +3967,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created reflection effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplReflectionEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error ReflectionEffectCreate(IPL._IPLContext_t context, ref IPL.AudioSettings audioSettings, ref IPL.ReflectionEffectSettings effectSettings, out IPL._IPLReflectionEffect_t effect);
+        public static extern IPL.Error ReflectionEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.ReflectionEffectSettings effectSettings, out IPL.ReflectionEffect effect);
         
         /// <summary>
         /// Retains an additional reference to a reflection effect.
@@ -3975,21 +3975,21 @@ namespace SteamAudio
         /// <param name="effect">The reflection effect to retain a reference to.</param>
         /// <returns>The additional reference to the reflection effect.</returns>
         [DllImport(Library, EntryPoint = "iplReflectionEffectRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLReflectionEffect_t ReflectionEffectRetain(IPL._IPLReflectionEffect_t effect);
+        public static extern IPL.ReflectionEffect ReflectionEffectRetain(IPL.ReflectionEffect effect);
         
         /// <summary>
         /// Releases a reference to a reflection effect.
         /// </summary>
         /// <param name="effect">The reflection effect to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplReflectionEffectRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ReflectionEffectRelease(ref IPL._IPLReflectionEffect_t effect);
+        public static extern void ReflectionEffectRelease(ref IPL.ReflectionEffect effect);
         
         /// <summary>
         /// Resets the internal processing state of a reflection effect.
         /// </summary>
         /// <param name="effect">The reflection effect to reset.</param>
         [DllImport(Library, EntryPoint = "iplReflectionEffectReset", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ReflectionEffectReset(IPL._IPLReflectionEffect_t effect);
+        public static extern void ReflectionEffectReset(IPL.ReflectionEffect effect);
         
         /// <summary>
         /// Applies a reflection effect to an audio buffer.
@@ -4011,7 +4011,7 @@ namespace SteamAudio
         /// This effect CANNOT be applied in-place.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplReflectionEffectApply", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.AudioEffectState ReflectionEffectApply(IPL._IPLReflectionEffect_t effect, ref IPL.ReflectionEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out, IPL._IPLReflectionMixer_t mixer);
+        public static extern IPL.AudioEffectState ReflectionEffectApply(IPL.ReflectionEffect effect, ref IPL.ReflectionEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out, IPL.ReflectionMixer mixer);
         
         /// <summary>
         /// Creates a reflection effect mixer.
@@ -4023,7 +4023,7 @@ namespace SteamAudio
         /// <param name="mixer">[out] The created reflection mixer.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplReflectionMixerCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error ReflectionMixerCreate(IPL._IPLContext_t context, ref IPL.AudioSettings audioSettings, ref IPL.ReflectionEffectSettings effectSettings, out IPL._IPLReflectionMixer_t mixer);
+        public static extern IPL.Error ReflectionMixerCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.ReflectionEffectSettings effectSettings, out IPL.ReflectionMixer mixer);
         
         /// <summary>
         /// Retains an additional reference to a reflection mixer.
@@ -4031,21 +4031,21 @@ namespace SteamAudio
         /// <param name="mixer">The reflection mixer to retain a reference to.</param>
         /// <returns>The additional reference to the reflection mixer.</returns>
         [DllImport(Library, EntryPoint = "iplReflectionMixerRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLReflectionMixer_t ReflectionMixerRetain(IPL._IPLReflectionMixer_t mixer);
+        public static extern IPL.ReflectionMixer ReflectionMixerRetain(IPL.ReflectionMixer mixer);
         
         /// <summary>
         /// Releases a reference to a reflection mixer.
         /// </summary>
         /// <param name="mixer">The reflection mixer to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplReflectionMixerRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ReflectionMixerRelease(ref IPL._IPLReflectionMixer_t mixer);
+        public static extern void ReflectionMixerRelease(ref IPL.ReflectionMixer mixer);
         
         /// <summary>
         /// Resets the internal processing state of a reflection mixer.
         /// </summary>
         /// <param name="mixer">The reflection mixer to reset.</param>
         [DllImport(Library, EntryPoint = "iplReflectionMixerReset", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ReflectionMixerReset(IPL._IPLReflectionMixer_t mixer);
+        public static extern void ReflectionMixerReset(IPL.ReflectionMixer mixer);
         
         /// <summary>
         /// Retrieves the contents of a reflection mixer and places it into an audio buffer.
@@ -4057,7 +4057,7 @@ namespace SteamAudio
         /// <returns>@c IPL_AUDIOEFFECTSTATE_TAILREMAINING if any tail samples remain in the effect's internal buffers, or
         /// @c IPL_AUDIOEFFECTSTATE_TAILCOMPLETE otherwise.</returns>
         [DllImport(Library, EntryPoint = "iplReflectionMixerApply", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.AudioEffectState ReflectionMixerApply(IPL._IPLReflectionMixer_t mixer, ref IPL.ReflectionEffectParams @params, ref IPL.AudioBuffer @out);
+        public static extern IPL.AudioEffectState ReflectionMixerApply(IPL.ReflectionMixer mixer, ref IPL.ReflectionEffectParams @params, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates a path effect.
@@ -4068,7 +4068,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created path effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplPathEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error PathEffectCreate(IPL._IPLContext_t context, ref IPL.AudioSettings audioSettings, ref IPL.PathEffectSettings effectSettings, out IPL._IPLPathEffect_t effect);
+        public static extern IPL.Error PathEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.PathEffectSettings effectSettings, out IPL.PathEffect effect);
         
         /// <summary>
         /// Retains an additional reference to a path effect.
@@ -4076,21 +4076,21 @@ namespace SteamAudio
         /// <param name="effect">The path effect to retain a reference to.</param>
         /// <returns>The additional reference to the path effect.</returns>
         [DllImport(Library, EntryPoint = "iplPathEffectRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLPathEffect_t PathEffectRetain(IPL._IPLPathEffect_t effect);
+        public static extern IPL.PathEffect PathEffectRetain(IPL.PathEffect effect);
         
         /// <summary>
         /// Releases a reference to a path effect.
         /// </summary>
         /// <param name="effect">The path effect to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplPathEffectRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void PathEffectRelease(ref IPL._IPLPathEffect_t effect);
+        public static extern void PathEffectRelease(ref IPL.PathEffect effect);
         
         /// <summary>
         /// Resets the internal processing state of a path effect.
         /// </summary>
         /// <param name="effect">The path effect to reset.</param>
         [DllImport(Library, EntryPoint = "iplPathEffectReset", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void PathEffectReset(IPL._IPLPathEffect_t effect);
+        public static extern void PathEffectReset(IPL.PathEffect effect);
         
         /// <summary>
         /// Applies a path effect to an audio buffer.
@@ -4106,7 +4106,7 @@ namespace SteamAudio
         /// This effect CANNOT be applied in-place.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplPathEffectApply", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.AudioEffectState PathEffectApply(IPL._IPLPathEffect_t effect, ref IPL.PathEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        public static extern IPL.AudioEffectState PathEffectApply(IPL.PathEffect effect, ref IPL.PathEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates an empty probe array.
@@ -4115,7 +4115,7 @@ namespace SteamAudio
         /// <param name="probeArray">[out] The created probe array.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplProbeArrayCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error ProbeArrayCreate(IPL._IPLContext_t context, out IPL._IPLProbeArray_t probeArray);
+        public static extern IPL.Error ProbeArrayCreate(IPL.Context context, out IPL.ProbeArray probeArray);
         
         /// <summary>
         /// Retains an additional reference to a probe array.
@@ -4123,14 +4123,14 @@ namespace SteamAudio
         /// <param name="probeArray">The probe array to retain a reference to.</param>
         /// <returns>The additional reference to the probe array.</returns>
         [DllImport(Library, EntryPoint = "iplProbeArrayRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLProbeArray_t ProbeArrayRetain(IPL._IPLProbeArray_t probeArray);
+        public static extern IPL.ProbeArray ProbeArrayRetain(IPL.ProbeArray probeArray);
         
         /// <summary>
         /// Releases a reference to a probe array.
         /// </summary>
         /// <param name="probeArray">The probe array to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplProbeArrayRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ProbeArrayRelease(ref IPL._IPLProbeArray_t probeArray);
+        public static extern void ProbeArrayRelease(ref IPL.ProbeArray probeArray);
         
         /// <summary>
         /// Generates probes and adds them to a probe array.
@@ -4139,7 +4139,7 @@ namespace SteamAudio
         /// <param name="params">Parameters to use for generating probes.</param>
         /// <param name="probeArray">The array into which to add the generated probes.</param>
         [DllImport(Library, EntryPoint = "iplProbeArrayGenerateProbes", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ProbeArrayGenerateProbes(IPL._IPLProbeArray_t probeArray, IPL._IPLScene_t scene, ref IPL.ProbeGenerationParams @params);
+        public static extern void ProbeArrayGenerateProbes(IPL.ProbeArray probeArray, IPL.Scene scene, ref IPL.ProbeGenerationParams @params);
         
         /// <summary>
         /// 
@@ -4147,7 +4147,7 @@ namespace SteamAudio
         /// <returns>The number of probes in a probe array.</returns>
         /// <param name="probeArray">The probe array.</param>
         [DllImport(Library, EntryPoint = "iplProbeArrayGetNumProbes", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ProbeArrayGetNumProbes(IPL._IPLProbeArray_t probeArray);
+        public static extern int ProbeArrayGetNumProbes(IPL.ProbeArray probeArray);
         
         /// <summary>
         /// 
@@ -4156,7 +4156,7 @@ namespace SteamAudio
         /// <param name="probeArray">The probe array.</param>
         /// <param name="index">Index of the probe within the array.</param>
         [DllImport(Library, EntryPoint = "iplProbeArrayGetProbe", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Sphere ProbeArrayGetProbe(IPL._IPLProbeArray_t probeArray, int index);
+        public static extern IPL.Sphere ProbeArrayGetProbe(IPL.ProbeArray probeArray, int index);
         
         /// <summary>
         /// Creates an empty probe batch.
@@ -4165,7 +4165,7 @@ namespace SteamAudio
         /// <param name="probeBatch">[out] The created probe batch.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplProbeBatchCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error ProbeBatchCreate(IPL._IPLContext_t context, out IPL._IPLProbeBatch_t probeBatch);
+        public static extern IPL.Error ProbeBatchCreate(IPL.Context context, out IPL.ProbeBatch probeBatch);
         
         /// <summary>
         /// Retains an additional reference to a probe batch.
@@ -4173,14 +4173,14 @@ namespace SteamAudio
         /// <param name="probeBatch">The probe batch to retain a reference to.</param>
         /// <returns>The additional reference to the probe batch.</returns>
         [DllImport(Library, EntryPoint = "iplProbeBatchRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLProbeBatch_t ProbeBatchRetain(IPL._IPLProbeBatch_t probeBatch);
+        public static extern IPL.ProbeBatch ProbeBatchRetain(IPL.ProbeBatch probeBatch);
         
         /// <summary>
         /// Releases a reference to a probe batch.
         /// </summary>
         /// <param name="probeBatch">The probe batch to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ProbeBatchRelease(ref IPL._IPLProbeBatch_t probeBatch);
+        public static extern void ProbeBatchRelease(ref IPL.ProbeBatch probeBatch);
         
         /// <summary>
         /// Loads a probe batch from a serialized object. Typically, the serialized object will be created from a byte array
@@ -4191,7 +4191,7 @@ namespace SteamAudio
         /// <param name="probeBatch">[out] The created probe batch.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplProbeBatchLoad", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error ProbeBatchLoad(IPL._IPLContext_t context, IPL._IPLSerializedObject_t serializedObject, out IPL._IPLProbeBatch_t probeBatch);
+        public static extern IPL.Error ProbeBatchLoad(IPL.Context context, IPL.SerializedObject serializedObject, out IPL.ProbeBatch probeBatch);
         
         /// <summary>
         /// Saves a probe batch to a serialized object. Typically, the serialized object will then be saved to disk.
@@ -4199,7 +4199,7 @@ namespace SteamAudio
         /// <param name="probeBatch">The probe batch to save.</param>
         /// <param name="serializedObject">The serialized object into which to save the probe batch.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchSave", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ProbeBatchSave(IPL._IPLProbeBatch_t probeBatch, IPL._IPLSerializedObject_t serializedObject);
+        public static extern void ProbeBatchSave(IPL.ProbeBatch probeBatch, IPL.SerializedObject serializedObject);
         
         /// <summary>
         /// 
@@ -4207,7 +4207,7 @@ namespace SteamAudio
         /// <returns>The number of probes in a probe batch.</returns>
         /// <param name="probeBatch">The probe batch.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchGetNumProbes", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ProbeBatchGetNumProbes(IPL._IPLProbeBatch_t probeBatch);
+        public static extern int ProbeBatchGetNumProbes(IPL.ProbeBatch probeBatch);
         
         /// <summary>
         /// Adds a probe to a batch. The new probe will be added as the last probe in the batch.
@@ -4215,7 +4215,7 @@ namespace SteamAudio
         /// <param name="probeBatch">The probe batch.</param>
         /// <param name="probe">The probe to add.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchAddProbe", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ProbeBatchAddProbe(IPL._IPLProbeBatch_t probeBatch, IPL.Sphere probe);
+        public static extern void ProbeBatchAddProbe(IPL.ProbeBatch probeBatch, IPL.Sphere probe);
         
         /// <summary>
         /// Adds every probe in an array to a batch. The new probes will be added, in order, at the end of the batch.
@@ -4223,7 +4223,7 @@ namespace SteamAudio
         /// <param name="probeBatch">The probe batch.</param>
         /// <param name="probeArray">The probe array containing the probes to add.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchAddProbeArray", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ProbeBatchAddProbeArray(IPL._IPLProbeBatch_t probeBatch, IPL._IPLProbeArray_t probeArray);
+        public static extern void ProbeBatchAddProbeArray(IPL.ProbeBatch probeBatch, IPL.ProbeArray probeArray);
         
         /// <summary>
         /// Removes a probe from a batch.
@@ -4231,7 +4231,7 @@ namespace SteamAudio
         /// <param name="probeBatch">The probe batch.</param>
         /// <param name="index">Index of the probe to remove.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchRemoveProbe", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ProbeBatchRemoveProbe(IPL._IPLProbeBatch_t probeBatch, int index);
+        public static extern void ProbeBatchRemoveProbe(IPL.ProbeBatch probeBatch, int index);
         
         /// <summary>
         /// Commits all changes made to a probe batch since this function was last called (or since the probe batch was
@@ -4240,7 +4240,7 @@ namespace SteamAudio
         /// </summary>
         /// <param name="probeBatch">The probe batch.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchCommit", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ProbeBatchCommit(IPL._IPLProbeBatch_t probeBatch);
+        public static extern void ProbeBatchCommit(IPL.ProbeBatch probeBatch);
         
         /// <summary>
         /// Deletes a specific layer of data from a probe batch.
@@ -4248,7 +4248,7 @@ namespace SteamAudio
         /// <param name="probeBatch">The probe batch.</param>
         /// <param name="identifier">The identifier of the baked data layer to delete.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchRemoveData", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ProbeBatchRemoveData(IPL._IPLProbeBatch_t probeBatch, ref IPL.BakedDataIdentifier identifier);
+        public static extern void ProbeBatchRemoveData(IPL.ProbeBatch probeBatch, ref IPL.BakedDataIdentifier identifier);
         
         /// <summary>
         /// 
@@ -4257,7 +4257,7 @@ namespace SteamAudio
         /// <param name="probeBatch">The probe batch.</param>
         /// <param name="identifier">The identifier of the baked data layer.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchGetDataSize", CallingConvention = CallingConvention.Cdecl)]
-        public static extern ulong ProbeBatchGetDataSize(IPL._IPLProbeBatch_t probeBatch, ref IPL.BakedDataIdentifier identifier);
+        public static extern ulong ProbeBatchGetDataSize(IPL.ProbeBatch probeBatch, ref IPL.BakedDataIdentifier identifier);
         
         /// <summary>
         /// Bakes a single layer of reflections data in a probe batch.
@@ -4273,14 +4273,14 @@ namespace SteamAudio
         /// Only one bake can be in progress at any point in time.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplReflectionsBakerBake", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ReflectionsBakerBake(IPL._IPLContext_t context, ref IPL.ReflectionsBakeParams @params, IPL.ProgressCallback progressCallback, IntPtr userData);
+        public static extern void ReflectionsBakerBake(IPL.Context context, ref IPL.ReflectionsBakeParams @params, IPL.ProgressCallback progressCallback, IntPtr userData);
         
         /// <summary>
         /// Cancels any running bakes of reflections data.
         /// </summary>
         /// <param name="context">The context used to initialize Steam Audio.</param>
         [DllImport(Library, EntryPoint = "iplReflectionsBakerCancelBake", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ReflectionsBakerCancelBake(IPL._IPLContext_t context);
+        public static extern void ReflectionsBakerCancelBake(IPL.Context context);
         
         /// <summary>
         /// Bakes a single layer of pathing data in a probe batch.
@@ -4296,14 +4296,14 @@ namespace SteamAudio
         /// Only one bake can be in progress at any point in time.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplPathBakerBake", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void PathBakerBake(IPL._IPLContext_t context, ref IPL.PathBakeParams @params, IPL.ProgressCallback progressCallback, IntPtr userData);
+        public static extern void PathBakerBake(IPL.Context context, ref IPL.PathBakeParams @params, IPL.ProgressCallback progressCallback, IntPtr userData);
         
         /// <summary>
         /// Cancels any running bakes of pathing data.
         /// </summary>
         /// <param name="context">The context used to initialize Steam Audio.</param>
         [DllImport(Library, EntryPoint = "iplPathBakerCancelBake", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void PathBakerCancelBake(IPL._IPLContext_t context);
+        public static extern void PathBakerCancelBake(IPL.Context context);
         
         /// <summary>
         /// Creates a simulator.
@@ -4313,7 +4313,7 @@ namespace SteamAudio
         /// <param name="simulator">[out] The created simulator.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplSimulatorCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error SimulatorCreate(IPL._IPLContext_t context, ref IPL.SimulationSettings settings, out IPL._IPLSimulator_t simulator);
+        public static extern IPL.Error SimulatorCreate(IPL.Context context, ref IPL.SimulationSettings settings, out IPL.Simulator simulator);
         
         /// <summary>
         /// Retains an additional reference to a simulator.
@@ -4321,14 +4321,14 @@ namespace SteamAudio
         /// <param name="simulator">The simulator to retain a reference to.</param>
         /// <returns>The additional reference to the simulator.</returns>
         [DllImport(Library, EntryPoint = "iplSimulatorRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLSimulator_t SimulatorRetain(IPL._IPLSimulator_t simulator);
+        public static extern IPL.Simulator SimulatorRetain(IPL.Simulator simulator);
         
         /// <summary>
         /// Releases a reference to a simulator.
         /// </summary>
         /// <param name="simulator">The simulator to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplSimulatorRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SimulatorRelease(ref IPL._IPLSimulator_t simulator);
+        public static extern void SimulatorRelease(ref IPL.Simulator simulator);
         
         /// <summary>
         /// Specifies the scene within which all subsequent simulations should be run.
@@ -4339,7 +4339,7 @@ namespace SteamAudio
         /// Call @c iplSimulatorCommit after calling this function for the changes to take effect.This function cannot be called while any simulation is running.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSimulatorSetScene", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SimulatorSetScene(IPL._IPLSimulator_t simulator, IPL._IPLScene_t scene);
+        public static extern void SimulatorSetScene(IPL.Simulator simulator, IPL.Scene scene);
         
         /// <summary>
         /// Adds a probe batch for use in subsequent simulations. Sources that require baked data can then use the
@@ -4351,7 +4351,7 @@ namespace SteamAudio
         /// Call @c iplSimulatorCommit after calling this function for the changes to take effect.This function cannot be called while any simulation is running.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSimulatorAddProbeBatch", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SimulatorAddProbeBatch(IPL._IPLSimulator_t simulator, IPL._IPLProbeBatch_t probeBatch);
+        public static extern void SimulatorAddProbeBatch(IPL.Simulator simulator, IPL.ProbeBatch probeBatch);
         
         /// <summary>
         /// Removed a probe batch from use in subsequent simulations. Sources that require baked data will then stop using the
@@ -4363,7 +4363,7 @@ namespace SteamAudio
         /// Call @c iplSimulatorCommit after calling this function for the changes to take effect.This function cannot be called while any simulation is running.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSimulatorRemoveProbeBatch", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SimulatorRemoveProbeBatch(IPL._IPLSimulator_t simulator, IPL._IPLProbeBatch_t probeBatch);
+        public static extern void SimulatorRemoveProbeBatch(IPL.Simulator simulator, IPL.ProbeBatch probeBatch);
         
         /// <summary>
         /// Specifies simulation parameters that are not associated with any particular source.
@@ -4376,7 +4376,7 @@ namespace SteamAudio
         /// any synchronization between the calls.</param>
         /// <param name="sharedInputs">The shared input parameters to set.</param>
         [DllImport(Library, EntryPoint = "iplSimulatorSetSharedInputs", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SimulatorSetSharedInputs(IPL._IPLSimulator_t simulator, IPL.SimulationFlags flags, ref IPL.SimulationSharedInputs sharedInputs);
+        public static extern void SimulatorSetSharedInputs(IPL.Simulator simulator, IPL.SimulationFlags flags, ref IPL.SimulationSharedInputs sharedInputs);
         
         /// <summary>
         /// Commits changes to the scene or probe batches used for simulation.
@@ -4387,7 +4387,7 @@ namespace SteamAudio
         /// @c iplSimulatorRemoveProbeBatch for the changes to take effect.This function cannot be called while any simulation is running.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSimulatorCommit", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SimulatorCommit(IPL._IPLSimulator_t simulator);
+        public static extern void SimulatorCommit(IPL.Simulator simulator);
         
         /// <summary>
         /// Runs a direct simulation for all sources added to the simulator. This may include distance attenuation,
@@ -4399,7 +4399,7 @@ namespace SteamAudio
         /// are enabled.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSimulatorRunDirect", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SimulatorRunDirect(IPL._IPLSimulator_t simulator);
+        public static extern void SimulatorRunDirect(IPL.Simulator simulator);
         
         /// <summary>
         /// Runs a reflections simulation for all sources added to the simulator.
@@ -4410,7 +4410,7 @@ namespace SteamAudio
         /// block either the audio processing thread or the game's main update thread.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSimulatorRunReflections", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SimulatorRunReflections(IPL._IPLSimulator_t simulator);
+        public static extern void SimulatorRunReflections(IPL.Simulator simulator);
         
         /// <summary>
         /// Runs a pathing simulation for all sources added to the simulator.
@@ -4421,7 +4421,7 @@ namespace SteamAudio
         /// block either the audio processing thread or the game's main update thread.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSimulatorRunPathing", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SimulatorRunPathing(IPL._IPLSimulator_t simulator);
+        public static extern void SimulatorRunPathing(IPL.Simulator simulator);
         
         /// <summary>
         /// Creates a simulation source.
@@ -4431,7 +4431,7 @@ namespace SteamAudio
         /// <param name="source">[out] The created source.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplSourceCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error SourceCreate(IPL._IPLSimulator_t simulator, ref IPL.SourceSettings settings, out IPL._IPLSource_t source);
+        public static extern IPL.Error SourceCreate(IPL.Simulator simulator, ref IPL.SourceSettings settings, out IPL.Source source);
         
         /// <summary>
         /// Retains an additional reference to a source.
@@ -4439,14 +4439,14 @@ namespace SteamAudio
         /// <param name="source">The source to retain a reference to.</param>
         /// <returns>The additional reference to the source.</returns>
         [DllImport(Library, EntryPoint = "iplSourceRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL._IPLSource_t SourceRetain(IPL._IPLSource_t source);
+        public static extern IPL.Source SourceRetain(IPL.Source source);
         
         /// <summary>
         /// Releases a reference to a source.
         /// </summary>
         /// <param name="source">The source to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplSourceRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SourceRelease(ref IPL._IPLSource_t source);
+        public static extern void SourceRelease(ref IPL.Source source);
         
         /// <summary>
         /// Adds a source to the set of sources processed by a simulator in subsequent simulations.
@@ -4454,7 +4454,7 @@ namespace SteamAudio
         /// <param name="simulator">The simulator being used.</param>
         /// <param name="source">The source to add.</param>
         [DllImport(Library, EntryPoint = "iplSourceAdd", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SourceAdd(IPL._IPLSource_t source, IPL._IPLSimulator_t simulator);
+        public static extern void SourceAdd(IPL.Source source, IPL.Simulator simulator);
         
         /// <summary>
         /// Removes a source from the set of sources processed by a simulator in subsequent simulations.
@@ -4462,7 +4462,7 @@ namespace SteamAudio
         /// <param name="simulator">The simulator being used.</param>
         /// <param name="source">The source to remove.</param>
         [DllImport(Library, EntryPoint = "iplSourceRemove", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SourceRemove(IPL._IPLSource_t source, IPL._IPLSimulator_t simulator);
+        public static extern void SourceRemove(IPL.Source source, IPL.Simulator simulator);
         
         /// <summary>
         /// Specifies simulation parameters for a source.
@@ -4475,7 +4475,7 @@ namespace SteamAudio
         /// any synchronization between the calls.</param>
         /// <param name="inputs">The input parameters to set.</param>
         [DllImport(Library, EntryPoint = "iplSourceSetInputs", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SourceSetInputs(IPL._IPLSource_t source, IPL.SimulationFlags flags, ref IPL.SimulationInputs inputs);
+        public static extern void SourceSetInputs(IPL.Source source, IPL.SimulationFlags flags, ref IPL.SimulationInputs inputs);
         
         /// <summary>
         /// Retrieves simulation results for a source.
@@ -4484,7 +4484,7 @@ namespace SteamAudio
         /// <param name="flags">The types of simulation for which to retrieve results.</param>
         /// <param name="outputs">[out] The simulation results.</param>
         [DllImport(Library, EntryPoint = "iplSourceGetOutputs", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SourceGetOutputs(IPL._IPLSource_t source, IPL.SimulationFlags flags, out IPL.SimulationOutputs outputs);
+        public static extern void SourceGetOutputs(IPL.Source source, IPL.SimulationFlags flags, out IPL.SimulationOutputs outputs);
         
         /// <summary>
         /// Calculates the distance attenuation between a source and a listener.
@@ -4495,7 +4495,7 @@ namespace SteamAudio
         /// <param name="model">The distance attenuation model to use.</param>
         /// <returns>The distance attenuation to apply, between @c 0 and @c 1.</returns>
         [DllImport(Library, EntryPoint = "iplDistanceAttenuationCalculate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern float DistanceAttenuationCalculate(IPL._IPLContext_t context, IPL.Vector3 source, IPL.Vector3 listener, ref IPL.DistanceAttenuationModel model);
+        public static extern float DistanceAttenuationCalculate(IPL.Context context, IPL.Vector3 source, IPL.Vector3 listener, ref IPL.DistanceAttenuationModel model);
         
         /// <summary>
         /// Calculates the air absorption coefficients between a source and a listener.
@@ -4506,7 +4506,7 @@ namespace SteamAudio
         /// <param name="model">The air absorption model to use.</param>
         /// <param name="airAbsorption">[out] The 3-band air absorption coefficients, each between @c 0 and @c 1.</param>
         [DllImport(Library, EntryPoint = "iplAirAbsorptionCalculate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AirAbsorptionCalculate(IPL._IPLContext_t context, IPL.Vector3 source, IPL.Vector3 listener, ref IPL.AirAbsorptionModel model, out float airAbsorption);
+        public static extern void AirAbsorptionCalculate(IPL.Context context, IPL.Vector3 source, IPL.Vector3 listener, ref IPL.AirAbsorptionModel model, out float airAbsorption);
         
         /// <summary>
         /// Calculates the attenuation of a source due to its directivity pattern and orientation relative to a listener.
@@ -4517,6 +4517,6 @@ namespace SteamAudio
         /// <param name="model">The directivity pattern to use.</param>
         /// <returns>The directivity value to apply, between @c 0 and @c 1.</returns>
         [DllImport(Library, EntryPoint = "iplDirectivityCalculate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern float DirectivityCalculate(IPL._IPLContext_t context, IPL.CoordinateSpace3 source, IPL.Vector3 listener, ref IPL.Directivity model);
+        public static extern float DirectivityCalculate(IPL.Context context, IPL.CoordinateSpace3 source, IPL.Vector3 listener, ref IPL.Directivity model);
     }
 }

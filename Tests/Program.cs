@@ -28,9 +28,9 @@ namespace Tests
 		private static AL al;
 		private static ALContext alc;
 		//Steam Audio
-		private static IPL._IPLContext_t iplContext;
-		private static IPL._IPLHRTF_t iplHrtf;
-		private static IPL._IPLBinauralEffect_t iplBinauralEffect;
+		private static IPL.Context iplContext;
+		private static IPL.Hrtf iplHrtf;
+		private static IPL.BinauralEffect iplBinauralEffect;
 		private static IPL.AudioBuffer iplInputBuffer;
 		private static IPL.AudioBuffer iplOutputBuffer;
 		private static IPL.AudioSettings iplAudioSettings;
@@ -81,7 +81,7 @@ namespace Tests
 					var binauralEffectParams = new IPL.BinauralEffectParams {
 						hrtf = iplHrtf,
 						direction = new IPL.Vector3(position.X, position.Y, position.Z),
-						interpolation = IPL.HRTFInterpolation.Nearest,
+						interpolation = IPL.HrtfInterpolation.Nearest,
 						spatialBlend = 1f,
 					};
 
@@ -266,8 +266,8 @@ namespace Tests
 
 			// HRTF
 
-			var hrtfSettings = new IPL.HRTFSettings {
-				type = IPL.HRTFType.Default
+			var hrtfSettings = new IPL.HrtfSettings {
+				type = IPL.HrtfType.Default
 			};
 
 			IPL.HRTFCreate(iplContext, ref iplAudioSettings, ref hrtfSettings, out iplHrtf);
