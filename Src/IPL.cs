@@ -4,8 +4,6 @@
 	{
 		public const string Library = "phonon.dll";
 
-		static IPL() => DllManager.PrepareResolver();
-
         public partial struct Vector3
         {
             public Vector3(float x, float y, float z)
