@@ -2951,7 +2951,7 @@ namespace SteamAudio
         /// <param name="context">[out] Handle to the created context object.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplContextCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error ContextCreate(ref IPL.ContextSettings settings, out IPL.Context context);
+        public static extern IPL.Error ContextCreate(in IPL.ContextSettings settings, out IPL.Context context);
         
         /// <summary>
         /// Retains an additional reference to a context. The context will not be destroyed until all references are
@@ -2990,7 +2990,7 @@ namespace SteamAudio
         /// <param name="serializedObject">[out] The created serialized object.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplSerializedObjectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error SerializedObjectCreate(IPL.Context context, ref IPL.SerializedObjectSettings settings, out IPL.SerializedObject serializedObject);
+        public static extern IPL.Error SerializedObjectCreate(IPL.Context context, in IPL.SerializedObjectSettings settings, out IPL.SerializedObject serializedObject);
         
         /// <summary>
         /// Retains an additional reference to a serialized object.
@@ -3025,7 +3025,7 @@ namespace SteamAudio
         /// <param name="device">[out] The created Embree device.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplEmbreeDeviceCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error EmbreeDeviceCreate(IPL.Context context, ref IPL.EmbreeDeviceSettings settings, out IPL.EmbreeDevice device);
+        public static extern IPL.Error EmbreeDeviceCreate(IPL.Context context, in IPL.EmbreeDeviceSettings settings, out IPL.EmbreeDevice device);
         
         /// <summary>
         /// Retains an additional reference to an Embree device.
@@ -3050,7 +3050,7 @@ namespace SteamAudio
         /// <param name="deviceList">[out] The created OpenCL device list.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplOpenCLDeviceListCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error OpenCLDeviceListCreate(IPL.Context context, ref IPL.OpenCLDeviceSettings settings, out IPL.OpenCLDeviceList deviceList);
+        public static extern IPL.Error OpenCLDeviceListCreate(IPL.Context context, in IPL.OpenCLDeviceSettings settings, out IPL.OpenCLDeviceList deviceList);
         
         /// <summary>
         /// Retains an additional reference to an OpenCL device list.
@@ -3127,7 +3127,7 @@ namespace SteamAudio
         /// <param name="rrDevice">[out] The created Radeon Rays device.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplRadeonRaysDeviceCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error RadeonRaysDeviceCreate(IPL.OpenCLDevice openCLDevice, ref IPL.RadeonRaysDeviceSettings settings, out IPL.RadeonRaysDevice rrDevice);
+        public static extern IPL.Error RadeonRaysDeviceCreate(IPL.OpenCLDevice openCLDevice, in IPL.RadeonRaysDeviceSettings settings, out IPL.RadeonRaysDevice rrDevice);
         
         /// <summary>
         /// Retains an additional reference to a Radeon Rays device.
@@ -3152,7 +3152,7 @@ namespace SteamAudio
         /// <param name="tanDevice">[out] The created TrueAudio Next device.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplTrueAudioNextDeviceCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error TrueAudioNextDeviceCreate(IPL.OpenCLDevice openCLDevice, ref IPL.TrueAudioNextDeviceSettings settings, out IPL.TrueAudioNextDevice tanDevice);
+        public static extern IPL.Error TrueAudioNextDeviceCreate(IPL.OpenCLDevice openCLDevice, in IPL.TrueAudioNextDeviceSettings settings, out IPL.TrueAudioNextDevice tanDevice);
         
         /// <summary>
         /// Retains an additional reference to a TrueAudio Next device.
@@ -3181,7 +3181,7 @@ namespace SteamAudio
         /// static meshes or instanced meshes and add them to the scene.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSceneCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error SceneCreate(IPL.Context context, ref IPL.SceneSettings settings, out IPL.Scene scene);
+        public static extern IPL.Error SceneCreate(IPL.Context context, in IPL.SceneSettings settings, out IPL.Scene scene);
         
         /// <summary>
         /// Retains an additional reference to a scene.
@@ -3210,7 +3210,7 @@ namespace SteamAudio
         /// <param name="scene">[out] The created scene.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplSceneLoad", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error SceneLoad(IPL.Context context, ref IPL.SceneSettings settings, IPL.SerializedObject serializedObject, IPL.ProgressCallback progressCallback, IntPtr progressCallbackUserData, out IPL.Scene scene);
+        public static extern IPL.Error SceneLoad(IPL.Context context, in IPL.SceneSettings settings, IPL.SerializedObject serializedObject, IPL.ProgressCallback progressCallback, IntPtr progressCallbackUserData, out IPL.Scene scene);
         
         /// <summary>
         /// Saves a scene to a serialized object. Typically, the serialized object will then be saved to disk.
@@ -3261,7 +3261,7 @@ namespace SteamAudio
         /// is sufficient.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplStaticMeshCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error StaticMeshCreate(IPL.Scene scene, ref IPL.StaticMeshSettings settings, out IPL.StaticMesh staticMesh);
+        public static extern IPL.Error StaticMeshCreate(IPL.Scene scene, in IPL.StaticMeshSettings settings, out IPL.StaticMesh staticMesh);
         
         /// <summary>
         /// Retains an additional reference to a static mesh.
@@ -3341,7 +3341,7 @@ namespace SteamAudio
         /// dynamic objects whose motion can be described purely in terms of rigid-body transformations.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplInstancedMeshCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error InstancedMeshCreate(IPL.Scene scene, ref IPL.InstancedMeshSettings settings, out IPL.InstancedMesh instancedMesh);
+        public static extern IPL.Error InstancedMeshCreate(IPL.Scene scene, in IPL.InstancedMeshSettings settings, out IPL.InstancedMesh instancedMesh);
         
         /// <summary>
         /// Retains an additional reference to a instanced mesh.
@@ -3427,7 +3427,7 @@ namespace SteamAudio
         /// <param name="src">The audio buffer to read from.</param>
         /// <param name="dst">The interleaved array to write into.</param>
         [DllImport(Library, EntryPoint = "iplAudioBufferInterleave", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AudioBufferInterleave(IPL.Context context, ref IPL.AudioBuffer src, ref float dst);
+        public static extern void AudioBufferInterleave(IPL.Context context, in IPL.AudioBuffer src, in float dst);
         
         /// <summary>
         /// Writes interleaved samples from a user-provided array into an audio buffer.
@@ -3436,7 +3436,7 @@ namespace SteamAudio
         /// <param name="src">The interleaved array to read from.</param>
         /// <param name="dst">The audio buffer to write into.</param>
         [DllImport(Library, EntryPoint = "iplAudioBufferDeinterleave", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AudioBufferDeinterleave(IPL.Context context, ref float src, ref IPL.AudioBuffer dst);
+        public static extern void AudioBufferDeinterleave(IPL.Context context, in float src, in IPL.AudioBuffer dst);
         
         /// <summary>
         /// Mixes one audio buffer into another.
@@ -3448,7 +3448,7 @@ namespace SteamAudio
         /// Both audio buffers must have the same number of channels and samples.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplAudioBufferMix", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AudioBufferMix(IPL.Context context, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer mix);
+        public static extern void AudioBufferMix(IPL.Context context, ref IPL.AudioBuffer @in, in IPL.AudioBuffer mix);
         
         /// <summary>
         /// Downmixes a multi-channel audio buffer into a mono audio buffer.
@@ -3493,7 +3493,7 @@ namespace SteamAudio
         /// if possible.This function is not thread-safe. Do not simultaneously call it from multiple threads.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplHRTFCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error HrtfCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.HrtfSettings hrtfSettings, out IPL.Hrtf hrtf);
+        public static extern IPL.Error HrtfCreate(IPL.Context context, in IPL.AudioSettings audioSettings, in IPL.HrtfSettings hrtfSettings, out IPL.Hrtf hrtf);
         
         /// <summary>
         /// Retains an additional reference to an HRTF object.
@@ -3519,7 +3519,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created panning effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplPanningEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error PanningEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.PanningEffectSettings effectSettings, out IPL.PanningEffect effect);
+        public static extern IPL.Error PanningEffectCreate(IPL.Context context, in IPL.AudioSettings audioSettings, in IPL.PanningEffectSettings effectSettings, out IPL.PanningEffect effect);
         
         /// <summary>
         /// Retains an additional reference to a panning effect.
@@ -3568,7 +3568,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created binaural effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplBinauralEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error BinauralEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.BinauralEffectSettings effectSettings, out IPL.BinauralEffect effect);
+        public static extern IPL.Error BinauralEffectCreate(IPL.Context context, in IPL.AudioSettings audioSettings, in IPL.BinauralEffectSettings effectSettings, out IPL.BinauralEffect effect);
         
         /// <summary>
         /// Retains an additional reference to a binaural effect.
@@ -3616,7 +3616,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created virtual surround effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplVirtualSurroundEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error VirtualSurroundEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.VirtualSurroundEffectSettings effectSettings, out IPL.VirtualSurroundEffect effect);
+        public static extern IPL.Error VirtualSurroundEffectCreate(IPL.Context context, in IPL.AudioSettings audioSettings, in IPL.VirtualSurroundEffectSettings effectSettings, out IPL.VirtualSurroundEffect effect);
         
         /// <summary>
         /// Retains an additional reference to a virtual surround effect.
@@ -3665,7 +3665,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created Ambisonics encode effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsEncodeEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error AmbisonicsEncodeEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsEncodeEffectSettings effectSettings, out IPL.AmbisonicsEncodeEffect effect);
+        public static extern IPL.Error AmbisonicsEncodeEffectCreate(IPL.Context context, in IPL.AudioSettings audioSettings, in IPL.AmbisonicsEncodeEffectSettings effectSettings, out IPL.AmbisonicsEncodeEffect effect);
         
         /// <summary>
         /// Retains an additional reference to an Ambisonics encode effect.
@@ -3713,7 +3713,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created Ambisonics panning effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsPanningEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error AmbisonicsPanningEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsPanningEffectSettings effectSettings, out IPL.AmbisonicsPanningEffect effect);
+        public static extern IPL.Error AmbisonicsPanningEffectCreate(IPL.Context context, in IPL.AudioSettings audioSettings, in IPL.AmbisonicsPanningEffectSettings effectSettings, out IPL.AmbisonicsPanningEffect effect);
         
         /// <summary>
         /// Retains an additional reference to an Ambisonics panning effect.
@@ -3762,7 +3762,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created Ambisonics binaural effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsBinauralEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error AmbisonicsBinauralEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsBinauralEffectSettings effectSettings, out IPL.AmbisonicsBinauralEffect effect);
+        public static extern IPL.Error AmbisonicsBinauralEffectCreate(IPL.Context context, in IPL.AudioSettings audioSettings, in IPL.AmbisonicsBinauralEffectSettings effectSettings, out IPL.AmbisonicsBinauralEffect effect);
         
         /// <summary>
         /// Retains an additional reference to an Ambisonics binaural effect.
@@ -3811,7 +3811,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created Ambisonics rotation effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsRotationEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error AmbisonicsRotationEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsRotationEffectSettings effectSettings, out IPL.AmbisonicsRotationEffect effect);
+        public static extern IPL.Error AmbisonicsRotationEffectCreate(IPL.Context context, in IPL.AudioSettings audioSettings, in IPL.AmbisonicsRotationEffectSettings effectSettings, out IPL.AmbisonicsRotationEffect effect);
         
         /// <summary>
         /// Retains an additional reference to an Ambisonics rotation effect.
@@ -3860,7 +3860,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created Ambisonics rotation effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplAmbisonicsDecodeEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error AmbisonicsDecodeEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.AmbisonicsDecodeEffectSettings effectSettings, out IPL.AmbisonicsDecodeEffect effect);
+        public static extern IPL.Error AmbisonicsDecodeEffectCreate(IPL.Context context, in IPL.AudioSettings audioSettings, in IPL.AmbisonicsDecodeEffectSettings effectSettings, out IPL.AmbisonicsDecodeEffect effect);
         
         /// <summary>
         /// Retains an additional reference to an Ambisonics rotation effect.
@@ -3911,7 +3911,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created direct effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplDirectEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error DirectEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.DirectEffectSettings effectSettings, out IPL.DirectEffect effect);
+        public static extern IPL.Error DirectEffectCreate(IPL.Context context, in IPL.AudioSettings audioSettings, in IPL.DirectEffectSettings effectSettings, out IPL.DirectEffect effect);
         
         /// <summary>
         /// Retains an additional reference to a direct effect.
@@ -3959,7 +3959,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created reflection effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplReflectionEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error ReflectionEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.ReflectionEffectSettings effectSettings, out IPL.ReflectionEffect effect);
+        public static extern IPL.Error ReflectionEffectCreate(IPL.Context context, in IPL.AudioSettings audioSettings, in IPL.ReflectionEffectSettings effectSettings, out IPL.ReflectionEffect effect);
         
         /// <summary>
         /// Retains an additional reference to a reflection effect.
@@ -4015,7 +4015,7 @@ namespace SteamAudio
         /// <param name="mixer">[out] The created reflection mixer.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplReflectionMixerCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error ReflectionMixerCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.ReflectionEffectSettings effectSettings, out IPL.ReflectionMixer mixer);
+        public static extern IPL.Error ReflectionMixerCreate(IPL.Context context, in IPL.AudioSettings audioSettings, in IPL.ReflectionEffectSettings effectSettings, out IPL.ReflectionMixer mixer);
         
         /// <summary>
         /// Retains an additional reference to a reflection mixer.
@@ -4060,7 +4060,7 @@ namespace SteamAudio
         /// <param name="effect">[out] The created path effect.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplPathEffectCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error PathEffectCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.PathEffectSettings effectSettings, out IPL.PathEffect effect);
+        public static extern IPL.Error PathEffectCreate(IPL.Context context, in IPL.AudioSettings audioSettings, in IPL.PathEffectSettings effectSettings, out IPL.PathEffect effect);
         
         /// <summary>
         /// Retains an additional reference to a path effect.
@@ -4231,13 +4231,13 @@ namespace SteamAudio
         /// <param name="identifier">The identifier of the baked data layer to delete.</param>
         /// <param name="probeBatch">The probe batch.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchRemoveData", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void ProbeBatchRemoveData(IPL.ProbeBatch probeBatch, ref IPL.BakedDataIdentifier identifier);
+        public static extern void ProbeBatchRemoveData(IPL.ProbeBatch probeBatch, in IPL.BakedDataIdentifier identifier);
         
         /// <param name="probeBatch">The probe batch.</param>
         /// <param name="identifier">The identifier of the baked data layer.</param>
         /// <returns>The size (in bytes) of a specific baked data layer in a probe batch.</returns>
         [DllImport(Library, EntryPoint = "iplProbeBatchGetDataSize", CallingConvention = CallingConvention.Cdecl)]
-        public static extern ulong ProbeBatchGetDataSize(IPL.ProbeBatch probeBatch, ref IPL.BakedDataIdentifier identifier);
+        public static extern ulong ProbeBatchGetDataSize(IPL.ProbeBatch probeBatch, in IPL.BakedDataIdentifier identifier);
         
         /// <summary>
         /// Bakes a single layer of reflections data in a probe batch.
@@ -4293,7 +4293,7 @@ namespace SteamAudio
         /// <param name="simulator">[out] The created simulator.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplSimulatorCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error SimulatorCreate(IPL.Context context, ref IPL.SimulationSettings settings, out IPL.Simulator simulator);
+        public static extern IPL.Error SimulatorCreate(IPL.Context context, in IPL.SimulationSettings settings, out IPL.Simulator simulator);
         
         /// <summary>
         /// Retains an additional reference to a simulator.
@@ -4356,7 +4356,7 @@ namespace SteamAudio
         /// any synchronization between the calls.</param>
         /// <param name="sharedInputs">The shared input parameters to set.</param>
         [DllImport(Library, EntryPoint = "iplSimulatorSetSharedInputs", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SimulatorSetSharedInputs(IPL.Simulator simulator, IPL.SimulationFlags flags, ref IPL.SimulationSharedInputs sharedInputs);
+        public static extern void SimulatorSetSharedInputs(IPL.Simulator simulator, IPL.SimulationFlags flags, in IPL.SimulationSharedInputs sharedInputs);
         
         /// <summary>
         /// Commits changes to the scene or probe batches used for simulation.
@@ -4411,7 +4411,7 @@ namespace SteamAudio
         /// <param name="source">[out] The created source.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         [DllImport(Library, EntryPoint = "iplSourceCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error SourceCreate(IPL.Simulator simulator, ref IPL.SourceSettings settings, out IPL.Source source);
+        public static extern IPL.Error SourceCreate(IPL.Simulator simulator, in IPL.SourceSettings settings, out IPL.Source source);
         
         /// <summary>
         /// Retains an additional reference to a source.
@@ -4455,7 +4455,7 @@ namespace SteamAudio
         /// any synchronization between the calls.</param>
         /// <param name="inputs">The input parameters to set.</param>
         [DllImport(Library, EntryPoint = "iplSourceSetInputs", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SourceSetInputs(IPL.Source source, IPL.SimulationFlags flags, ref IPL.SimulationInputs inputs);
+        public static extern void SourceSetInputs(IPL.Source source, IPL.SimulationFlags flags, in IPL.SimulationInputs inputs);
         
         /// <summary>
         /// Retrieves simulation results for a source.
@@ -4475,7 +4475,7 @@ namespace SteamAudio
         /// <param name="model">The distance attenuation model to use.</param>
         /// <returns>The distance attenuation to apply, between @c 0 and @c 1.</returns>
         [DllImport(Library, EntryPoint = "iplDistanceAttenuationCalculate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern float DistanceAttenuationCalculate(IPL.Context context, IPL.Vector3 source, IPL.Vector3 listener, ref IPL.DistanceAttenuationModel model);
+        public static extern float DistanceAttenuationCalculate(IPL.Context context, IPL.Vector3 source, IPL.Vector3 listener, in IPL.DistanceAttenuationModel model);
         
         /// <summary>
         /// Calculates the air absorption coefficients between a source and a listener.
@@ -4486,7 +4486,7 @@ namespace SteamAudio
         /// <param name="model">The air absorption model to use.</param>
         /// <param name="airAbsorption">[out] The 3-band air absorption coefficients, each between @c 0 and @c 1.</param>
         [DllImport(Library, EntryPoint = "iplAirAbsorptionCalculate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void AirAbsorptionCalculate(IPL.Context context, IPL.Vector3 source, IPL.Vector3 listener, ref IPL.AirAbsorptionModel model, out float airAbsorption);
+        public static extern void AirAbsorptionCalculate(IPL.Context context, IPL.Vector3 source, IPL.Vector3 listener, in IPL.AirAbsorptionModel model, out float airAbsorption);
         
         /// <summary>
         /// Calculates the attenuation of a source due to its directivity pattern and orientation relative to a listener.
@@ -4497,7 +4497,7 @@ namespace SteamAudio
         /// <param name="model">The directivity pattern to use.</param>
         /// <returns>The directivity value to apply, between @c 0 and @c 1.</returns>
         [DllImport(Library, EntryPoint = "iplDirectivityCalculate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern float DirectivityCalculate(IPL.Context context, IPL.CoordinateSpace3 source, IPL.Vector3 listener, ref IPL.Directivity model);
+        public static extern float DirectivityCalculate(IPL.Context context, IPL.CoordinateSpace3 source, IPL.Vector3 listener, in IPL.Directivity model);
         
         public const uint VersionMajor = 4;
         

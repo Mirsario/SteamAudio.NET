@@ -87,7 +87,7 @@ namespace Tests
 
 					IPL.BinauralEffectApply(iplBinauralEffect, ref binauralEffectParams, ref iplInputBuffer, ref iplOutputBuffer);
 
-					IPL.AudioBufferInterleave(iplContext, ref iplOutputBuffer, ref Unsafe.AsRef<float>((void*)tempInterlacingBuffer));
+					IPL.AudioBufferInterleave(iplContext, in iplOutputBuffer, in Unsafe.AsRef<float>((void*)tempInterlacingBuffer));
 
 					al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Stereo, (void*)tempInterlacingBuffer, AudioFrameSizeInBytes * 2, iplAudioSettings.SamplingRate);
 #else
@@ -250,7 +250,7 @@ namespace Tests
 				Version = IPL.Version,
 			};
 
-			IPL.ContextCreate(ref contextSettings, out iplContext);
+			IPL.ContextCreate(in contextSettings, out iplContext);
 
 			Console.WriteLine("Created SteamAudio context.");
 
@@ -265,7 +265,7 @@ namespace Tests
 				Type = IPL.HrtfType.Default
 			};
 
-			IPL.HrtfCreate(iplContext, ref iplAudioSettings, ref hrtfSettings, out iplHrtf);
+			IPL.HrtfCreate(iplContext, in iplAudioSettings, in hrtfSettings, out iplHrtf);
 
 			// Binaural Effect
 
@@ -273,7 +273,7 @@ namespace Tests
 				Hrtf = iplHrtf
 			};
 
-			IPL.BinauralEffectCreate(iplContext, ref iplAudioSettings, ref binauralEffectSettings, out iplBinauralEffect);
+			IPL.BinauralEffectCreate(iplContext, in iplAudioSettings, in binauralEffectSettings, out iplBinauralEffect);
 
 			// Audio Buffers
 
@@ -288,6 +288,8 @@ namespace Tests
 
 		private static void UnloadSteamAudio()
 		{
+			IPL.AudioBufferFree(iplContext, ref iplInputBuffer);
+			IPL.AudioBufferFree(iplContext, ref iplOutputBuffer);
 			IPL.BinauralEffectRelease(ref iplBinauralEffect);
 			IPL.HrtfRelease(ref iplHrtf);
 			IPL.ContextRelease(ref iplContext);

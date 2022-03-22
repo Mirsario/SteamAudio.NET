@@ -199,7 +199,20 @@ namespace CodeGenerator
 
 						if (paragraphText.StartsWith("[out]")) {
 							refParameterType.Kind = CSharpRefKind.Out;
-						} else if (paragraphText.StartsWith("[in]")) {
+							return;
+						}
+						
+						if (!paragraphText.StartsWith("[in, out]")) {
+							// Unfortunately, the above checks are still not enough.
+
+							if (paragraphText.Contains("to allocate") || paragraphText.Contains("to free")) {
+								return;
+							}
+
+							if (function.Name.Contains("Release")) {
+								return;
+							}
+
 							refParameterType.Kind = CSharpRefKind.In;
 						}
 					}),
