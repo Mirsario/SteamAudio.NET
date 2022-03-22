@@ -1,23 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	<OutputType>Library</OutputType>
-	<TargetFramework>netcoreapp3.1</TargetFramework>
-	<Platforms>AnyCPU</Platforms>
-	<AssemblyName>SteamAudio.NET</AssemblyName>
-	<RootNamespace>SteamAudio</RootNamespace>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<TieredCompilation>false</TieredCompilation>
-	<ApplicationIcon />
-	<StartupObject />
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<Platforms>AnyCPU</Platforms>
+		<AssemblyName>SteamAudio.NET</AssemblyName>
+		<RootNamespace>SteamAudio</RootNamespace>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <Optimize>true</Optimize>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<Optimize>true</Optimize>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <Optimize>false</Optimize>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<Optimize>false</Optimize>
+	</PropertyGroup>
+
 
 </Project>

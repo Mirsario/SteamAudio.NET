@@ -1,26 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6</TargetFramework>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <ItemGroup>
-	<ProjectReference Include="..\Src\SteamAudio.NET.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Src\SteamAudio.NET.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-	<Compile Remove="References\**" />
-	<EmbeddedResource Remove="References\**" />
-	<None Remove="References\**" />
-    <None Update="app.config" CopyToOutputDirectory="Always" />
-    <None Update="SteamAudio.NET.dll.config" CopyToOutputDirectory="Always" />
-  </ItemGroup>
-	
+	<ItemGroup>
+		<Compile Remove="References\**" />
+		<EmbeddedResource Remove="References\**" />
+		<None Remove="References\**" />
+		<None Update="app.config" CopyToOutputDirectory="Always" />
+		<None Update="SteamAudio.NET.dll.config" CopyToOutputDirectory="Always" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Silk.NET.OpenAL " Version="2.13.0" />
 		<PackageReference Include="Silk.NET.OpenAL.Extensions.EXT" Version="2.13.0" />
