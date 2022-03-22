@@ -65,7 +65,7 @@ namespace Tests
 
 				void StreamBuffer(uint bufferId, Vector3 position)
 				{
-					float* inputBufferChannelPtr = ((float**)iplInputBuffer.data)[0];
+					float* inputBufferChannelPtr = ((float**)iplInputBuffer.Data)[0];
 					var inputBufferByteSpan = new Span<byte>(inputBufferChannelPtr, AudioFrameSizeInBytes);
 					//var inputBufferFloatSpan = new Span<float>(inputBufferChannelPtr, AudioFrameSize);
 					int bytesRead = audioStream.Read(inputBufferByteSpan);
@@ -79,17 +79,17 @@ namespace Tests
 
 #if !NO_PROCESSING
 					var binauralEffectParams = new IPL.BinauralEffectParams {
-						hrtf = iplHrtf,
-						direction = new IPL.Vector3(position.X, position.Y, position.Z),
-						interpolation = IPL.HrtfInterpolation.Nearest,
-						spatialBlend = 1f,
+						Hrtf = iplHrtf,
+						Direction = new IPL.Vector3(position.X, position.Y, position.Z),
+						Interpolation = IPL.HrtfInterpolation.Nearest,
+						SpatialBlend = 1f,
 					};
 
 					IPL.BinauralEffectApply(iplBinauralEffect, ref binauralEffectParams, ref iplInputBuffer, ref iplOutputBuffer);
 
 					IPL.AudioBufferInterleave(iplContext, ref iplOutputBuffer, ref Unsafe.AsRef<float>((void*)tempInterlacingBuffer));
 
-					al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Stereo, (void*)tempInterlacingBuffer, AudioFrameSizeInBytes * 2, iplAudioSettings.samplingRate);
+					al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Stereo, (void*)tempInterlacingBuffer, AudioFrameSizeInBytes * 2, iplAudioSettings.SamplingRate);
 #else
 					al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Mono, (void*)inputBufferChannelPtr, AudioFrameSizeInBytes, iplAudioSettings.samplingRate);
 #endif
@@ -247,7 +247,7 @@ namespace Tests
 			// Steam Audio Initialization
 
 			var contextSettings = new IPL.ContextSettings {
-				version = IPL.Version,
+				Version = IPL.Version,
 			};
 
 			IPL.ContextCreate(ref contextSettings, out iplContext);
@@ -255,14 +255,14 @@ namespace Tests
 			Console.WriteLine("Created SteamAudio context.");
 
 			iplAudioSettings = new IPL.AudioSettings {
-				samplingRate = SamplingRate,
-				frameSize = AudioFrameSize
+				SamplingRate = SamplingRate,
+				FrameSize = AudioFrameSize
 			};
 
 			// HRTF
 
 			var hrtfSettings = new IPL.HrtfSettings {
-				type = IPL.HrtfType.Default
+				Type = IPL.HrtfType.Default
 			};
 
 			IPL.HrtfCreate(iplContext, ref iplAudioSettings, ref hrtfSettings, out iplHrtf);
@@ -270,7 +270,7 @@ namespace Tests
 			// Binaural Effect
 
 			var binauralEffectSettings = new IPL.BinauralEffectSettings {
-				hrtf = iplHrtf
+				Hrtf = iplHrtf
 			};
 
 			IPL.BinauralEffectCreate(iplContext, ref iplAudioSettings, ref binauralEffectSettings, out iplBinauralEffect);
@@ -278,8 +278,8 @@ namespace Tests
 			// Audio Buffers
 
 			// Input is mono, output is stereo.
-			IPL.AudioBufferAllocate(iplContext, 1, iplAudioSettings.frameSize, ref iplInputBuffer);
-			IPL.AudioBufferAllocate(iplContext, 2, iplAudioSettings.frameSize, ref iplOutputBuffer);
+			IPL.AudioBufferAllocate(iplContext, 1, iplAudioSettings.FrameSize, ref iplInputBuffer);
+			IPL.AudioBufferAllocate(iplContext, 2, iplAudioSettings.FrameSize, ref iplOutputBuffer);
 
 			// Celebrate!
 
