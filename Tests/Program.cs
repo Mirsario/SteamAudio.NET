@@ -83,7 +83,9 @@ namespace Tests
 
 					al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Stereo, (void*)iplOutputBuffer.interleavedBuffer, AudioFrameSizeInBytes * 2, iplRenderingSettings.samplingRate);
 #else
-					al.BufferData(bufferId, BufferFormatMonoFloat32, frameInputBuffer, frameInputBuffer.Length, SamplingRate);
+					fixed (byte* frameInputBufferPtr = frameInputBuffer) {
+						al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Mono, frameInputBufferPtr, frameInputBuffer.Length, SamplingRate);
+					}
 #endif
 
 					CheckALErrors();
