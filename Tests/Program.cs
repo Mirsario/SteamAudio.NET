@@ -270,7 +270,7 @@ namespace Tests
 				type = IPL.HrtfType.Default
 			};
 
-			IPL.HRTFCreate(iplContext, ref iplAudioSettings, ref hrtfSettings, out iplHrtf);
+			IPL.HrtfCreate(iplContext, ref iplAudioSettings, ref hrtfSettings, out iplHrtf);
 
 			// Audio Formats
 
@@ -309,7 +309,7 @@ namespace Tests
 		private static void UnloadSteamAudio()
 		{
 			IPL.BinauralEffectRelease(ref iplBinauralEffect);
-			IPL.HRTFRelease(ref iplHrtf);
+			IPL.HrtfRelease(ref iplHrtf);
 			IPL.ContextRelease(ref iplContext);
 		}
 	}
