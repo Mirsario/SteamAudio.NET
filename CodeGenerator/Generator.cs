@@ -175,16 +175,6 @@ namespace CodeGenerator
 						csEnumItem.Name = name;
 					}),
 
-					// Fix weird 'ref void' parameters.
-					e => e.MapAll<CppParameter>().CSharpAction((converter, element) => {
-						var parameter = (CSharpParameter)element;
-						var parameterType = parameter.ParameterType;
-
-						if (parameterType is CSharpRefType refType && refType.ElementType is CSharpPrimitiveType primitiveType && primitiveType.Kind == CSharpPrimitiveKind.Void) {
-							parameter.ParameterType = CSharpPrimitiveType.IntPtr;
-						}
-					}),
-
 					// Turn some 'ref' parameters to 'out' or 'in' based on \param documentation.
 					e => e.MapAll<CppParameter>().CSharpAction((converter, element) => {
 						var parameter = (CSharpParameter)element;
@@ -232,32 +222,18 @@ namespace CodeGenerator
 
 					// Execute replacements from the NameReplacements dictionaries for all C# types.
 					e => e.MapAll<CppElement>().CSharpAction((converter, csElement) => {
-						string oldName;
-
-						if (csElement is ICSharpMember csMember) {
-							oldName = csMember.Name;
-						} else if (csElement is CSharpEnumItem csEnumItem) {
-							oldName = csEnumItem.Name;
-						} else {
+						if (csElement is not ICSharpMember csMember) {
 							return;
 						}
 
+						string oldName = csMember.Name;
 						string newName = oldName;
 
 						foreach (var pair in NameReplacements) {
 							newName = newName.Replace(pair.Key, pair.Value);
 						}
 
-						if (newName != oldName) {
-							switch (csElement) {
-								case ICSharpMember csMember2:
-									csMember2.Name = newName;
-									break;
-								case CSharpEnumItem csEnumItem2:
-									csEnumItem2.Name = newName;
-									break;
-							}
-						}
+						csMember.Name = newName;
 					}),
 
 					// Lazy fixes for conversion mistakes.

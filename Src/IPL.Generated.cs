@@ -6,6 +6,7 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+
 using System;
 
 namespace SteamAudio
@@ -3006,19 +3007,13 @@ namespace SteamAudio
         [DllImport(Library, EntryPoint = "iplSerializedObjectRelease", CallingConvention = CallingConvention.Cdecl)]
         public static extern void SerializedObjectRelease(ref IPL.SerializedObject serializedObject);
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>The size in bytes of the serialized data contained in a serialized object.</returns>
         /// <param name="serializedObject">The serialized object.</param>
+        /// <returns>The size in bytes of the serialized data contained in a serialized object.</returns>
         [DllImport(Library, EntryPoint = "iplSerializedObjectGetSize", CallingConvention = CallingConvention.Cdecl)]
         public static extern ulong SerializedObjectGetSize(IPL.SerializedObject serializedObject);
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>A pointer to a byte array of serialized data contained in a serialized object.</returns>
         /// <param name="serializedObject">The serialized object.</param>
+        /// <returns>A pointer to a byte array of serialized data contained in a serialized object.</returns>
         [DllImport(Library, EntryPoint = "iplSerializedObjectGetData", CallingConvention = CallingConvention.Cdecl)]
         public static extern ref byte SerializedObjectGetData(IPL.SerializedObject serializedObject);
         
@@ -3072,11 +3067,8 @@ namespace SteamAudio
         [DllImport(Library, EntryPoint = "iplOpenCLDeviceListRelease", CallingConvention = CallingConvention.Cdecl)]
         public static extern void OpenCLDeviceListRelease(ref IPL.OpenCLDeviceList deviceList);
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>The number of devices in an OpenCL device list.</returns>
         /// <param name="deviceList">The OpenCL device list.</param>
+        /// <returns>The number of devices in an OpenCL device list.</returns>
         [DllImport(Library, EntryPoint = "iplOpenCLDeviceListGetNumDevices", CallingConvention = CallingConvention.Cdecl)]
         public static extern int OpenCLDeviceListGetNumDevices(IPL.OpenCLDeviceList deviceList);
         
@@ -3423,8 +3415,8 @@ namespace SteamAudio
         /// <summary>
         /// Frees an audio buffer.
         /// </summary>
-        /// <param name="context">The context used to initialize Steam Audio.</param>
         /// <param name="audioBuffer">The audio buffer to free.</param>
+        /// <param name="context">The context used to initialize Steam Audio.</param>
         [DllImport(Library, EntryPoint = "iplAudioBufferFree", CallingConvention = CallingConvention.Cdecl)]
         public static extern void AudioBufferFree(IPL.Context context, ref IPL.AudioBuffer audioBuffer);
         
@@ -3501,7 +3493,7 @@ namespace SteamAudio
         /// if possible.This function is not thread-safe. Do not simultaneously call it from multiple threads.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplHRTFCreate", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Error HRTFCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.HrtfSettings hrtfSettings, out IPL.Hrtf hrtf);
+        public static extern IPL.Error HrtfCreate(IPL.Context context, ref IPL.AudioSettings audioSettings, ref IPL.HrtfSettings hrtfSettings, out IPL.Hrtf hrtf);
         
         /// <summary>
         /// Retains an additional reference to an HRTF object.
@@ -3509,14 +3501,14 @@ namespace SteamAudio
         /// <param name="hrtf">The HRTF object to retain a reference to.</param>
         /// <returns>The additional reference to the HRTF object.</returns>
         [DllImport(Library, EntryPoint = "iplHRTFRetain", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IPL.Hrtf HRTFRetain(IPL.Hrtf hrtf);
+        public static extern IPL.Hrtf HrtfRetain(IPL.Hrtf hrtf);
         
         /// <summary>
         /// Releases a reference to an HRTF object.
         /// </summary>
         /// <param name="hrtf">The HRTF object to release a reference to.</param>
         [DllImport(Library, EntryPoint = "iplHRTFRelease", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void HRTFRelease(ref IPL.Hrtf hrtf);
+        public static extern void HrtfRelease(ref IPL.Hrtf hrtf);
         
         /// <summary>
         /// Creates a panning effect.
@@ -4141,20 +4133,14 @@ namespace SteamAudio
         [DllImport(Library, EntryPoint = "iplProbeArrayGenerateProbes", CallingConvention = CallingConvention.Cdecl)]
         public static extern void ProbeArrayGenerateProbes(IPL.ProbeArray probeArray, IPL.Scene scene, ref IPL.ProbeGenerationParams @params);
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>The number of probes in a probe array.</returns>
         /// <param name="probeArray">The probe array.</param>
+        /// <returns>The number of probes in a probe array.</returns>
         [DllImport(Library, EntryPoint = "iplProbeArrayGetNumProbes", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ProbeArrayGetNumProbes(IPL.ProbeArray probeArray);
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>The probe at a given index in a probe array.</returns>
         /// <param name="probeArray">The probe array.</param>
         /// <param name="index">Index of the probe within the array.</param>
+        /// <returns>The probe at a given index in a probe array.</returns>
         [DllImport(Library, EntryPoint = "iplProbeArrayGetProbe", CallingConvention = CallingConvention.Cdecl)]
         public static extern IPL.Sphere ProbeArrayGetProbe(IPL.ProbeArray probeArray, int index);
         
@@ -4196,40 +4182,37 @@ namespace SteamAudio
         /// <summary>
         /// Saves a probe batch to a serialized object. Typically, the serialized object will then be saved to disk.
         /// </summary>
-        /// <param name="probeBatch">The probe batch to save.</param>
         /// <param name="serializedObject">The serialized object into which to save the probe batch.</param>
+        /// <param name="probeBatch">The probe batch to save.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchSave", CallingConvention = CallingConvention.Cdecl)]
         public static extern void ProbeBatchSave(IPL.ProbeBatch probeBatch, IPL.SerializedObject serializedObject);
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>The number of probes in a probe batch.</returns>
         /// <param name="probeBatch">The probe batch.</param>
+        /// <returns>The number of probes in a probe batch.</returns>
         [DllImport(Library, EntryPoint = "iplProbeBatchGetNumProbes", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ProbeBatchGetNumProbes(IPL.ProbeBatch probeBatch);
         
         /// <summary>
         /// Adds a probe to a batch. The new probe will be added as the last probe in the batch.
         /// </summary>
-        /// <param name="probeBatch">The probe batch.</param>
         /// <param name="probe">The probe to add.</param>
+        /// <param name="probeBatch">The probe batch.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchAddProbe", CallingConvention = CallingConvention.Cdecl)]
         public static extern void ProbeBatchAddProbe(IPL.ProbeBatch probeBatch, IPL.Sphere probe);
         
         /// <summary>
         /// Adds every probe in an array to a batch. The new probes will be added, in order, at the end of the batch.
         /// </summary>
-        /// <param name="probeBatch">The probe batch.</param>
         /// <param name="probeArray">The probe array containing the probes to add.</param>
+        /// <param name="probeBatch">The probe batch.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchAddProbeArray", CallingConvention = CallingConvention.Cdecl)]
         public static extern void ProbeBatchAddProbeArray(IPL.ProbeBatch probeBatch, IPL.ProbeArray probeArray);
         
         /// <summary>
         /// Removes a probe from a batch.
         /// </summary>
-        /// <param name="probeBatch">The probe batch.</param>
         /// <param name="index">Index of the probe to remove.</param>
+        /// <param name="probeBatch">The probe batch.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchRemoveProbe", CallingConvention = CallingConvention.Cdecl)]
         public static extern void ProbeBatchRemoveProbe(IPL.ProbeBatch probeBatch, int index);
         
@@ -4245,17 +4228,14 @@ namespace SteamAudio
         /// <summary>
         /// Deletes a specific layer of data from a probe batch.
         /// </summary>
-        /// <param name="probeBatch">The probe batch.</param>
         /// <param name="identifier">The identifier of the baked data layer to delete.</param>
+        /// <param name="probeBatch">The probe batch.</param>
         [DllImport(Library, EntryPoint = "iplProbeBatchRemoveData", CallingConvention = CallingConvention.Cdecl)]
         public static extern void ProbeBatchRemoveData(IPL.ProbeBatch probeBatch, ref IPL.BakedDataIdentifier identifier);
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>The size (in bytes) of a specific baked data layer in a probe batch.</returns>
         /// <param name="probeBatch">The probe batch.</param>
         /// <param name="identifier">The identifier of the baked data layer.</param>
+        /// <returns>The size (in bytes) of a specific baked data layer in a probe batch.</returns>
         [DllImport(Library, EntryPoint = "iplProbeBatchGetDataSize", CallingConvention = CallingConvention.Cdecl)]
         public static extern ulong ProbeBatchGetDataSize(IPL.ProbeBatch probeBatch, ref IPL.BakedDataIdentifier identifier);
         
@@ -4451,16 +4431,16 @@ namespace SteamAudio
         /// <summary>
         /// Adds a source to the set of sources processed by a simulator in subsequent simulations.
         /// </summary>
-        /// <param name="simulator">The simulator being used.</param>
         /// <param name="source">The source to add.</param>
+        /// <param name="simulator">The simulator being used.</param>
         [DllImport(Library, EntryPoint = "iplSourceAdd", CallingConvention = CallingConvention.Cdecl)]
         public static extern void SourceAdd(IPL.Source source, IPL.Simulator simulator);
         
         /// <summary>
         /// Removes a source from the set of sources processed by a simulator in subsequent simulations.
         /// </summary>
-        /// <param name="simulator">The simulator being used.</param>
         /// <param name="source">The source to remove.</param>
+        /// <param name="simulator">The simulator being used.</param>
         [DllImport(Library, EntryPoint = "iplSourceRemove", CallingConvention = CallingConvention.Cdecl)]
         public static extern void SourceRemove(IPL.Source source, IPL.Simulator simulator);
         
