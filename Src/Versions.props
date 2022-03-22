@@ -1,7 +1,7 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup>
-		<SteamAudioBindingsVersion>1.0.0</SteamAudioBindingsVersion>
+		<SteamAudioBindingsVersion>1.0.8</SteamAudioBindingsVersion>
 	</PropertyGroup>
 
 </Project>

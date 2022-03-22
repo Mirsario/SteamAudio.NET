@@ -4498,5 +4498,13 @@ namespace SteamAudio
         /// <returns>The directivity value to apply, between @c 0 and @c 1.</returns>
         [DllImport(Library, EntryPoint = "iplDirectivityCalculate", CallingConvention = CallingConvention.Cdecl)]
         public static extern float DirectivityCalculate(IPL.Context context, IPL.CoordinateSpace3 source, IPL.Vector3 listener, ref IPL.Directivity model);
+        
+        public const uint VersionMajor = 4;
+        
+        public const uint VersionMinor = 0;
+        
+        public const uint VersionPatch = 3;
+        
+        public const uint Version = (((uint)(VersionMajor)<<16)|((uint)(VersionMinor)<<8)|((uint)(VersionPatch)));
     }
 }

@@ -246,13 +246,8 @@ namespace Tests
 		{
 			// Steam Audio Initialization
 
-			const uint SteamAudioVersionMajor = 4;
-			const uint SteamAudioVersionMinor = 0;
-			const uint SteamAudioVersionPatch = 3;
-			const uint SteamAudioVersion = (((uint)(SteamAudioVersionMajor) << 16) | ((uint)(SteamAudioVersionMinor) << 8) | ((uint)(SteamAudioVersionPatch)));
-
 			var contextSettings = new IPL.ContextSettings {
-				version = SteamAudioVersion,
+				version = IPL.Version,
 			};
 
 			IPL.ContextCreate(ref contextSettings, out iplContext);

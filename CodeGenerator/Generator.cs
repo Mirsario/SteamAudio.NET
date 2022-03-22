@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
+using CodeGenerator.Plugins;
 using CppAst;
 using CppAst.CodeGen.Common;
 using CppAst.CodeGen.CSharp;
@@ -76,7 +78,6 @@ namespace CodeGenerator
 
 			Console.WriteLine($"Processing file '{Path.GetFileName(inputFile)}'...");
 
-			//Writing
 			var converterOptions = new CSharpConverterOptions() {
 				DefaultNamespace = defaultNamespace,
 				DefaultClassLib = defaultClass,
@@ -87,28 +88,44 @@ namespace CodeGenerator
 				ParseMacros = true,
 				TypedefCodeGenKind = CppTypedefCodeGenKind.NoWrap,
 
+				Plugins = {
+					new CustomMacroConverterPlugin {
+						Rules = {
+							// There's A LOT of code related to this, but all this does is just convert ~4 macros to constants.......
+							new CustomMacroToConstantRule("STEAMAUDIO_VERSION", CSharpPrimitiveType.UInt(), outputFile, defaultClass) {
+								NameChanger = n => StringUtils.SnakeCaseToCamelCase(StringUtils.RemovePrefixWithSeparator(n, '_')),
+								ValueChanger = v => v.Replace("uint32_t", "uint"),
+							},
+							new CustomMacroToConstantRule("STEAMAUDIO_(VERSION_.+)", CSharpPrimitiveType.UInt(), outputFile, defaultClass) {
+								NameChanger = n => StringUtils.SnakeCaseToCamelCase(StringUtils.RemovePrefixWithSeparator(n, '_')),
+							},
+						}
+					}
+				},
+
 				MappingRules = {
 					// Remove prefixes from elements' names.
 					e => e.MapAll<CppElement>().CSharpAction((converter, element) => {
-						switch (element) {
-							case CSharpNamedType csNamedType:
-								csNamedType.Name = StringUtils.Capitalize(StringUtils.RemovePrefix(csNamedType.Name, "IPL"));
-								break;
-							case CSharpEnumItem csEnumItem:
-								csEnumItem.Name = StringUtils.Capitalize(StringUtils.RemovePrefix(csEnumItem.Name, "IPL_"));
-								break;
-							case CSharpMethod csMethod:
-								string oldName = csMethod.Name;
-								string newName = StringUtils.Capitalize(StringUtils.RemovePrefix(oldName, "ipl"));
+						if (element is not ICSharpMember csMember) {
+							return;
+						}
 
-								// Add an EntryPoint parameter to the DllImportAttribute, so that this rename doesn't break anything.
-								if (csMethod.Attributes.FirstOrDefault(attrib => attrib is CSharpDllImportAttribute) is CSharpDllImportAttribute dllImportAttribute) {
-									dllImportAttribute.EntryPoint = $@"""{oldName}""";
-								}
+						string prefix = element switch {
+							CSharpNamedType => "IPL",
+							CSharpEnumItem => "IPL_",
+							CSharpMethod => "ipl",
+							_ => null,
+						};
 
-								csMethod.Name = newName;
+						if (prefix != null) {
+							string newName = StringUtils.Capitalize(StringUtils.RemovePrefix(csMember.Name, prefix));
 
-								break;
+							// Add an EntryPoint parameter to the DllImportAttribute, so that this rename doesn't break anything.
+							if (csMember is CSharpMethod csMethod && csMethod.Attributes.FirstOrDefault(attrib => attrib is CSharpDllImportAttribute) is CSharpDllImportAttribute dllImportAttribute) {
+								dllImportAttribute.EntryPoint = $@"""{csMember.Name}""";
+							}
+
+							csMember.Name = newName;
 						}
 					}),
 
@@ -145,34 +162,8 @@ namespace CodeGenerator
 					e => e.MapAll<CppEnumItem>().CSharpAction((converter, element) => {
 						var csEnumItem = (CSharpEnumItem)element;
 
-						string name = csEnumItem.Name;
-						string[] splits = name.Split('_');
-
-						if (splits.Length > 1) {
-							string prefix = splits[0];
-
-							// Remove (potentially partial) prefixes of enum's name on its items' names.
-							if (name.Length > prefix.Length + 1 && name.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase)) {
-								name = name.Substring(prefix.Length + 1);
-								splits = name.Split('_');
-							}
-
-							// Capitalize each part
-							for (int i = 0; i < splits.Length; i++) {
-								string split = splits[i];
-								char[] chars = split.ToCharArray();
-
-								for (int j = 0; j < chars.Length; j++) {
-									chars[j] = j == 0 ? char.ToUpper(chars[j]) : char.ToLower(chars[j]);
-								}
-
-								splits[i] = new string(chars);
-							}
-
-							name = string.Join(string.Empty, splits);
-						}
-
-						csEnumItem.Name = name;
+						csEnumItem.Name = StringUtils.RemovePrefixWithSeparator(csEnumItem.Name, '_');
+						csEnumItem.Name = StringUtils.SnakeCaseToCamelCase(csEnumItem.Name);
 					}),
 
 					// Turn some 'ref' parameters to 'out' or 'in' based on \param documentation.

@@ -1,4 +1,6 @@
-﻿namespace CodeGenerator
+﻿using System;
+
+namespace CodeGenerator
 {
 	internal static class StringUtils
 	{
@@ -10,6 +12,17 @@
 				chars[0] = char.ToUpper(chars[0]);
 
 				return new string(chars);
+			}
+
+			return text;
+		}
+
+		public static string RemovePrefixWithSeparator(string text, char separator)
+		{
+			int index = text.IndexOf(separator);
+
+			if (index >= 0 && index + 1 < text.Length) {
+				text = text.Substring(index + 1);
 			}
 
 			return text;
@@ -31,6 +44,27 @@
 			}
 
 			return text;
+		}
+
+		public static string SnakeCaseToCamelCase(string input)
+		{
+			string[] splits = input.Split('_');
+
+			// Capitalize each part
+			for (int i = 0; i < splits.Length; i++) {
+				string split = splits[i];
+				char[] chars = split.ToCharArray();
+
+				for (int j = 0; j < chars.Length; j++) {
+					chars[j] = j == 0 ? char.ToUpper(chars[j]) : char.ToLower(chars[j]);
+				}
+
+				splits[i] = new string(chars);
+			}
+
+			string result = string.Join(string.Empty, splits);
+
+			return result;
 		}
 	}
 }
