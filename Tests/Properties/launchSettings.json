@@ -3,7 +3,8 @@
     "SteamAudioTest": {
       "commandName": "Project",
       "commandLineArgs": "Quincas Moreira - Moskito.raw",
-      "workingDirectory": "."
+      "workingDirectory": ".",
+      "nativeDebugging": true
     }
   }
 }

@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Silk.NET.OpenAL;
@@ -27,19 +28,19 @@ namespace Tests
 		private static AL al;
 		private static ALContext alc;
 		//Steam Audio
-		private static IntPtr iplContext;
-		private static IntPtr iplBinauralRenderer;
-		private static IntPtr iplBinauralEffect;
-		private static IPL.AudioFormat iplFormatMono;
-		private static IPL.AudioFormat iplFormatStereo;
+		private static IPL.Context iplContext;
+		private static IPL.Hrtf iplHrtf;
+		private static IPL.BinauralEffect iplBinauralEffect;
 		private static IPL.AudioBuffer iplInputBuffer;
 		private static IPL.AudioBuffer iplOutputBuffer;
-		private static IPL.RenderingSettings iplRenderingSettings;
+		private static IPL.AudioSettings iplAudioSettings;
 
 		private static unsafe void Main(string[] args)
 		{
 			Console.WriteLine($"Working Directory: '{Path.GetFullPath(".")}'.");
 			Console.WriteLine($"Launch Arguments: '{string.Join(' ', args)}'.");
+
+			IntPtr tempInterlacingBuffer = IntPtr.Zero;
 
 			try {
 				var stopwatch = new Stopwatch();
@@ -47,15 +48,11 @@ namespace Tests
 				using var audioStream = new MemoryStream(bytes);
 
 				PrepareOpenAL();
-
-#if !NO_PROCESSING
 				PrepareSteamAudio();
-#endif
 
 				const int NumBuffers = 2;
 
 				uint* alBuffers = stackalloc uint[NumBuffers];
-				byte[] frameInputBuffer = new byte[AudioFrameSizeInBytes];
 
 				al.GenBuffers(NumBuffers, alBuffers);
 
@@ -63,29 +60,38 @@ namespace Tests
 
 				stopwatch.Start();
 
+				// SteamAudio uses non-interlaced audio buffers, while OpenAL wants interlaced ones. This "array" is used for conversions.
+				tempInterlacingBuffer = Marshal.AllocHGlobal(AudioFrameSizeInBytes * 2);
+
 				void StreamBuffer(uint bufferId, Vector3 position)
 				{
-					int bytesRead = audioStream.Read(frameInputBuffer, 0, frameInputBuffer.Length);
+					float* inputBufferChannelPtr = ((float**)iplInputBuffer.Data)[0];
+					var inputBufferByteSpan = new Span<byte>(inputBufferChannelPtr, AudioFrameSizeInBytes);
+					//var inputBufferFloatSpan = new Span<float>(inputBufferChannelPtr, AudioFrameSize);
+					int bytesRead = audioStream.Read(inputBufferByteSpan);
 
-					//Loop the audio on stream end.
-					if (bytesRead < frameInputBuffer.Length) {
+					// Loop the audio on stream end.
+					if (bytesRead < AudioFrameSizeInBytes) {
 						audioStream.Position = 0;
 
-						audioStream.Read(frameInputBuffer, 0, frameInputBuffer.Length - bytesRead);
+						audioStream.Read(inputBufferByteSpan.Slice(0, AudioFrameSizeInBytes - bytesRead));
 					}
 
 #if !NO_PROCESSING
-					fixed (byte* ptr = frameInputBuffer) {
-						iplInputBuffer.interleavedBuffer = (IntPtr)ptr;
+					var binauralEffectParams = new IPL.BinauralEffectParams {
+						Hrtf = iplHrtf,
+						Direction = new IPL.Vector3(position.X, position.Y, position.Z),
+						Interpolation = IPL.HrtfInterpolation.Nearest,
+						SpatialBlend = 1f,
+					};
 
-						IPL.ApplyBinauralEffect(iplBinauralEffect, iplBinauralRenderer, iplInputBuffer, new IPL.Vector3(position.X, position.Y, position.Z), IPL.HrtfInterpolation.Nearest, 1f, iplOutputBuffer);
-					}
+					IPL.BinauralEffectApply(iplBinauralEffect, ref binauralEffectParams, ref iplInputBuffer, ref iplOutputBuffer);
 
-					al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Stereo, (void*)iplOutputBuffer.interleavedBuffer, AudioFrameSizeInBytes * 2, iplRenderingSettings.samplingRate);
+					IPL.AudioBufferInterleave(iplContext, in iplOutputBuffer, in Unsafe.AsRef<float>((void*)tempInterlacingBuffer));
+
+					al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Stereo, (void*)tempInterlacingBuffer, AudioFrameSizeInBytes * 2, iplAudioSettings.SamplingRate);
 #else
-					fixed (byte* frameInputBufferPtr = frameInputBuffer) {
-						al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Mono, frameInputBufferPtr, frameInputBuffer.Length, SamplingRate);
-					}
+					al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Mono, (void*)inputBufferChannelPtr, AudioFrameSizeInBytes, iplAudioSettings.samplingRate);
 #endif
 
 					CheckALErrors();
@@ -101,7 +107,7 @@ namespace Tests
 				while (true) {
 					var position = GetRotatingAudioPosition((float)stopwatch.Elapsed.TotalSeconds);
 
-					//Display information
+					// Display information
 
 					Console.SetCursorPosition(cursorPosX, cursorPosY);
 					Console.WriteLine($"Sound position: {position: 0.00;-0.00; 0.00}");
@@ -111,7 +117,7 @@ namespace Tests
 
 					Console.WriteLine($"Stream position: {streamPositionTimeSpan.Minutes:D2}:{streamPositionTimeSpan.Seconds:D2} / {streamLengthTimeSpan.Minutes:D2}:{streamLengthTimeSpan.Seconds:D2}");
 
-					//Update streamed audio
+					// Update streamed audio
 
 					al.GetSourceProperty(sourceId, GetSourceInteger.BuffersProcessed, out int numProcessedBuffers);
 					al.GetSourceProperty(sourceId, GetSourceInteger.BuffersQueued, out int numQueuedBuffers);
@@ -135,7 +141,7 @@ namespace Tests
 						buffersToAdd--;
 					}
 
-					//Start playback whenever it stops
+					// Start playback whenever it stops
 					al.GetSourceProperty(sourceId, GetSourceInteger.SourceState, out int sourceStateInt);
 
 					if ((SourceState)sourceStateInt != SourceState.Playing) {
@@ -144,7 +150,7 @@ namespace Tests
 
 					CheckALErrors();
 
-					//Sleep to not stress the CPU.
+					// Sleep to not stress the CPU.
 					Thread.Sleep(1);
 				}
 			}
@@ -155,6 +161,10 @@ namespace Tests
 			}
 
 			try {
+				if (tempInterlacingBuffer != IntPtr.Zero) {
+					Marshal.FreeHGlobal(tempInterlacingBuffer);
+				}
+
 				UnloadSteamAudio();
 				UnloadOpenAL();
 			}
@@ -236,65 +246,53 @@ namespace Tests
 		{
 			// Steam Audio Initialization
 
-			IPL.CreateContext(null, null, null, out iplContext);
+			var contextSettings = new IPL.ContextSettings {
+				Version = IPL.Version,
+			};
+
+			IPL.ContextCreate(in contextSettings, out iplContext);
 
 			Console.WriteLine("Created SteamAudio context.");
 
-			iplRenderingSettings = new IPL.RenderingSettings {
-				samplingRate = SamplingRate,
-				frameSize = AudioFrameSize
+			iplAudioSettings = new IPL.AudioSettings {
+				SamplingRate = SamplingRate,
+				FrameSize = AudioFrameSize
 			};
 
-			// Binaural Renderer
+			// HRTF
 
-			var hrtfParams = new IPL.HrtfParams {
-				type = IPL.HrtfDatabaseType.Default
+			var hrtfSettings = new IPL.HrtfSettings {
+				Type = IPL.HrtfType.Default
 			};
 
-			IPL.CreateBinauralRenderer(iplContext, iplRenderingSettings, hrtfParams, out iplBinauralRenderer);
-
-			// Audio Formats
-
-			iplFormatMono = new IPL.AudioFormat {
-				channelLayoutType = IPL.ChannelLayoutType.Speakers,
-				channelLayout = IPL.ChannelLayout.Mono,
-				channelOrder = IPL.ChannelOrder.Interleaved
-			};
-			iplFormatStereo = new IPL.AudioFormat {
-				channelLayoutType = IPL.ChannelLayoutType.Speakers,
-				channelLayout = IPL.ChannelLayout.Stereo,
-				channelOrder = IPL.ChannelOrder.Interleaved
-			};
+			IPL.HrtfCreate(iplContext, in iplAudioSettings, in hrtfSettings, out iplHrtf);
 
 			// Binaural Effect
 
-			IPL.CreateBinauralEffect(iplBinauralRenderer, iplFormatMono, iplFormatStereo, out iplBinauralEffect);
+			var binauralEffectSettings = new IPL.BinauralEffectSettings {
+				Hrtf = iplHrtf
+			};
+
+			IPL.BinauralEffectCreate(iplContext, in iplAudioSettings, in binauralEffectSettings, out iplBinauralEffect);
 
 			// Audio Buffers
 
-			iplInputBuffer = new IPL.AudioBuffer {
-				format = iplFormatMono,
-				numSamples = iplRenderingSettings.frameSize,
-				interleavedBuffer = IntPtr.Zero //Will be assigned before use.
-			};
+			// Input is mono, output is stereo.
+			IPL.AudioBufferAllocate(iplContext, 1, iplAudioSettings.FrameSize, ref iplInputBuffer);
+			IPL.AudioBufferAllocate(iplContext, 2, iplAudioSettings.FrameSize, ref iplOutputBuffer);
 
-			IntPtr outputDataPtr = Marshal.AllocHGlobal(AudioFrameSizeInBytes * 2);
-
-			iplOutputBuffer = new IPL.AudioBuffer {
-				format = iplFormatStereo,
-				numSamples = iplRenderingSettings.frameSize,
-				interleavedBuffer = outputDataPtr
-			};
+			// Celebrate!
 
 			Console.WriteLine("SteamAudio is ready.");
 		}
 
 		private static void UnloadSteamAudio()
 		{
-			IPL.DestroyBinauralEffect(ref iplBinauralEffect);
-			IPL.DestroyBinauralRenderer(ref iplBinauralRenderer);
-			IPL.DestroyContext(ref iplContext);
-			IPL.Cleanup();
+			IPL.AudioBufferFree(iplContext, ref iplInputBuffer);
+			IPL.AudioBufferFree(iplContext, ref iplOutputBuffer);
+			IPL.BinauralEffectRelease(ref iplBinauralEffect);
+			IPL.HrtfRelease(ref iplHrtf);
+			IPL.ContextRelease(ref iplContext);
 		}
 	}
 }
