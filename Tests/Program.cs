@@ -272,21 +272,6 @@ namespace Tests
 
 			IPL.HrtfCreate(iplContext, ref iplAudioSettings, ref hrtfSettings, out iplHrtf);
 
-			// Audio Formats
-
-			/*
-			iplFormatMono = new IPL.AudioFormat {
-				channelLayoutType = IPL.ChannelLayoutType.Speakers,
-				channelLayout = IPL.ChannelLayout.Mono,
-				channelOrder = IPL.ChannelOrder.Interleaved
-			};
-			iplFormatStereo = new IPL.AudioFormat {
-				channelLayoutType = IPL.ChannelLayoutType.Speakers,
-				channelLayout = IPL.ChannelLayout.Stereo,
-				channelOrder = IPL.ChannelOrder.Interleaved
-			};
-			*/
-
 			// Binaural Effect
 
 			var binauralEffectSettings = new IPL.BinauralEffectSettings {
