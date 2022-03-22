@@ -17,12 +17,8 @@
 	<Compile Remove="References\**" />
 	<EmbeddedResource Remove="References\**" />
 	<None Remove="References\**" />
-    <None Update="app.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SteamAudio.NET.dll.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Update="app.config" CopyToOutputDirectory="Always" />
+    <None Update="SteamAudio.NET.dll.config" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 </Project>

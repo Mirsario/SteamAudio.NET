@@ -20,10 +20,4 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
 
-  <Import Project="$(SolutionDir)SolutionDefines.targets" Condition="exists('$(SolutionDir)SolutionDefines.targets')" />
-
-  <ItemGroup>
-    <None Include="..\.editorconfig" Link=".editorconfig" />
-  </ItemGroup>
-
 </Project>
