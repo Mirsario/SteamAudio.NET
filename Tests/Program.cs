@@ -4,7 +4,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using System.Threading;
 using Silk.NET.OpenAL;
 using Silk.NET.OpenAL.Extensions.EXT;
@@ -45,10 +44,7 @@ namespace Tests
 				using var audioStream = new MemoryStream(bytes);
 
 				PrepareOpenAL();
-
-#if !NO_PROCESSING
 				PrepareSteamAudio();
-#endif
 
 				const int NumBuffers = 2;
 
@@ -63,6 +59,7 @@ namespace Tests
 				void StreamBuffer(uint bufferId, Vector3 position)
 				{
 					var inputBufferByteSpan = new Span<byte>((void*)iplInputBuffer.data, AudioFrameSizeInBytes);
+					var inputBufferFloatSpan = new Span<float>((void*)iplInputBuffer.data, AudioFrameSize);
 					int bytesRead = audioStream.Read(inputBufferByteSpan);
 
 					// Loop the audio on stream end.
@@ -80,15 +77,11 @@ namespace Tests
 						spatialBlend = 1f,
 					};
 
-					var result = IPL.BinauralEffectApply(iplBinauralEffect, ref binauralEffectParams, ref iplInputBuffer, ref iplOutputBuffer);
-
-					;
+					IPL.BinauralEffectApply(iplBinauralEffect, ref binauralEffectParams, ref iplInputBuffer, ref iplOutputBuffer);
 
 					al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Stereo, (void*)iplOutputBuffer.data, AudioFrameSizeInBytes * 2, iplAudioSettings.samplingRate);
 #else
-					fixed (byte* frameInputBufferPtr = frameInputBuffer) {
-						al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Mono, frameInputBufferPtr, frameInputBuffer.Length, SamplingRate);
-					}
+					al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Mono, (void*)iplInputBuffer.data, AudioFrameSizeInBytes, iplAudioSettings.samplingRate);
 #endif
 
 					CheckALErrors();
