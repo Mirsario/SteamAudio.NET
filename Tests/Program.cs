@@ -16,10 +16,8 @@ namespace Tests
 	{
 		public const int UpdateFrequency = 120;
 
-		public const int BufferFormatMonoFloat32 = 0x10010;
-		public const int BufferFormatStereoFloat32 = 0x10011;
 		public const int SamplingRate = 44100;
-		public const int AudioFrameSize = 1024;
+		public const int AudioFrameSize = 4096; // The higher this is - the less glitchly but also more delayed will the playback be.
 		public const int AudioFrameSizeInBytes = AudioFrameSize * sizeof(float);
 		public const bool SoftwareAL = true;
 
@@ -40,7 +38,8 @@ namespace Tests
 
 		private static unsafe void Main(string[] args)
 		{
-			Console.WriteLine($"Working Directory: {Path.GetFullPath(".")}");
+			Console.WriteLine($"Working Directory: '{Path.GetFullPath(".")}'.");
+			Console.WriteLine($"Launch Arguments: '{string.Join(' ', args)}'.");
 
 			try {
 				var stopwatch = new Stopwatch();
@@ -204,7 +203,9 @@ namespace Tests
 			const string Float32Extension = "AL_EXT_float32";
 
 			if (!al.IsExtensionPresent(Float32Extension)) {
-				throw new Exception($"This program requires '{Float32Extension}' OpenAL extension to function.");
+				string extensions = al.GetStateProperty(StateString.Extensions);
+
+				throw new Exception($"This program requires '{Float32Extension}' OpenAL extension to function.\r\nAvailable extensions: {extensions}");
 			}
 
 			CheckALErrors();
