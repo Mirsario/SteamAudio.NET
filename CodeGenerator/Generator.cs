@@ -14,8 +14,10 @@ namespace CodeGenerator
 	{
 		internal static void Main(string[] args)
 		{
+			Console.WriteLine($"NOTE: To run this generator, you may need a Windows machine and Visual Studio with C++ Development packages installed.");
+
 			try {
-				if(args.Length == 0) {
+				if (args.Length == 0) {
 					throw new ArgumentException("An output path must be provided in command line arguments.");
 				}
 
@@ -24,7 +26,7 @@ namespace CodeGenerator
 				Console.WriteLine("Success.");
 				Thread.Sleep(500);
 			}
-			catch(Exception e) {
+			catch (Exception e) {
 				Console.WriteLine($"{e.GetType().Name}: {e.Message}");
 				Console.WriteLine();
 				Console.WriteLine("Press any key to close the application...");
@@ -49,28 +51,28 @@ namespace CodeGenerator
 				TypedefCodeGenKind = CppTypedefCodeGenKind.NoWrap,
 
 				MappingRules = {
-					//Remove prefixes from elements' names.
+					// Remove prefixes from elements' names.
 					e => e.MapAll<CppElement>().CppAction((converter, element) => {
-						if(element is ICppMember member) {
+						if (element is ICppMember member) {
 							string prefix = member switch {
 								CppType _ => "IPL",
 								CppEnumItem _ => "IPL_",
 								_ => null
 							};
 
-							if(prefix != null) {
+							if (prefix != null) {
 								member.Name = StringUtils.Capitalize(StringUtils.RemovePrefix(member.Name, prefix));
 							}
 						}
 					}).CSharpAction((converter, element) => {
-						if(element is CSharpMethod method) {
+						if (element is CSharpMethod method) {
 							const string Prefix = "ipl";
 
 							string oldName = method.Name;
 							string newName = StringUtils.Capitalize(StringUtils.RemovePrefix(oldName, Prefix));
 
-							//Add an EntryPoint parameter to the DllImportAttribute, so that this rename doesn't break anything.
-							if(method.Attributes.FirstOrDefault(attrib => attrib is CSharpDllImportAttribute) is CSharpDllImportAttribute dllImportAttribute) {
+							// Add an EntryPoint parameter to the DllImportAttribute, so that this rename doesn't break anything.
+							if (method.Attributes.FirstOrDefault(attrib => attrib is CSharpDllImportAttribute) is CSharpDllImportAttribute dllImportAttribute) {
 								dllImportAttribute.EntryPoint = $@"""{oldName}""";
 							}
 
@@ -78,28 +80,28 @@ namespace CodeGenerator
 						}
 					}),
 
-					//Replace the bool enum with an actual bool.
+					// Replace the bool enum with an actual bool.
 					e => e.Map<CppEnum>("Bool").Discard(),
 					e => e.MapAll<CppDeclaration>().CSharpAction((converter, element) => {
 						CSharpType type;
 						Action<CSharpType> setType;
 
-						if(element is CSharpField field) {
+						if (element is CSharpField field) {
 							type = field.FieldType;
 							setType = value => field.FieldType = value;
-						} else if(element is CSharpParameter parameter) {
+						} else if (element is CSharpParameter parameter) {
 							type = parameter.ParameterType;
 							setType = value => parameter.ParameterType = value;
 						} else {
 							return;
 						}
 
-						if(type is CSharpFreeType freeType && freeType.Text == "unsupported_type /* enum Bool {...} */") {
+						if (type is CSharpFreeType freeType && freeType.Text == "unsupported_type /* enum Bool {...} */") {
 							var boolean = converter.GetCSharpType(CppPrimitiveType.Bool, element);
 
 							setType(boolean);
 
-							if(boolean is CSharpTypeWithAttributes typeWithAttributes) {
+							if (boolean is CSharpTypeWithAttributes typeWithAttributes) {
 								foreach(CSharpMarshalAttribute attribute in typeWithAttributes.Attributes.Where(a => a is CSharpMarshalAttribute)) {
 									attribute.UnmanagedType = CSharpUnmanagedKind.U4;
 								}
@@ -107,28 +109,28 @@ namespace CodeGenerator
 						}
 					}),
 
-					//Rename enum elements from SCREAMING_SNAKECASE to LameupperCamelcase. There are manual fixes below, for cases where words aren't separated.
+					// Rename enum elements from SCREAMING_SNAKECASE to LameupperCamelcase. There are manual fixes below, for cases where words aren't separated.
 					e => e.MapAll<CppEnumItem>().CppAction((converter, element) => {
 						var enumItem = (CppEnumItem)element;
 
 						string name = enumItem.Name;
 						string[] splits = name.Split('_');
 
-						if(splits.Length > 1) {
+						if (splits.Length > 1) {
 							string prefix = splits[0];
 
-							//Remove (potentially partial) prefixes of enum's name on its items' names.
-							if(name.Length > prefix.Length + 1 && name.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase)) {
+							// Remove (potentially partial) prefixes of enum's name on its items' names.
+							if (name.Length > prefix.Length + 1 && name.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase)) {
 								name = name.Substring(prefix.Length + 1);
 								splits = name.Split('_');
 							}
 
-							//Capitalize each part
-							for(int i = 0; i < splits.Length; i++) {
+							// Capitalize each part
+							for (int i = 0; i < splits.Length; i++) {
 								string split = splits[i];
 								char[] chars = split.ToCharArray();
 
-								for(int j = 0; j < chars.Length; j++) {
+								for (int j = 0; j < chars.Length; j++) {
 									chars[j] = j == 0 ? char.ToUpper(chars[j]) : char.ToLower(chars[j]);
 								}
 
@@ -141,49 +143,52 @@ namespace CodeGenerator
 						enumItem.Name = name;
 					}),
 
-					//Fix weird 'ref void' parameters.
+					// Fix weird 'ref void' parameters.
 					e => e.MapAll<CppParameter>().CSharpAction((converter, element) => {
 						var parameter = (CSharpParameter)element;
 						var parameterType = parameter.ParameterType;
 
-						if(parameterType is CSharpRefType refType && refType.ElementType is CSharpPrimitiveType primitiveType && primitiveType.Kind == CSharpPrimitiveKind.Void) {
+						if (parameterType is CSharpRefType refType && refType.ElementType is CSharpPrimitiveType primitiveType && primitiveType.Kind == CSharpPrimitiveKind.Void) {
 							parameter.ParameterType = CSharpPrimitiveType.IntPtr;
 						}
 					}),
 
-					//Turn some 'ref' parameters to 'out' or 'in' based on \param documentation.
+					// Turn some 'ref' parameters to 'out' or 'in' based on \param documentation.
 					e => e.MapAll<CppParameter>().CSharpAction((converter, element) => {
 						var parameter = (CSharpParameter)element;
 
-						if(!(parameter.ParameterType is CSharpRefType refParameterType)) {
+						if (parameter.ParameterType is not CSharpRefType refParameterType) {
 							return;
 						}
 
-						if(!(element.Parent is CSharpMethod method) || !(method.CppElement is CppFunction function)) {
+						if (element.Parent is not CSharpMethod method || method.CppElement is not CppFunction function) {
 							return;
 						}
 
-						if(!(function.Comment?.Children?.FirstOrDefault(c => c is CppCommentParamCommand pc && pc.ParamName == parameter.Name) is CppCommentParamCommand parameterComment)) {
+						if (function.Comment?.Children?.FirstOrDefault(c => c is CppCommentParamCommand pc && pc.ParamName == parameter.Name) is not CppCommentParamCommand parameterComment) {
 							return;
 						}
 
-						if(!(parameterComment?.Children?.FirstOrDefault() is CppCommentParagraph paragraph)) {
+						if (parameterComment?.Children?.FirstOrDefault() is not CppCommentParagraph paragraph) {
 							return;
 						}
 
 						string paragraphText = paragraph.ToString().Trim();
 
-						if(paragraphText.StartsWith("[out]")) {
+						if (paragraphText.StartsWith("[out]")) {
 							refParameterType.Kind = CSharpRefKind.Out;
-						} else if(paragraphText.StartsWith("[in]")) { //Never actually used
+						} else if (paragraphText.StartsWith("[in]")) { //Never actually used
 							refParameterType.Kind = CSharpRefKind.In;
 						}
 					}),
 
-					//Turn a 2D fixed array into an 1D one.
+					// Turn a 2D fixed array into an 1D one.
 					e => e.Map<CppField>("Matrix4x4::elements").Type("float", 16),
 
-					//Manually fix casing on some enum properties. This could theoretically be made automatic through crazy dictionary-based algorithms, but that's overkill.
+					// Manually fix mistakes.
+					e => e.Map<CppEnumItem>("SIMDLevel::Neon").CSharpAction((_, element) => ((CSharpEnumItem)element).Value = "Sse2"),
+
+					// Manually fix casing on some enum properties. This could theoretically be made automatic through crazy dictionary-based algorithms, but that's overkill.
 					e => e.Map<CppEnumItem>("Error::Outofmemory").Name("OutOfMemory"),
 					e => e.Map<CppEnumItem>("SceneType::Radeonrays").Name("RadeonRays"),
 					e => e.Map<CppEnumItem>("ConvolutionType::Trueaudionext").Name("TrueAudioNext"),
@@ -207,9 +212,9 @@ namespace CodeGenerator
 
 			var compilation = CSharpConverter.Convert(new List<string> { inputFile }, converterOptions);
 
-			if(compilation.HasErrors) {
-				foreach(var message in compilation.Diagnostics.Messages) {
-					if(message.Type == CppLogMessageType.Error) {
+			if (compilation.HasErrors) {
+				foreach (var message in compilation.Diagnostics.Messages) {
+					if (message.Type == CppLogMessageType.Error) {
 						Console.WriteLine(message);
 					}
 				}

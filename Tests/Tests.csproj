@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<Import Project="..\Src\Versions.props" />
+
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net6</TargetFramework>
@@ -10,7 +12,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="SteamAudio.NET" Version="1.0.0" />
+		<PackageReference Include="SteamAudio.NET" Version="$(SteamAudioBindingsVersion)" />
 		<PackageReference Include="Silk.NET.OpenAL " Version="2.13.0" />
 		<PackageReference Include="Silk.NET.OpenAL.Extensions.EXT" Version="2.13.0" />
 		<PackageReference Include="Silk.NET.OpenAL.Soft.Native" Version="1.21.1.1" />
