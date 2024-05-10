@@ -104,6 +104,23 @@ namespace SteamAudio
         }
         
         /// <summary>
+        /// Additional flags for modifying the behavior of a Steam Audio context.
+        /// </summary>
+        [Flags]
+        public enum ContextFlags : int
+        {
+            /// <summary>
+            /// All API functions perform extra validation checks. NOTE: This imposes a significant performance penalty.
+            /// </summary>
+            Validation = unchecked((int)1  << (int) 0),
+            
+            /// <summary>
+            /// Force this enum to be 32 bits in size.
+            /// </summary>
+            Force32bit = unchecked((int)0x7fffffff),
+        }
+        
+        /// <summary>
         /// The type of devices to include when listing OpenCL devices.
         /// </summary>
         public enum OpenCLDeviceType : int
@@ -138,7 +155,7 @@ namespace SteamAudio
             
             /// <summary>
             /// The Intel Embree ray tracer. Supports multi-threading. This is a highly optimized implementation, and
-            /// is likely to be faster than the Phonon ray tracer. However, Embree requires Windows, Linux, or macOS,
+            /// is likely to be faster than the default ray tracer. However, Embree requires Windows, Linux, or macOS,
             /// and a 32-bit x86 or 64-bit x86_64 CPU.
             /// </summary>
             Embree,
@@ -146,15 +163,15 @@ namespace SteamAudio
             /// <summary>
             /// The AMD Radeon Rays ray tracer. This is an OpenCL implementation, and can use either the CPU or any
             /// GPU that supports OpenCL 1.2 or later. If using the GPU, it is likely to be significantly faster than
-            /// the Phonon ray tracer. However, with heavy real-time simulation workloads, it may impact your
+            /// the default ray tracer. However, with heavy real-time simulation workloads, it may impact your
             /// application's frame rate. On supported AMD GPUs, you can use the Resource Reservation feature to
             /// mitigate this issue.
             /// </summary>
             RadeonRays,
             
             /// <summary>
-            /// Allows you to specify callbacks to your own ray tracer. Useful if your application already uses a 
-            /// high-performance ray tracer. This option uses the least amount of memory at run-time, since it does 
+            /// Allows you to specify callbacks to your own ray tracer. Useful if your application already uses a
+            /// high-performance ray tracer. This option uses the least amount of memory at run-time, since it does
             /// not have to build any ray tracing data structures of its own.
             /// </summary>
             Custom,
@@ -250,20 +267,37 @@ namespace SteamAudio
         }
         
         /// <summary>
+        /// Volume normalization types to use.
+        /// </summary>
+        public enum HrtfNormType : int
+        {
+            /// <summary>
+            /// No normalization.
+            /// </summary>
+            None,
+            
+            /// <summary>
+            /// Root-mean squared normalization. Normalize HRTF volume to ensure similar volume from all directions
+            /// based on root-mean-square value of each HRTF.
+            /// </summary>
+            Rms,
+        }
+        
+        /// <summary>
         /// Techniques for interpolating HRTF data. This is used when rendering a point source whose position relative to
         /// the listener is not contained in the measured HRTF data.
         /// </summary>
         public enum HrtfInterpolation : int
         {
             /// <summary>
-            /// Nearest-neighbor filtering, i.e., no interpolation. Selects the measurement location that is closest to 
+            /// Nearest-neighbor filtering, i.e., no interpolation. Selects the measurement location that is closest to
             /// the source's actual location.
             /// </summary>
             Nearest,
             
             /// <summary>
-            /// Bilinear filtering. Incurs a relatively high CPU overhead as compared to nearest-neighbor filtering, so use 
-            /// this for sounds where it has a significant benefit. Typically, bilinear filtering is most useful for wide-band 
+            /// Bilinear filtering. Incurs a relatively high CPU overhead as compared to nearest-neighbor filtering, so use
+            /// this for sounds where it has a significant benefit. Typically, bilinear filtering is most useful for wide-band
             /// noise-like sounds, such as radio static, mechanical noise, fire, etc.
             /// </summary>
             Bilinear,
@@ -366,10 +400,10 @@ namespace SteamAudio
             Centroid,
             
             /// <summary>
-            /// Generates probes that are uniformly-spaced, at a fixed height above solid geometry. A probe will never be 
-            /// generated above another probe unless there is a solid object between them. The goal is to model floors or 
-            /// terrain, and generate probes that are a fixed height above the floor or terrain, and uniformly-spaced along 
-            /// the horizontal plane. This algorithm is not suitable for scenarios where the listener may fly into a region 
+            /// Generates probes that are uniformly-spaced, at a fixed height above solid geometry. A probe will never be
+            /// generated above another probe unless there is a solid object between them. The goal is to model floors or
+            /// terrain, and generate probes that are a fixed height above the floor or terrain, and uniformly-spaced along
+            /// the horizontal plane. This algorithm is not suitable for scenarios where the listener may fly into a region
             /// with no probes; if this happens, the listener will not be influenced by any of the baked data.
             /// </summary>
             UniformFloor,
@@ -504,7 +538,7 @@ namespace SteamAudio
         public enum DistanceAttenuationModelType : int
         {
             /// <summary>
-            /// The default distance attenuation model. This is an inverse distance falloff, with all sounds within 1 meter 
+            /// The default distance attenuation model. This is an inverse distance falloff, with all sounds within 1 meter
             /// of the listener rendered without distance attenuation.
             /// </summary>
             Default,
@@ -624,6 +658,11 @@ namespace SteamAudio
             /// parameter to `IPL_SIMDLEVEL_AVX2` or lower.
             /// </summary>
             public IPL.SimdLevel SimdLevel;
+            
+            /// <summary>
+            /// Additional flags for modifying the behavior of the created context.
+            /// </summary>
+            public IPL.ContextFlags Flags;
         }
         
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -768,7 +807,7 @@ namespace SteamAudio
             public IntPtr Data;
             
             /// <summary>
-            /// The number of bytes in the buffer pointed to by @c data. Set to 0 if @c data is 
+            /// The number of bytes in the buffer pointed to by @c data. Set to 0 if @c data is
             /// NULL.
             /// </summary>
             public ulong Size;
@@ -799,6 +838,7 @@ namespace SteamAudio
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         public partial struct EmbreeDeviceSettings
         {
+            public byte Reserved;
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -890,7 +930,7 @@ namespace SteamAudio
             /// If @c IPL_TRUE, then the GPU device must support TrueAudio Next. It is not necessary to set this
             /// to @c IPL_TRUE if @c numCUsToReserve or @c fractionCUsForIRUpdate are set to non-zero values.
             /// </summary>
-            [MarshalAs(UnmanagedType.U4)]
+            [MarshalAs(UnmanagedType.U1)]
             public bool RequiresTAN;
         }
         
@@ -998,6 +1038,7 @@ namespace SteamAudio
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         public partial struct RadeonRaysDeviceSettings
         {
+            public byte Reserved;
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -1119,9 +1160,9 @@ namespace SteamAudio
         /// A triangle in 3D space.
         /// </summary>
         /// <remarks>
-        /// Triangles are specified by their three vertices, which are in turn specified using indices into a 
-        /// vertex array.Steam Audio uses a counter-clockwise winding order. This means that when looking at the triangle such that the 
-        /// normal is pointing towards you, the vertices are specified in counter-clockwise order.Each triangle must be specified using three vertices; triangle strip or fan representations are 
+        /// Triangles are specified by their three vertices, which are in turn specified using indices into a
+        /// vertex array.Steam Audio uses a counter-clockwise winding order. This means that when looking at the triangle such that the
+        /// normal is pointing towards you, the vertices are specified in counter-clockwise order.Each triangle must be specified using three vertices; triangle strip or fan representations are
         /// not supported.
         /// </remarks>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -1137,8 +1178,8 @@ namespace SteamAudio
         /// The acoustic properties of a surface.
         /// </summary>
         /// <remarks>
-        /// You can specify the acoustic material properties of each triangle, although typically many triangles will 
-        /// share a common material.The acoustic material properties are specified for three frequency bands with center frequencies of 
+        /// You can specify the acoustic material properties of each triangle, although typically many triangles will
+        /// share a common material.The acoustic material properties are specified for three frequency bands with center frequencies of
         /// 400 Hz, 2.5 KHz, and 15 KHz.Below are the acoustic material properties for a few standard materials.```cpp
         /// {"generic",{0.10f,0.20f,0.30f,0.05f,0.100f,0.050f,0.030f}}
         /// {"brick",{0.03f,0.04f,0.07f,0.05f,0.015f,0.015f,0.015f}}
@@ -1162,13 +1203,13 @@ namespace SteamAudio
             public fixed float Absorption[3];
             
             /// <summary>
-            /// Fraction of sound energy scattered in a random direction on reflection. Between 0.0 (pure specular) and 1.0 
+            /// Fraction of sound energy scattered in a random direction on reflection. Between 0.0 (pure specular) and 1.0
             /// (pure diffuse).
             /// </summary>
             public float Scattering;
             
             /// <summary>
-            /// Fraction of sound energy transmitted through at low, middle, high frequencies. Between 0.0 and 1.0. 
+            /// Fraction of sound energy transmitted through at low, middle, high frequencies. Between 0.0 and 1.0.
             /// Only used for direct occlusion calculations.
             /// </summary>
             public fixed float Transmission[3];
@@ -1445,10 +1486,32 @@ namespace SteamAudio
             public IPL.HrtfType Type;
             
             /// <summary>
-            /// SOFA file from which to load HRTF data. Only for @c IPL_HRTFTYPE_SOFA.
+            /// SOFA file from which to load HRTF data. Either @c sofaFileName or @c sofaData should be non-NULL.
+            /// Only for @c IPL_HRTFTYPE_SOFA.
             /// </summary>
             [MarshalAs(UnmanagedType.LPStr)]
             public string SofaFileName;
+            
+            /// <summary>
+            /// Pointer to a buffer containing SOFA file data from which to load HRTF data. Either @c sofaFileName or @c sofaData should be non-NULL. Only for @c IPL_HRTFTYPE_SOFA.
+            /// </summary>
+            public IntPtr SofaData;
+            
+            /// <summary>
+            /// Size (in bytes) of the buffer pointed to by @c sofaData. Only for @c IPL_HRTFTYPE_SOFA.
+            /// </summary>
+            public int SofaDataSize;
+            
+            /// <summary>
+            /// Volume correction factor to apply to the loaded HRTF data. A value of 1.0 means the HRTF data will be used
+            /// without any change.
+            /// </summary>
+            public float Volume;
+            
+            /// <summary>
+            /// Normalization setting. No normalization will be applied when choosing @c IPL_HRTFNORMTYPE_NONE.
+            /// </summary>
+            public IPL.HrtfNormType NormType;
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -1548,7 +1611,7 @@ namespace SteamAudio
             public IPL.HrtfInterpolation Interpolation;
             
             /// <summary>
-            /// Amount to blend input audio with spatialized audio. When set to 0, output audio is not spatialized at all 
+            /// Amount to blend input audio with spatialized audio. When set to 0, output audio is not spatialized at all
             /// and is close to input audio. If set to 1, output audio is fully spatialized.
             /// </summary>
             public float SpatialBlend;
@@ -1557,6 +1620,13 @@ namespace SteamAudio
             /// The HRTF to use.
             /// </summary>
             public IPL.Hrtf Hrtf;
+            
+            /// <summary>
+            /// Base address of an array into which to write the left- and right-ear peak delays for the HRTF used
+            /// to spatialize the input audio. Memory for this array must be allocated and managed by the caller.
+            /// Can be NULL, in which case peak delays will not be written.
+            /// </summary>
+            public IntPtr PeakDelays;
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -1651,7 +1721,8 @@ namespace SteamAudio
         public partial struct AmbisonicsEncodeEffectParams
         {
             /// <summary>
-            /// Unit vector pointing from the listener towards the source.
+            /// Vector pointing from the listener towards the source. Need not be normalized; Steam Audio will automatically
+            /// normalize this vector. If a zero-length vector is passed, the output will be order 0 (omnidirectional).
             /// </summary>
             public IPL.Vector3 Direction;
             
@@ -1817,7 +1888,7 @@ namespace SteamAudio
             public IPL.CoordinateSpace3 Orientation;
             
             /// <summary>
-            /// Ambisonic order of the input and output buffers. May be less than the @c maxOrder specified when creating the 
+            /// Ambisonic order of the input and output buffers. May be less than the @c maxOrder specified when creating the
             /// effect, in which case the effect will process fewer channels, reducing CPU usage.
             /// </summary>
             public int Order;
@@ -1892,7 +1963,7 @@ namespace SteamAudio
             /// <summary>
             /// Whether to use binaural rendering or panning.
             /// </summary>
-            [MarshalAs(UnmanagedType.U4)]
+            [MarshalAs(UnmanagedType.U1)]
             public bool Binaural;
         }
         
@@ -2077,13 +2148,13 @@ namespace SteamAudio
             public IPL.ReflectionEffectIR Ir;
             
             /// <summary>
-            /// 3-band reverb decay times (RT60). For @c IPL_REFLECTIONEFFECTTYPE_PARAMETRIC or 
+            /// 3-band reverb decay times (RT60). For @c IPL_REFLECTIONEFFECTTYPE_PARAMETRIC or
             /// @c IPL_REFLECTIONEFFECTTYPE_HYBRID.
             /// </summary>
             public fixed float ReverbTimes[3];
             
             /// <summary>
-            /// 3-band EQ coefficients applied to the parametric part to ensure smooth transition. 
+            /// 3-band EQ coefficients applied to the parametric part to ensure smooth transition.
             /// For @c IPL_REFLECTIONEFFECTTYPE_HYBRID.
             /// </summary>
             public fixed float Eq[3];
@@ -2149,6 +2220,25 @@ namespace SteamAudio
             /// The maximum Ambisonics order that will be used by output audio buffers.
             /// </summary>
             public int MaxOrder;
+            
+            /// <summary>
+            /// If @c IPL_TRUE, then this effect will render spatialized audio into the output buffer. If @c IPL_FALSE, this effect will render un-spatialized (and un-rotated) Ambisonic audio. Setting this to @c IPL_FALSE is
+            /// mainly useful only if you plan to mix multiple Ambisonic buffers and/or apply additional processing to
+            /// the Ambisonic audio before spatialization. If you plan to immediately spatialize the output of the path
+            /// effect, setting this value to @c IPL_TRUE can result in significant performance improvements.
+            /// </summary>
+            [MarshalAs(UnmanagedType.U1)]
+            public bool Spatialize;
+            
+            /// <summary>
+            /// The speaker layout to use when spatializing. Only used if @c spatialize is @c IPL_TRUE.
+            /// </summary>
+            public IPL.SpeakerLayout SpeakerLayout;
+            
+            /// <summary>
+            /// The HRTF to use when spatializing. Only used if @c spatialize is @c IPL_TRUE.
+            /// </summary>
+            public IPL.Hrtf Hrtf;
         }
         
         /// <summary>
@@ -2175,6 +2265,25 @@ namespace SteamAudio
             /// in which case higher-order @c shCoeffs will be ignored, and CPU usage will be reduced.
             /// </summary>
             public int Order;
+            
+            /// <summary>
+            /// If @c IPL_TRUE, spatialize using HRTF-based binaural rendering. Only used if @c spatialize was set to
+            /// @c IPL_TRUE in @c IPLPathEffectSettings.
+            /// </summary>
+            [MarshalAs(UnmanagedType.U1)]
+            public bool Binaural;
+            
+            /// <summary>
+            /// The HRTF to use when spatializing. Only used if @c spatialize was set to @c IPL_TRUE in
+            /// @c IPLPathEffectSettings and @c binaural is set to @c IPL_TRUE.
+            /// </summary>
+            public IPL.Hrtf Hrtf;
+            
+            /// <summary>
+            /// The position and orientation of the listener. Only used if @c spatialize was set to @c IPL_TRUE in
+            /// @c IPLPathEffectSettings and @c binaural is set to @c IPL_TRUE.
+            /// </summary>
+            public IPL.CoordinateSpace3 Listener;
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -2370,7 +2479,8 @@ namespace SteamAudio
             public float IrradianceMinDistance;
             
             /// <summary>
-            /// If using Radeon Rays, this is the number of probes for which data is baked simultaneously.
+            /// If using Radeon Rays or if @c identifier.variation is @c IPL_BAKEDDATAVARIATION_STATICLISTENER, this is the
+            /// number of probes for which data is baked simultaneously.
             /// </summary>
             public int BakeBatchSize;
             
@@ -2434,7 +2544,7 @@ namespace SteamAudio
             public float VisRange;
             
             /// <summary>
-            /// If the distance between two probes is greater than this value, the probes are considered to
+            /// If the length of the path between two probes is greater than this value, the probes are considered to
             /// not have any path between them. Increasing this value allows sound to propagate over greater
             /// distances, at the cost of increased bake times and memory usage.
             /// </summary>
@@ -2526,7 +2636,7 @@ namespace SteamAudio
             /// curve defined in a GUI. If the user is editing the curve in real-time, set this to @c IPL_TRUE whenever
             /// the curve changes, so Steam Audio can update simulation results to match.
             /// </summary>
-            [MarshalAs(UnmanagedType.U4)]
+            [MarshalAs(UnmanagedType.U1)]
             public bool Dirty;
         }
         
@@ -2564,11 +2674,11 @@ namespace SteamAudio
             
             /// <summary>
             /// Set to @c IPL_TRUE to indicate that the air absorption model defined by the @c callback function
-            /// has changed since the last time simulation was run. For example, the callback may be evaluating a set of 
+            /// has changed since the last time simulation was run. For example, the callback may be evaluating a set of
             /// curves defined in a GUI. If the user is editing the curves in real-time, set this to @c IPL_TRUE whenever
             /// the curves change, so Steam Audio can update simulation results to match.
             /// </summary>
-            [MarshalAs(UnmanagedType.U4)]
+            [MarshalAs(UnmanagedType.U1)]
             public bool Dirty;
         }
         
@@ -2808,7 +2918,7 @@ namespace SteamAudio
             /// If using hybrid reverb for rendering reflections, this is the amount of overlap between
             /// the convolution and parametric parts. To ensure smooth transitions from the early
             /// convolution part to the late parametric part, the two are cross-faded towards the end of
-            /// the convolution part. For example, if @c hybridReverbTransitionTime is @c 1.0f, and 
+            /// the convolution part. For example, if @c hybridReverbTransitionTime is @c 1.0f, and
             /// @c hybridReverbOverlapPercent is @c 0.25f, then the first 0.75 seconds are pure convolution,
             /// the next 0.25 seconds are a blend between convolution and parametric, and the portion of
             /// the tail beyond 1.0 second is pure parametric.
@@ -2818,7 +2928,7 @@ namespace SteamAudio
             /// <summary>
             /// If @c IPL_TRUE, this source will used baked data for reflections simulation.
             /// </summary>
-            [MarshalAs(UnmanagedType.U4)]
+            [MarshalAs(UnmanagedType.U1)]
             public bool Baked;
             
             /// <summary>
@@ -2861,7 +2971,7 @@ namespace SteamAudio
             /// If @c IPL_TRUE, baked paths are tested for visibility. This is useful if your scene has dynamic
             /// objects that might occlude baked paths.
             /// </summary>
-            [MarshalAs(UnmanagedType.U4)]
+            [MarshalAs(UnmanagedType.U1)]
             public bool EnableValidation;
             
             /// <summary>
@@ -2869,8 +2979,17 @@ namespace SteamAudio
             /// geometry, path finding is re-run in real-time to find alternate paths that take into account the
             /// dynamic geometry.
             /// </summary>
-            [MarshalAs(UnmanagedType.U4)]
+            [MarshalAs(UnmanagedType.U1)]
             public bool FindAlternatePaths;
+            
+            /// <summary>
+            /// If simulating transmission, this is the maximum number of surfaces, starting from the closest
+            /// surface to the listener, whose transmission coefficients will be considered when calculating
+            /// the total amount of sound transmitted. Increasing this value will result in more accurate
+            /// results when multiple surfaces lie between the source and the listener, at the cost of
+            /// increased CPU usage.
+            /// </summary>
+            public int NumTransmissionRays;
         }
         
         /// <summary>
@@ -2885,7 +3004,7 @@ namespace SteamAudio
             public IPL.CoordinateSpace3 Listener;
             
             /// <summary>
-            /// The number of rays to trace from the listener. Increasing this value results in more accurate 
+            /// The number of rays to trace from the listener. Increasing this value results in more accurate
             /// reflections, at the cost of increased CPU usage.
             /// </summary>
             public int NumRays;
@@ -2917,7 +3036,21 @@ namespace SteamAudio
             /// @c irradianceMinDistance, for the purposes of energy calculations.
             /// </summary>
             public float IrradianceMinDistance;
+            
+            /// <summary>
+            /// Callback for visualizing valid path segments during call to @c iplSimulatorRunPathing.
+            /// </summary>
+            public IPL.PathingVisualizationCallback PathingVisCallback;
+            
+            /// <summary>
+            /// Pointer to arbitrary user-specified data provided when calling the function that will
+            /// call this callback.
+            /// </summary>
+            public IntPtr PathingUserData;
         }
+        
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void PathingVisualizationCallback(IPL.Vector3 from, IPL.Vector3 to, [MarshalAs(UnmanagedType.U1)] bool occluded, IntPtr userData);
         
         /// <summary>
         /// Simulation results for a source.
@@ -3229,8 +3362,8 @@ namespace SteamAudio
         /// <param name="scene">The scene to save.</param>
         /// <param name="fileBaseName">Absolute or relative path to the OBJ file to generate.</param>
         /// <remarks>
-        /// An OBJ file is a widely-supported 3D model file format, that can be displayed using a variety of software 
-        /// on most PC platforms. The OBJ file generated by this function can be useful for detecting problems that 
+        /// An OBJ file is a widely-supported 3D model file format, that can be displayed using a variety of software
+        /// on most PC platforms. The OBJ file generated by this function can be useful for detecting problems that
         /// occur when exporting scene data from your application to Steam Audio.*This function can only be called on a scene created with @c IPL_SCENETYPE_DEFAULT or @c IPL_SCENETYPE_EMBREE.**
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSceneSaveOBJ", CallingConvention = CallingConvention.Cdecl)]
@@ -3241,7 +3374,7 @@ namespace SteamAudio
         /// </summary>
         /// <param name="scene">The scene to commit changes to.</param>
         /// <remarks>
-        /// This function should be called after any calls to the following functions, for the changes to take effect:-   @c iplStaticMeshAdd -   @c iplStaticMeshRemove -   @c iplInstancedMeshAdd -   @c iplInstancedMeshRemove -   @c iplInstancedMeshUpdateTransform For best performance, call this function once after all changes have been made for a given frame.*This function cannot be called concurrently with any simulation functions.**
+        /// This function should be called after any calls to the following functions, for the changes to take effect:-   @c iplStaticMeshAdd -   @c iplStaticMeshRemove -   @c iplInstancedMeshAdd -   @c iplInstancedMeshRemove -   @c iplInstancedMeshUpdateTransformFor best performance, call this function once after all changes have been made for a given frame.*This function cannot be called concurrently with any simulation functions.**
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSceneCommit", CallingConvention = CallingConvention.Cdecl)]
         public static extern void SceneCommit(IPL.Scene scene);
@@ -3254,10 +3387,10 @@ namespace SteamAudio
         /// <param name="staticMesh">[out] The created static mesh.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         /// <remarks>
-        /// A static mesh represents a triangle mesh that does not change after it is created. A static mesh also contains 
-        /// an array of acoustic material properties, and a mapping between each of its triangles and their acoustic material 
-        /// properties.Static mesh objects should be used for scene geometry that is guaranteed to never change, such as rooms, 
-        /// buildings, or triangulated terrain. A scene may contain multiple static meshes, although typically one 
+        /// A static mesh represents a triangle mesh that does not change after it is created. A static mesh also contains
+        /// an array of acoustic material properties, and a mapping between each of its triangles and their acoustic material
+        /// properties.Static mesh objects should be used for scene geometry that is guaranteed to never change, such as rooms,
+        /// buildings, or triangulated terrain. A scene may contain multiple static meshes, although typically one
         /// is sufficient.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplStaticMeshCreate", CallingConvention = CallingConvention.Cdecl)]
@@ -3473,7 +3606,7 @@ namespace SteamAudio
         /// <param name="in">The source audio buffer.</param>
         /// <param name="out">The destination audio buffer.</param>
         /// <remarks>
-        /// Both audio buffers must have the same number of samples.This conversion can be applied in-place, i.e., @c in and @c out can be the same 
+        /// Both audio buffers must have the same number of samples.This conversion can be applied in-place, i.e., @c in and @c out can be the same
         /// audio buffer.Steam Audio's "native" Ambisonic format is N3D, so for best performance, keep all
         /// Ambisonic data in N3D format except when exchanging data with your audio engine.
         /// </remarks>
@@ -3489,7 +3622,7 @@ namespace SteamAudio
         /// <param name="hrtf">[out] The created HRTF object.</param>
         /// <returns>Status code indicating whether or not the operation succeeded.</returns>
         /// <remarks>
-        /// Calling this function is somewhat expensive; avoid creating HRTF objects in your audio thread at all 
+        /// Calling this function is somewhat expensive; avoid creating HRTF objects in your audio thread at all
         /// if possible.This function is not thread-safe. Do not simultaneously call it from multiple threads.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplHRTFCreate", CallingConvention = CallingConvention.Cdecl)]
@@ -4363,7 +4496,7 @@ namespace SteamAudio
         /// </summary>
         /// <param name="simulator">The simulator being used.</param>
         /// <remarks>
-        /// Call this function after calling @c iplSimulatorSetScene, @c iplSimulatorAddProbeBatch, or 
+        /// Call this function after calling @c iplSimulatorSetScene, @c iplSimulatorAddProbeBatch, or
         /// @c iplSimulatorRemoveProbeBatch for the changes to take effect.This function cannot be called while any simulation is running.
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplSimulatorCommit", CallingConvention = CallingConvention.Cdecl)]
@@ -4501,7 +4634,7 @@ namespace SteamAudio
         
         public const uint VersionMajor = 4;
         
-        public const uint VersionMinor = 0;
+        public const uint VersionMinor = 5;
         
         public const uint VersionPatch = 3;
         
