@@ -91,7 +91,7 @@ namespace Tests
 
 					al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Stereo, (void*)tempInterlacingBuffer, AudioFrameSizeInBytes * 2, iplAudioSettings.SamplingRate);
 #else
-					al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Mono, (void*)inputBufferChannelPtr, AudioFrameSizeInBytes, iplAudioSettings.samplingRate);
+					al.BufferData(bufferId, (BufferFormat)FloatBufferFormat.Mono, (void*)inputBufferChannelPtr, AudioFrameSizeInBytes, iplAudioSettings.SamplingRate);
 #endif
 
 					CheckALErrors();
@@ -262,7 +262,9 @@ namespace Tests
 			// HRTF
 
 			var hrtfSettings = new IPL.HrtfSettings {
-				Type = IPL.HrtfType.Default
+				Type = IPL.HrtfType.Default,
+				Volume = 1.0f,
+				NormType = IPL.HrtfNormType.None
 			};
 
 			IPL.HrtfCreate(iplContext, in iplAudioSettings, in hrtfSettings, out iplHrtf);
