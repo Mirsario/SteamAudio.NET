@@ -1,8 +1,8 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup>
-		<NativesVersion>4.0.3</NativesVersion>
-		<BindingsVersion>4.0.3</BindingsVersion>
+		<NativesVersion>4.5.3</NativesVersion>
+		<BindingsVersion>4.5.3</BindingsVersion>
 	</PropertyGroup>
 
 </Project>
