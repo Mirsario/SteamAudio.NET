@@ -94,7 +94,7 @@ namespace CodeGenerator
 							// There's A LOT of code related to this, but all this does is just convert ~4 macros to constants.......
 							new CustomMacroToConstantRule("STEAMAUDIO_VERSION", CSharpPrimitiveType.UInt(), outputFile, defaultClass) {
 								NameChanger = n => StringUtils.SnakeCaseToCamelCase(StringUtils.RemovePrefixWithSeparator(n, '_')),
-								ValueChanger = v => v.Replace("uint32_t", "uint"),
+								ValueChanger = v => v.Replace("IPLuint32", "uint"),
 							},
 							new CustomMacroToConstantRule("STEAMAUDIO_(VERSION_.+)", CSharpPrimitiveType.UInt(), outputFile, defaultClass) {
 								NameChanger = n => StringUtils.SnakeCaseToCamelCase(StringUtils.RemovePrefixWithSeparator(n, '_')),
