@@ -149,6 +149,13 @@ namespace CodeGenerator
 							var boolean = converter.GetCSharpType(CppPrimitiveType.Bool, element);
 
 							setType(boolean);
+
+							if (boolean is CSharpTypeWithAttributes typeWithAttributes) {
+								foreach(var attribute in typeWithAttributes.Attributes.Where(a => a is CSharpMarshalAttribute).Cast<CSharpMarshalAttribute>()) {
+									// The enum's size depends on the used compilers.
+									attribute.UnmanagedType = CSharpUnmanagedKind.U1; //CSharpUnmanagedKind.U4;
+								}
+							}
 						}
 					}),
 
