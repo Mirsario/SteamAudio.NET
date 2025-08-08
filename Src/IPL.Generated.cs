@@ -3693,6 +3693,34 @@ namespace SteamAudio
         public static extern IPL.AudioEffectState PanningEffectApply(IPL.PanningEffect effect, ref IPL.PanningEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
+        /// Returns the number of tail samples remaining in a panning effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The panning effect.</param>
+        /// <returns>The number of tail samples remaining.</returns>
+        /// <remarks>
+        /// Tail samples are audio samples that should be played even after the input to the effect has stopped
+        /// playing and no further input samples are available.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplPanningEffectGetTailSize", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int PanningEffectGetTailSize(IPL.PanningEffect effect);
+        
+        /// <summary>
+        /// Retrieves a single frame of tail samples from a panning effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The panning effect.</param>
+        /// <param name="out">The output audio buffer. Must have as many channels as needed for the speaker layout
+        /// specified when creating the panning effect. For example, if the speaker layout is
+        /// @c IPL_SPEAKERLAYOUTTYPE_SURROUND_5_1, the output buffer must contain 6 channels.</param>
+        /// <returns>@c IPL_AUDIOEFFECTSTATE_TAILREMAINING if any tail samples remain in the effect's internal buffers, or
+        /// @c IPL_AUDIOEFFECTSTATE_TAILCOMPLETE otherwise.</returns>
+        /// <remarks>
+        /// After the input to the panning effect has stopped, this function must be called instead of
+        /// @c iplPanningEffectApply until the return value indicates that no more tail samples remain.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplPanningEffectGetTail", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.AudioEffectState PanningEffectGetTail(IPL.PanningEffect effect, ref IPL.AudioBuffer @out);
+        
+        /// <summary>
         /// Creates a binaural effect.
         /// </summary>
         /// <param name="context">The context used to initialize Steam Audio.</param>
@@ -3739,6 +3767,32 @@ namespace SteamAudio
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplBinauralEffectApply", CallingConvention = CallingConvention.Cdecl)]
         public static extern IPL.AudioEffectState BinauralEffectApply(IPL.BinauralEffect effect, ref IPL.BinauralEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        
+        /// <summary>
+        /// Returns the number of tail samples remaining in a binaural effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The binaural effect.</param>
+        /// <returns>The number of tail samples remaining.</returns>
+        /// <remarks>
+        /// Tail samples are audio samples that should be played even after the input to the effect has stopped
+        /// playing and no further input samples are available.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplBinauralEffectGetTailSize", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int BinauralEffectGetTailSize(IPL.BinauralEffect effect);
+        
+        /// <summary>
+        /// Retrieves a single frame of tail samples from a binaural effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The binaural effect.</param>
+        /// <param name="out">The output audio buffer. Must be 2-channel.</param>
+        /// <returns>@c IPL_AUDIOEFFECTSTATE_TAILREMAINING if any tail samples remain in the effect's internal buffers, or
+        /// @c IPL_AUDIOEFFECTSTATE_TAILCOMPLETE otherwise.</returns>
+        /// <remarks>
+        /// After the input to the binaural effect has stopped, this function must be called instead of
+        /// @c iplBinauralEffectApply until the return value indicates that no more tail samples remain.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplBinauralEffectGetTail", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.AudioEffectState BinauralEffectGetTail(IPL.BinauralEffect effect, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates a virtual surround effect.
@@ -3790,6 +3844,32 @@ namespace SteamAudio
         public static extern IPL.AudioEffectState VirtualSurroundEffectApply(IPL.VirtualSurroundEffect effect, ref IPL.VirtualSurroundEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
+        /// Returns the number of tail samples remaining in a virtual surround effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The virtual surround effect.</param>
+        /// <returns>The number of tail samples remaining.</returns>
+        /// <remarks>
+        /// Tail samples are audio samples that should be played even after the input to the effect has stopped
+        /// playing and no further input samples are available.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplVirtualSurroundEffectGetTailSize", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int VirtualSurroundEffectGetTailSize(IPL.VirtualSurroundEffect effect);
+        
+        /// <summary>
+        /// Retrieves a single frame of tail samples from a virtual surround effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The virtual surround effect.</param>
+        /// <param name="out">The output audio buffer. Must be 2-channel.</param>
+        /// <returns>@c IPL_AUDIOEFFECTSTATE_TAILREMAINING if any tail samples remain in the effect's internal buffers, or
+        /// @c IPL_AUDIOEFFECTSTATE_TAILCOMPLETE otherwise.</returns>
+        /// <remarks>
+        /// After the input to the virtual surround effect has stopped, this function must be called instead of
+        /// @c iplVirtualSurroundEffectApply until the return value indicates that no more tail samples remain.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplVirtualSurroundEffectGetTail", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.AudioEffectState VirtualSurroundEffectGetTail(IPL.VirtualSurroundEffect effect, ref IPL.AudioBuffer @out);
+        
+        /// <summary>
         /// Creates an Ambisonics encode effect.
         /// </summary>
         /// <param name="context">The context used to initialize Steam Audio.</param>
@@ -3836,6 +3916,33 @@ namespace SteamAudio
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplAmbisonicsEncodeEffectApply", CallingConvention = CallingConvention.Cdecl)]
         public static extern IPL.AudioEffectState AmbisonicsEncodeEffectApply(IPL.AmbisonicsEncodeEffect effect, ref IPL.AmbisonicsEncodeEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        
+        /// <summary>
+        /// Returns the number of tail samples remaining in an Ambisonics encode effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The Ambisonics encode effect.</param>
+        /// <returns>The number of tail samples remaining.</returns>
+        /// <remarks>
+        /// Tail samples are audio samples that should be played even after the input to the effect has stopped
+        /// playing and no further input samples are available.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplAmbisonicsEncodeEffectGetTailSize", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int AmbisonicsEncodeEffectGetTailSize(IPL.AmbisonicsEncodeEffect effect);
+        
+        /// <summary>
+        /// Retrieves a single frame of tail samples from an Ambisonics encode effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The Ambisonics encode effect.</param>
+        /// <param name="out">The output audio buffer. Must have as many channels as needed for the
+        /// Ambisonics order specified when creating the effect.</param>
+        /// <returns>@c IPL_AUDIOEFFECTSTATE_TAILREMAINING if any tail samples remain in the effect's internal buffers, or
+        /// @c IPL_AUDIOEFFECTSTATE_TAILCOMPLETE otherwise.</returns>
+        /// <remarks>
+        /// After the input to the Ambisonics encode effect has stopped, this function must be called instead of
+        /// @c iplAmbisonicsEncodeEffectApply until the return value indicates that no more tail samples remain.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplAmbisonicsEncodeEffectGetTail", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.AudioEffectState AmbisonicsEncodeEffectGetTail(IPL.AmbisonicsEncodeEffect effect, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates an Ambisonics panning effect.
@@ -3887,6 +3994,33 @@ namespace SteamAudio
         public static extern IPL.AudioEffectState AmbisonicsPanningEffectApply(IPL.AmbisonicsPanningEffect effect, ref IPL.AmbisonicsPanningEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
+        /// Returns the number of tail samples remaining in an Ambisonics panning effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The Ambisonics panning effect.</param>
+        /// <returns>The number of tail samples remaining.</returns>
+        /// <remarks>
+        /// Tail samples are audio samples that should be played even after the input to the effect has stopped
+        /// playing and no further input samples are available.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplAmbisonicsPanningEffectGetTailSize", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int AmbisonicsPanningEffectGetTailSize(IPL.AmbisonicsPanningEffect effect);
+        
+        /// <summary>
+        /// Retrieves a single frame of tail samples from a Ambisonics panning effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The Ambisonics panning effect.</param>
+        /// <param name="out">The output audio buffer. Must have as many channels as needed for the speaker layout
+        /// specified when creating the effect.</param>
+        /// <returns>@c IPL_AUDIOEFFECTSTATE_TAILREMAINING if any tail samples remain in the effect's internal buffers, or
+        /// @c IPL_AUDIOEFFECTSTATE_TAILCOMPLETE otherwise.</returns>
+        /// <remarks>
+        /// After the input to the Ambisonics panning effect has stopped, this function must be called instead of
+        /// @c iplAmbisonicsPanningEffectApply until the return value indicates that no more tail samples remain.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplAmbisonicsPanningEffectGetTail", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.AudioEffectState AmbisonicsPanningEffectGetTail(IPL.AmbisonicsPanningEffect effect, ref IPL.AudioBuffer @out);
+        
+        /// <summary>
         /// Creates an Ambisonics binaural effect.
         /// </summary>
         /// <param name="context">The context used to initialize Steam Audio.</param>
@@ -3934,6 +4068,32 @@ namespace SteamAudio
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplAmbisonicsBinauralEffectApply", CallingConvention = CallingConvention.Cdecl)]
         public static extern IPL.AudioEffectState AmbisonicsBinauralEffectApply(IPL.AmbisonicsBinauralEffect effect, ref IPL.AmbisonicsBinauralEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        
+        /// <summary>
+        /// Returns the number of tail samples remaining in an Ambisonics binaural effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The Ambisonics binaural effect.</param>
+        /// <returns>The number of tail samples remaining.</returns>
+        /// <remarks>
+        /// Tail samples are audio samples that should be played even after the input to the effect has stopped
+        /// playing and no further input samples are available.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplAmbisonicsBinauralEffectGetTailSize", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int AmbisonicsBinauralEffectGetTailSize(IPL.AmbisonicsBinauralEffect effect);
+        
+        /// <summary>
+        /// Retrieves a single frame of tail samples from an Ambisonics binaural effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The Ambisonics binaural effect.</param>
+        /// <param name="out">The output audio buffer. Must have 2 channels.</param>
+        /// <returns>@c IPL_AUDIOEFFECTSTATE_TAILREMAINING if any tail samples remain in the effect's internal buffers, or
+        /// @c IPL_AUDIOEFFECTSTATE_TAILCOMPLETE otherwise.</returns>
+        /// <remarks>
+        /// After the input to the Ambisonics binaural effect has stopped, this function must be called instead of
+        /// @c iplAmbisonicsBinauralEffectApply until the return value indicates that no more tail samples remain.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplAmbisonicsBinauralEffectGetTail", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.AudioEffectState AmbisonicsBinauralEffectGetTail(IPL.AmbisonicsBinauralEffect effect, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates an Ambisonics rotation effect.
@@ -3985,6 +4145,33 @@ namespace SteamAudio
         public static extern IPL.AudioEffectState AmbisonicsRotationEffectApply(IPL.AmbisonicsRotationEffect effect, ref IPL.AmbisonicsRotationEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
         
         /// <summary>
+        /// Returns the number of tail samples remaining in an Ambisonics rotation effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The Ambisonics rotation effect.</param>
+        /// <returns>The number of tail samples remaining.</returns>
+        /// <remarks>
+        /// Tail samples are audio samples that should be played even after the input to the effect has stopped
+        /// playing and no further input samples are available.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplAmbisonicsRotationEffectGetTailSize", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int AmbisonicsRotationEffectGetTailSize(IPL.AmbisonicsRotationEffect effect);
+        
+        /// <summary>
+        /// Retrieves a single frame of tail samples from an Ambisonics rotation effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The Ambisonics rotation effect.</param>
+        /// <param name="out">The output audio buffer. Must have as many channels as needed for the Ambisonics order
+        /// specified when creating the effect.</param>
+        /// <returns>@c IPL_AUDIOEFFECTSTATE_TAILREMAINING if any tail samples remain in the effect's internal buffers, or
+        /// @c IPL_AUDIOEFFECTSTATE_TAILCOMPLETE otherwise.</returns>
+        /// <remarks>
+        /// After the input to the Ambisonics rotation effect has stopped, this function must be called instead of
+        /// @c iplAmbisonicsRotationEffectApply until the return value indicates that no more tail samples remain.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplAmbisonicsRotationEffectGetTail", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.AudioEffectState AmbisonicsRotationEffectGetTail(IPL.AmbisonicsRotationEffect effect, ref IPL.AudioBuffer @out);
+        
+        /// <summary>
         /// Creates an Ambisonics rotation effect.
         /// </summary>
         /// <param name="context">The context used to initialize Steam Audio.</param>
@@ -4011,9 +4198,9 @@ namespace SteamAudio
         public static extern void AmbisonicsDecodeEffectRelease(ref IPL.AmbisonicsDecodeEffect effect);
         
         /// <summary>
-        /// Resets the internal processing state of an Ambisonics rotation effect.
+        /// Resets the internal processing state of an Ambisonics decode effect.
         /// </summary>
-        /// <param name="effect">The Ambisonics rotation effect to reset.</param>
+        /// <param name="effect">The Ambisonics decode effect to reset.</param>
         [DllImport(Library, EntryPoint = "iplAmbisonicsDecodeEffectReset", CallingConvention = CallingConvention.Cdecl)]
         public static extern void AmbisonicsDecodeEffectReset(IPL.AmbisonicsDecodeEffect effect);
         
@@ -4034,6 +4221,34 @@ namespace SteamAudio
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplAmbisonicsDecodeEffectApply", CallingConvention = CallingConvention.Cdecl)]
         public static extern IPL.AudioEffectState AmbisonicsDecodeEffectApply(IPL.AmbisonicsDecodeEffect effect, ref IPL.AmbisonicsDecodeEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        
+        /// <summary>
+        /// Returns the number of tail samples remaining in an Ambisonics decode effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The Ambisonics decode effect.</param>
+        /// <returns>The number of tail samples remaining.</returns>
+        /// <remarks>
+        /// Tail samples are audio samples that should be played even after the input to the effect has stopped
+        /// playing and no further input samples are available.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplAmbisonicsDecodeEffectGetTailSize", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int AmbisonicsDecodeEffectGetTailSize(IPL.AmbisonicsDecodeEffect effect);
+        
+        /// <summary>
+        /// Retrieves a single frame of tail samples from an Ambisonics decode effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The Ambisonics decode effect.</param>
+        /// <param name="out">The output audio buffer. Must have as many channels as needed for the speaker layout
+        /// specified when creating the effect (if using panning) or 2 channels (if using
+        /// binaural rendering).</param>
+        /// <returns>@c IPL_AUDIOEFFECTSTATE_TAILREMAINING if any tail samples remain in the effect's internal buffers, or
+        /// @c IPL_AUDIOEFFECTSTATE_TAILCOMPLETE otherwise.</returns>
+        /// <remarks>
+        /// After the input to the Ambisonics decode effect has stopped, this function must be called instead of
+        /// @c iplAmbisonicsDecodeEffectApply until the return value indicates that no more tail samples remain.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplAmbisonicsDecodeEffectGetTail", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.AudioEffectState AmbisonicsDecodeEffectGetTail(IPL.AmbisonicsDecodeEffect effect, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates a direct effect.
@@ -4082,6 +4297,32 @@ namespace SteamAudio
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplDirectEffectApply", CallingConvention = CallingConvention.Cdecl)]
         public static extern IPL.AudioEffectState DirectEffectApply(IPL.DirectEffect effect, ref IPL.DirectEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        
+        /// <summary>
+        /// Returns the number of tail samples remaining in a direct effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The direct effect.</param>
+        /// <returns>The number of tail samples remaining.</returns>
+        /// <remarks>
+        /// Tail samples are audio samples that should be played even after the input to the effect has stopped
+        /// playing and no further input samples are available.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplDirectEffectGetTailSize", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int DirectEffectGetTailSize(IPL.DirectEffect effect);
+        
+        /// <summary>
+        /// Retrieves a single frame of tail samples from a direct effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The direct effect.</param>
+        /// <param name="out">The output audio buffer. Must have as many channels as specified when creating the effect.</param>
+        /// <returns>@c IPL_AUDIOEFFECTSTATE_TAILREMAINING if any tail samples remain in the effect's internal buffers, or
+        /// @c IPL_AUDIOEFFECTSTATE_TAILCOMPLETE otherwise.</returns>
+        /// <remarks>
+        /// After the input to the direct effect has stopped, this function must be called instead of
+        /// @c iplDirectEffectApply until the return value indicates that no more tail samples remain.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplDirectEffectGetTail", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.AudioEffectState DirectEffectGetTail(IPL.DirectEffect effect, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates a reflection effect.
@@ -4137,6 +4378,39 @@ namespace SteamAudio
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplReflectionEffectApply", CallingConvention = CallingConvention.Cdecl)]
         public static extern IPL.AudioEffectState ReflectionEffectApply(IPL.ReflectionEffect effect, ref IPL.ReflectionEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out, IPL.ReflectionMixer mixer);
+        
+        /// <summary>
+        /// Returns the number of tail samples remaining in a reflection effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The reflection effect.</param>
+        /// <returns>The number of tail samples remaining.</returns>
+        /// <remarks>
+        /// Tail samples are audio samples that should be played even after the input to the effect has stopped
+        /// playing and no further input samples are available.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplReflectionEffectGetTailSize", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ReflectionEffectGetTailSize(IPL.ReflectionEffect effect);
+        
+        /// <summary>
+        /// Retrieves a single frame of tail samples from a reflection effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The reflection effect.</param>
+        /// <param name="out">The output audio buffer. Must have as many channels as the impulse response
+        /// specified when creating the effect (for convolution, hybrid, and TAN) or at
+        /// least 1 channel (for parametric).</param>
+        /// <param name="mixer">If this is non-null, then the tail samples will be mixed into the given
+        /// mixer object instead of being returned in the @c out parameter. The mixed output can
+        /// be retrieved elsewhere in the audio pipeline using @c iplReflectionMixerApply. This
+        /// can have a performance benefit if using convolution. If using TAN, specifying
+        /// a mixer is required.</param>
+        /// <returns>@c IPL_AUDIOEFFECTSTATE_TAILREMAINING if any tail samples remain in the effect's internal buffers, or
+        /// @c IPL_AUDIOEFFECTSTATE_TAILCOMPLETE otherwise.</returns>
+        /// <remarks>
+        /// After the input to the reflection effect has stopped, this function must be called instead of
+        /// @c iplReflectionEffectApply until the return value indicates that no more tail samples remain.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplReflectionEffectGetTail", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.AudioEffectState ReflectionEffectGetTail(IPL.ReflectionEffect effect, ref IPL.AudioBuffer @out, IPL.ReflectionMixer mixer);
         
         /// <summary>
         /// Creates a reflection effect mixer.
@@ -4232,6 +4506,33 @@ namespace SteamAudio
         /// </remarks>
         [DllImport(Library, EntryPoint = "iplPathEffectApply", CallingConvention = CallingConvention.Cdecl)]
         public static extern IPL.AudioEffectState PathEffectApply(IPL.PathEffect effect, ref IPL.PathEffectParams @params, ref IPL.AudioBuffer @in, ref IPL.AudioBuffer @out);
+        
+        /// <summary>
+        /// Returns the number of tail samples remaining in a path effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The path effect.</param>
+        /// <returns>The number of tail samples remaining.</returns>
+        /// <remarks>
+        /// Tail samples are audio samples that should be played even after the input to the effect has stopped
+        /// playing and no further input samples are available.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplPathEffectGetTailSize", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int PathEffectGetTailSize(IPL.PathEffect effect);
+        
+        /// <summary>
+        /// Retrieves a single frame of tail samples from a path effect's internal buffers.
+        /// </summary>
+        /// <param name="effect">The path effect.</param>
+        /// <param name="out">The output audio buffer. Must have as many channels as needed for the
+        /// Ambisonics order specified when creating the effect.</param>
+        /// <returns>@c IPL_AUDIOEFFECTSTATE_TAILREMAINING if any tail samples remain in the effect's internal buffers, or
+        /// @c IPL_AUDIOEFFECTSTATE_TAILCOMPLETE otherwise.</returns>
+        /// <remarks>
+        /// After the input to the path effect has stopped, this function must be called instead of
+        /// @c iplPathEffectApply until the return value indicates that no more tail samples remain.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplPathEffectGetTail", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.AudioEffectState PathEffectGetTail(IPL.PathEffect effect, ref IPL.AudioBuffer @out);
         
         /// <summary>
         /// Creates an empty probe array.
@@ -4634,9 +4935,9 @@ namespace SteamAudio
         
         public const uint VersionMajor = 4;
         
-        public const uint VersionMinor = 5;
+        public const uint VersionMinor = 6;
         
-        public const uint VersionPatch = 3;
+        public const uint VersionPatch = 1;
         
         public const uint Version = (((uint)(VersionMajor)<<16)|((uint)(VersionMinor)<<8)|((uint)(VersionPatch)));
     }
