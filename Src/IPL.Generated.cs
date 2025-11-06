@@ -578,6 +578,23 @@ namespace SteamAudio
         }
         
         /// <summary>
+        /// The types of deviation model that can be used.
+        /// </summary>
+        public enum DeviationModelType : int
+        {
+            /// <summary>
+            /// The default deviation model. This is a physics-based model, based on the Uniform Theory of Diffraction,
+            /// with various additional assumptions.
+            /// </summary>
+            Default,
+            
+            /// <summary>
+            /// An arbitrary deviation model, defined by a callback function.
+            /// </summary>
+            Callback,
+        }
+        
+        /// <summary>
         /// The different algorithms for simulating occlusion.
         /// </summary>
         public enum OcclusionType : int
@@ -2284,6 +2301,187 @@ namespace SteamAudio
             /// @c IPLPathEffectSettings and @c binaural is set to @c IPL_TRUE.
             /// </summary>
             public IPL.CoordinateSpace3 Listener;
+            
+            /// <summary>
+            /// If @c IPL_TRUE, the values in @c eqCoeffs will be normalized before being used, i.e., each value in
+            /// @c eqCoeffs will be divided by the largest value in @c eqCoeffs. This can help counteract overly-aggressive
+            /// filtering due to a physics-based deviation model. If @c IPL_FALSE, the values in @c eqCoeffs will be
+            /// used as-is.
+            /// </summary>
+            [MarshalAs(UnmanagedType.U1)]
+            public bool NormalizeEQ;
+        }
+        
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public readonly partial struct EnergyField : IEquatable<EnergyField>
+        {
+            private readonly IntPtr _handle;
+            
+            public EnergyField(IntPtr handle) => _handle = handle;
+            
+            public IntPtr Handle => _handle;
+            
+            public bool Equals(EnergyField other) => _handle.Equals(other._handle);
+            
+            public override bool Equals(object obj) => obj is EnergyField other && Equals(other);
+            
+            public override int GetHashCode() => _handle.GetHashCode();
+            
+            public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
+            
+            public static bool operator ==(EnergyField left, EnergyField right) => left.Equals(right);
+            
+            public static bool operator !=(EnergyField left, EnergyField right) => !left.Equals(right);
+        }
+        
+        /// <summary>
+        /// Settings used to create an energy field.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public partial struct EnergyFieldSettings
+        {
+            /// <summary>
+            /// Total duration (in seconds) of the energy field. This determines the number of bins in each channel and band.
+            /// </summary>
+            public float Duration;
+            
+            /// <summary>
+            /// The Ambisonic order. This determines the number of channels.
+            /// </summary>
+            public int Order;
+        }
+        
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public readonly partial struct ImpulseResponse : IEquatable<ImpulseResponse>
+        {
+            private readonly IntPtr _handle;
+            
+            public ImpulseResponse(IntPtr handle) => _handle = handle;
+            
+            public IntPtr Handle => _handle;
+            
+            public bool Equals(ImpulseResponse other) => _handle.Equals(other._handle);
+            
+            public override bool Equals(object obj) => obj is ImpulseResponse other && Equals(other);
+            
+            public override int GetHashCode() => _handle.GetHashCode();
+            
+            public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
+            
+            public static bool operator ==(ImpulseResponse left, ImpulseResponse right) => left.Equals(right);
+            
+            public static bool operator !=(ImpulseResponse left, ImpulseResponse right) => !left.Equals(right);
+        }
+        
+        /// <summary>
+        /// Settings used to create an impulse response.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public partial struct ImpulseResponseSettings
+        {
+            /// <summary>
+            /// Total duration (in seconds) of the impulse response. This determines the number of samples in each channel.
+            /// </summary>
+            public float Duration;
+            
+            /// <summary>
+            /// The Ambisonic order. This determines the number of channels.
+            /// </summary>
+            public int Order;
+            
+            /// <summary>
+            /// The sampling rate. This, together with the duration, determines the number of samples in each channel.
+            /// </summary>
+            public int SamplingRate;
+        }
+        
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public readonly partial struct Reconstructor : IEquatable<Reconstructor>
+        {
+            private readonly IntPtr _handle;
+            
+            public Reconstructor(IntPtr handle) => _handle = handle;
+            
+            public IntPtr Handle => _handle;
+            
+            public bool Equals(Reconstructor other) => _handle.Equals(other._handle);
+            
+            public override bool Equals(object obj) => obj is Reconstructor other && Equals(other);
+            
+            public override int GetHashCode() => _handle.GetHashCode();
+            
+            public override string ToString() => "0x" + (IntPtr.Size == 8 ? _handle.ToString("X16") : _handle.ToString("X8"));
+            
+            public static bool operator ==(Reconstructor left, Reconstructor right) => left.Equals(right);
+            
+            public static bool operator !=(Reconstructor left, Reconstructor right) => !left.Equals(right);
+        }
+        
+        /// <summary>
+        /// Settings used to create a reconstructor.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public partial struct ReconstructorSettings
+        {
+            /// <summary>
+            /// The largest possible duration (in seconds) of any impulse response that will be reconstructed using this 
+            /// reconstructor.
+            /// </summary>
+            public float MaxDuration;
+            
+            /// <summary>
+            /// The largest possible Ambisonic order of any impulse response that will be reconstructed using this
+            /// reconstructor.
+            /// </summary>
+            public int MaxOrder;
+            
+            /// <summary>
+            /// The sampling rate of impulse responses reconstructed using this reconstructor.
+            /// </summary>
+            public int SamplingRate;
+        }
+        
+        /// <summary>
+        /// The inputs for a single reconstruction operation.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public partial struct ReconstructorInputs
+        {
+            /// <summary>
+            /// The energy field from which to reconstruct an impulse response.
+            /// </summary>
+            public IPL.EnergyField EnergyField;
+        }
+        
+        /// <summary>
+        /// Inputs common to all reconstruction operations specified in a single call to @c iplReconstructorReconstruct.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public partial struct ReconstructorSharedInputs
+        {
+            /// <summary>
+            /// Duration of impulse responses to reconstruct. Must be less than or equal to @c maxDuration specified in
+            /// @c IPLReconstructorSettings.
+            /// </summary>
+            public float Duration;
+            
+            /// <summary>
+            /// Ambisonic order of impulse responses to reconstruct. Must be less than or equal to @c maxOrder specified in
+            /// @c IPLReconstructorSettings.
+            /// </summary>
+            public int Order;
+        }
+        
+        /// <summary>
+        /// The outputs for a single reconstruction operation.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public partial struct ReconstructorOutputs
+        {
+            /// <summary>
+            /// The impulse response object into which the reconstructed impulse repsonse should be stored.
+            /// </summary>
+            public IPL.ImpulseResponse ImpulseResponse;
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -2727,6 +2925,34 @@ namespace SteamAudio
         public delegate float DirectivityCallback(IPL.Vector3 direction, IntPtr userData);
         
         /// <summary>
+        /// A deviation model that can be used for modeling frequency-dependent attenuation of sound as it
+        /// bends along the path from the source to the listener.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public partial struct DeviationModel
+        {
+            /// <summary>
+            /// The type of deviation model to use.
+            /// </summary>
+            public IPL.DeviationModelType Type;
+            
+            /// <summary>
+            /// When @c type is @c IPL_DEVIATIONTYPE_CALLBACK, this function will be called whenever Steam Audio
+            /// needs to evaluate deviation-based attenuation.
+            /// </summary>
+            public IPL.DeviationCallback Callback;
+            
+            /// <summary>
+            /// Pointer to arbitrary data that will be provided to the @c callback function whenever it is called.
+            /// May be @c NULL.
+            /// </summary>
+            public IntPtr UserData;
+        }
+        
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate float DeviationCallback(float angle, int band, IntPtr userData);
+        
+        /// <summary>
         /// Settings used to create a simulator.
         /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -2990,6 +3216,11 @@ namespace SteamAudio
             /// increased CPU usage.
             /// </summary>
             public int NumTransmissionRays;
+            
+            /// <summary>
+            /// The deviation model to use for this source. Only used when simulating pathing.
+            /// </summary>
+            public IntPtr DeviationModel;
         }
         
         /// <summary>
@@ -4535,6 +4766,320 @@ namespace SteamAudio
         public static extern IPL.AudioEffectState PathEffectGetTail(IPL.PathEffect effect, ref IPL.AudioBuffer @out);
         
         /// <summary>
+        /// Creates an energy field.
+        /// </summary>
+        /// <param name="context">The context used to initialize Steam Audio.</param>
+        /// <param name="settings">The settings to use when creating the energy field.</param>
+        /// <param name="energyField">[out] The created energy field.</param>
+        /// <returns>Status code indicating whether or not the operation succeeded.</returns>
+        [DllImport(Library, EntryPoint = "iplEnergyFieldCreate", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.Error EnergyFieldCreate(IPL.Context context, in IPL.EnergyFieldSettings settings, out IPL.EnergyField energyField);
+        
+        /// <summary>
+        /// Retains an additional reference to an energy field.
+        /// </summary>
+        /// <param name="energyField">The energy field to retain a reference to.</param>
+        /// <returns>The additional reference to the energy field.</returns>
+        [DllImport(Library, EntryPoint = "iplEnergyFieldRetain", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.EnergyField EnergyFieldRetain(IPL.EnergyField energyField);
+        
+        /// <summary>
+        /// Releases a reference to an energy field.
+        /// </summary>
+        /// <param name="energyField">The energy field to release a reference to.</param>
+        [DllImport(Library, EntryPoint = "iplEnergyFieldRelease", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void EnergyFieldRelease(ref IPL.EnergyField energyField);
+        
+        /// <summary>
+        /// Returns the number of channels in the energy field.
+        /// </summary>
+        /// <param name="energyField">The energy field.</param>
+        /// <returns>The number of channels in the energy field.</returns>
+        [DllImport(Library, EntryPoint = "iplEnergyFieldGetNumChannels", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int EnergyFieldGetNumChannels(IPL.EnergyField energyField);
+        
+        /// <summary>
+        /// Returns the number of bins in the energy field.
+        /// </summary>
+        /// <param name="energyField">The energy field.</param>
+        /// <returns>The number of bins in the energy field.</returns>
+        [DllImport(Library, EntryPoint = "iplEnergyFieldGetNumBins", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int EnergyFieldGetNumBins(IPL.EnergyField energyField);
+        
+        /// <summary>
+        /// Returns a pointer to the data stored in the energy field.
+        /// </summary>
+        /// <param name="energyField">The energy field.</param>
+        /// <returns>Pointer to #channels * #bands * #bins IPLfloat32 values stored in the energy field, in row-major order.</returns>
+        [DllImport(Library, EntryPoint = "iplEnergyFieldGetData", CallingConvention = CallingConvention.Cdecl)]
+        public static extern ref float EnergyFieldGetData(IPL.EnergyField energyField);
+        
+        /// <summary>
+        /// Returns a pointer to the data stored in the energy field for the given channel.
+        /// </summary>
+        /// <param name="energyField">The energy field.</param>
+        /// <param name="channelIndex">Index of the channel.</param>
+        /// <returns>Pointer to #bands * #bins IPLfloat32 values stored in the energy field for the given channel, in 
+        /// row-major order.</returns>
+        [DllImport(Library, EntryPoint = "iplEnergyFieldGetChannel", CallingConvention = CallingConvention.Cdecl)]
+        public static extern ref float EnergyFieldGetChannel(IPL.EnergyField energyField, int channelIndex);
+        
+        /// <summary>
+        /// Returns a pointer to the data stored in the energy field for the given channel and band.
+        /// </summary>
+        /// <param name="energyField">The energy field.</param>
+        /// <param name="channelIndex">Index of the channel.</param>
+        /// <param name="bandIndex">Index of the band.</param>
+        /// <returns>Pointer to #bins IPLfloat32 values stored in the energy field for the given channel and band, in row-major 
+        /// order.</returns>
+        [DllImport(Library, EntryPoint = "iplEnergyFieldGetBand", CallingConvention = CallingConvention.Cdecl)]
+        public static extern ref float EnergyFieldGetBand(IPL.EnergyField energyField, int channelIndex, int bandIndex);
+        
+        /// <summary>
+        /// Resets all values stored in an energy field to zero.
+        /// </summary>
+        /// <param name="energyField">The energy field.</param>
+        [DllImport(Library, EntryPoint = "iplEnergyFieldReset", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void EnergyFieldReset(IPL.EnergyField energyField);
+        
+        /// <summary>
+        /// Copies data from one energy field into another.
+        /// </summary>
+        /// <param name="src">The source energy field.</param>
+        /// <param name="dst">The destination energy field.</param>
+        /// <remarks>
+        /// If the source and destination energy fields have different numbers of channels, only the smaller of the two
+        /// numbers of channels will be copied.If the source and destination energy fields have different numbers of bins, only the smaller of the two numbers of
+        /// bins will be copied.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplEnergyFieldCopy", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void EnergyFieldCopy(IPL.EnergyField src, IPL.EnergyField dst);
+        
+        /// <summary>
+        /// Swaps the data contained in one energy field with the data contained in another energy field.
+        /// </summary>
+        /// <param name="a">The first energy field.</param>
+        /// <param name="b">The second energy field.</param>
+        /// <remarks>
+        /// The two energy fields may contain different numbers of channels or bins.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplEnergyFieldSwap", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void EnergyFieldSwap(IPL.EnergyField a, IPL.EnergyField b);
+        
+        /// <summary>
+        /// Adds the values stored in two energy fields, and stores the result in a third energy field.
+        /// </summary>
+        /// <param name="in1">The first input energy field.</param>
+        /// <param name="in2">The second input energy field.</param>
+        /// <param name="out">The output energy field.</param>
+        /// <remarks>
+        /// If the energy fields have different numbers of channels, only the smallest of the three numbers of channels will
+        /// be added.If the energy fields have different numbers of bins, only the smallest of the three numbers of bins will
+        /// be added.This function can be used for in-place addition, i.e. @c out may be equal to @c in1 or @c in2.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplEnergyFieldAdd", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void EnergyFieldAdd(IPL.EnergyField in1, IPL.EnergyField in2, IPL.EnergyField @out);
+        
+        /// <summary>
+        /// Scales the values stored in an energy field by a scalar, and stores the result in a second energy field.
+        /// </summary>
+        /// <param name="in">The input energy field.</param>
+        /// <param name="scalar">The scalar value.</param>
+        /// <param name="out">The output energy field.</param>
+        /// <remarks>
+        /// If the energy fields have different numbers of channels, only the smallest of the two numbers of channels will
+        /// be scaled.If the energy fields have different numbers of bins, only the smallest of the two numbers of bins will
+        /// be scaled.This function can be used for in-place scaling, i.e. @c out may be equal to @c in.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplEnergyFieldScale", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void EnergyFieldScale(IPL.EnergyField @in, float scalar, IPL.EnergyField @out);
+        
+        /// <summary>
+        /// Scales the values stored in an energy field by a scalar, and adds the result to a second energy field.
+        /// </summary>
+        /// <param name="in">The input energy field.</param>
+        /// <param name="scalar">The scalar value.</param>
+        /// <param name="out">The output energy field.</param>
+        /// <remarks>
+        /// If the energy fields have different numbers of channels, only the smallest of the two numbers of channels will
+        /// be added.If the energy fields have different numbers of bins, only the smallest of the two numbers of bins will
+        /// be added.This function can be used for in-place operation, i.e. @c out may be equal to @c in.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplEnergyFieldScaleAccum", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void EnergyFieldScaleAccum(IPL.EnergyField @in, float scalar, IPL.EnergyField @out);
+        
+        /// <summary>
+        /// Creates an impulse response.
+        /// </summary>
+        /// <param name="context">The context used to initialize Steam Audio.</param>
+        /// <param name="settings">The settings to use when creating the impulse response.</param>
+        /// <param name="impulseResponse">[out] The created impulse response.</param>
+        /// <returns>Status code indicating whether or not the operation succeeded.</returns>
+        [DllImport(Library, EntryPoint = "iplImpulseResponseCreate", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.Error ImpulseResponseCreate(IPL.Context context, in IPL.ImpulseResponseSettings settings, out IPL.ImpulseResponse impulseResponse);
+        
+        /// <summary>
+        /// Retains an additional reference to an impulse response.
+        /// </summary>
+        /// <param name="impulseResponse">The impulse response to retain a reference to.</param>
+        /// <returns>The additional reference to the impulse response.</returns>
+        [DllImport(Library, EntryPoint = "iplImpulseResponseRetain", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.ImpulseResponse ImpulseResponseRetain(IPL.ImpulseResponse impulseResponse);
+        
+        /// <summary>
+        /// Releases a reference to an impulse response.
+        /// </summary>
+        /// <param name="impulseResponse">The impulse response to release a reference to.</param>
+        [DllImport(Library, EntryPoint = "iplImpulseResponseRelease", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ImpulseResponseRelease(ref IPL.ImpulseResponse impulseResponse);
+        
+        /// <summary>
+        /// Returns the number of channels in the impulse response.
+        /// </summary>
+        /// <param name="impulseResponse">The impulse response.</param>
+        /// <returns>The number of channels in the impulse response.</returns>
+        [DllImport(Library, EntryPoint = "iplImpulseResponseGetNumChannels", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ImpulseResponseGetNumChannels(IPL.ImpulseResponse impulseResponse);
+        
+        /// <summary>
+        /// Returns the number of samples in the impulse response.
+        /// </summary>
+        /// <param name="impulseResponse">The impulse response.</param>
+        /// <returns>The number of samples in the impulse response.</returns>
+        [DllImport(Library, EntryPoint = "iplImpulseResponseGetNumSamples", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ImpulseResponseGetNumSamples(IPL.ImpulseResponse impulseResponse);
+        
+        /// <summary>
+        /// Returns a pointer to the data stored in the impulse response.
+        /// </summary>
+        /// <param name="impulseResponse">The impulse response.</param>
+        /// <returns>Pointer to #channels * #samples IPLfloat32 values stored in the impulse response, in row-major order.</returns>
+        [DllImport(Library, EntryPoint = "iplImpulseResponseGetData", CallingConvention = CallingConvention.Cdecl)]
+        public static extern ref float ImpulseResponseGetData(IPL.ImpulseResponse impulseResponse);
+        
+        /// <summary>
+        /// Returns a pointer to the data stored in the impulse response for the given channel.
+        /// </summary>
+        /// <param name="impulseResponse">The impulse response.</param>
+        /// <param name="channelIndex">Index of the channel.</param>
+        /// <returns>Pointer to #samples IPLfloat32 values stored in the impulse response for the given channel, in
+        /// row-major order.</returns>
+        [DllImport(Library, EntryPoint = "iplImpulseResponseGetChannel", CallingConvention = CallingConvention.Cdecl)]
+        public static extern ref float ImpulseResponseGetChannel(IPL.ImpulseResponse impulseResponse, int channelIndex);
+        
+        /// <summary>
+        /// Resets all values stored in an impulse response to zero.
+        /// </summary>
+        /// <param name="impulseResponse">The impulse response.</param>
+        [DllImport(Library, EntryPoint = "iplImpulseResponseReset", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ImpulseResponseReset(IPL.ImpulseResponse impulseResponse);
+        
+        /// <summary>
+        /// Copies data from one impulse response into another.
+        /// </summary>
+        /// <param name="src">The source impulse response.</param>
+        /// <param name="dst">The destination impulse response.</param>
+        /// <remarks>
+        /// If the source and destination impulse responses have different numbers of channels, only the smaller of the two
+        /// numbers of channels will be copied.If the source and destination impulse responses have different numbers of samples, only the smaller of the two numbers of
+        /// samples will be copied.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplImpulseResponseCopy", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ImpulseResponseCopy(IPL.ImpulseResponse src, IPL.ImpulseResponse dst);
+        
+        /// <summary>
+        /// Swaps the data contained in one impulse response with the data contained in another impulse response.
+        /// </summary>
+        /// <param name="a">The first impulse response.</param>
+        /// <param name="b">The second impulse response.</param>
+        /// <remarks>
+        /// The two impulse responses may contain different numbers of channels or samples.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplImpulseResponseSwap", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ImpulseResponseSwap(IPL.ImpulseResponse ir1, IPL.ImpulseResponse ir2);
+        
+        /// <summary>
+        /// Adds the values stored in two impulse responses, and stores the result in a third impulse response.
+        /// </summary>
+        /// <param name="in1">The first input impulse response.</param>
+        /// <param name="in2">The second input impulse response.</param>
+        /// <param name="out">The output impulse response.</param>
+        /// <remarks>
+        /// If the impulse responses have different numbers of channels, only the smallest of the three numbers of channels will
+        /// be added.If the impulse responses have different numbers of samples, only the smallest of the three numbers of samples will
+        /// be added.This function can be used for in-place addition, i.e. @c out may be equal to @c in1 or @c in2.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplImpulseResponseAdd", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ImpulseResponseAdd(IPL.ImpulseResponse in1, IPL.ImpulseResponse in2, IPL.ImpulseResponse @out);
+        
+        /// <summary>
+        /// Scales the values stored in an impulse response by a scalar, and stores the result in a second impulse response.
+        /// </summary>
+        /// <param name="in">The input impulse response.</param>
+        /// <param name="scalar">The scalar value.</param>
+        /// <param name="out">The output impulse response.</param>
+        /// <remarks>
+        /// If the impulse responses have different numbers of channels, only the smallest of the two numbers of channels will
+        /// be scaled.If the impulse responses have different numbers of samples, only the smallest of the two numbers of samples will
+        /// be scaled.This function can be used for in-place scaling, i.e. @c out may be equal to @c in.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplImpulseResponseScale", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ImpulseResponseScale(IPL.ImpulseResponse @in, float scalar, IPL.ImpulseResponse @out);
+        
+        /// <summary>
+        /// Scales the values stored in an impulse response by a scalar, and adds the result to a second impulse response.
+        /// </summary>
+        /// <param name="in">The input impulse response.</param>
+        /// <param name="scalar">The scalar value.</param>
+        /// <param name="out">The output impulse response.</param>
+        /// <remarks>
+        /// If the impulse responses have different numbers of channels, only the smallest of the two numbers of channels will
+        /// be added.If the impulse responses have different numbers of samples, only the smallest of the two numbers of samples will
+        /// be added.This function can be used for in-place operation, i.e. @c out may be equal to @c in.
+        /// </remarks>
+        [DllImport(Library, EntryPoint = "iplImpulseResponseScaleAccum", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ImpulseResponseScaleAccum(IPL.ImpulseResponse @in, float scalar, IPL.ImpulseResponse @out);
+        
+        /// <summary>
+        /// Creates a reconstructor.
+        /// </summary>
+        /// <param name="context">The context used to initialize Steam Audio.</param>
+        /// <param name="settings">The settings to use when creating the reconstructor.</param>
+        /// <param name="reconstructor">[out] The created reconstructor.</param>
+        /// <returns>Status code indicating whether or not the operation succeeded.</returns>
+        [DllImport(Library, EntryPoint = "iplReconstructorCreate", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.Error ReconstructorCreate(IPL.Context context, in IPL.ReconstructorSettings settings, out IPL.Reconstructor reconstructor);
+        
+        /// <summary>
+        /// Retains an additional reference to a reconstructor.
+        /// </summary>
+        /// <param name="reconstructor">The reconstructor to retain a reference to.</param>
+        /// <returns>The additional reference to the reconstructor.</returns>
+        [DllImport(Library, EntryPoint = "iplReconstructorRetain", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IPL.Reconstructor ReconstructorRetain(IPL.Reconstructor reconstructor);
+        
+        /// <summary>
+        /// Releases a reference to a reconstructor.
+        /// </summary>
+        /// <param name="reconstructor">The reconstructor to release a reference to.</param>
+        [DllImport(Library, EntryPoint = "iplReconstructorRelease", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ReconstructorRelease(ref IPL.Reconstructor reconstructor);
+        
+        /// <summary>
+        /// Reconstructs one or more impulse responses as a single batch of work.
+        /// </summary>
+        /// <param name="reconstructor">The reconstructor to use.</param>
+        /// <param name="numInputs">The number of impulse responses to reconstruct.</param>
+        /// <param name="inputs">Pointer to @c numInputs input structures, each describing a single energy field from which
+        /// to reconstruct a corresponding impulse response.</param>
+        /// <param name="sharedInputs">Pointer to a single shared input structure, describing common inputs used across all
+        /// impulse response reconstruction operations in this call.</param>
+        /// <param name="outputs">Pointer to @c numInputs output structures, each describing a single impulse response object
+        /// into which to write the corresponding reconstructed impulse response.</param>
+        [DllImport(Library, EntryPoint = "iplReconstructorReconstruct", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ReconstructorReconstruct(IPL.Reconstructor reconstructor, int numInputs, in IPL.ReconstructorInputs inputs, in IPL.ReconstructorSharedInputs sharedInputs, in IPL.ReconstructorOutputs outputs);
+        
+        /// <summary>
         /// Creates an empty probe array.
         /// </summary>
         /// <param name="context">The context used to initialize Steam Audio.</param>
@@ -4672,6 +5217,27 @@ namespace SteamAudio
         /// <returns>The size (in bytes) of a specific baked data layer in a probe batch.</returns>
         [DllImport(Library, EntryPoint = "iplProbeBatchGetDataSize", CallingConvention = CallingConvention.Cdecl)]
         public static extern ulong ProbeBatchGetDataSize(IPL.ProbeBatch probeBatch, in IPL.BakedDataIdentifier identifier);
+        
+        /// <summary>
+        /// Retrieves a single energy field in a specific baked data layer of a specific probe in a probe batch.
+        /// </summary>
+        /// <param name="probeBatch">The probe batch.</param>
+        /// <param name="identifier">The identifier of the baked data layer.</param>
+        /// <param name="probeIndex">The index of the probe.</param>
+        /// <param name="energyField">The energy field into which to copy the baked energy field.</param>
+        [DllImport(Library, EntryPoint = "iplProbeBatchGetEnergyField", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ProbeBatchGetEnergyField(IPL.ProbeBatch probeBatch, in IPL.BakedDataIdentifier identifier, int probeIndex, IPL.EnergyField energyField);
+        
+        /// <summary>
+        /// Retrieves a single array of parametric reverb times in a specific baked data layer of a specific probe in a probe batch.
+        /// </summary>
+        /// <param name="probeBatch">The probe batch.</param>
+        /// <param name="identifier">The identifier of the baked data layer.</param>
+        /// <param name="probeIndex">The index of the probe.</param>
+        /// <param name="reverbTimes">Pointer to an array containing at least 3 IPLfloat32 values, into which the baked reverb times
+        /// will be copied.</param>
+        [DllImport(Library, EntryPoint = "iplProbeBatchGetReverb", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void ProbeBatchGetReverb(IPL.ProbeBatch probeBatch, in IPL.BakedDataIdentifier identifier, int probeIndex, in float reverbTimes);
         
         /// <summary>
         /// Bakes a single layer of reflections data in a probe batch.
@@ -4865,16 +5431,22 @@ namespace SteamAudio
         /// <summary>
         /// Adds a source to the set of sources processed by a simulator in subsequent simulations.
         /// </summary>
-        /// <param name="source">The source to add.</param>
         /// <param name="simulator">The simulator being used.</param>
+        /// <param name="source">The source to add.</param>
+        /// <remarks>
+        /// Call @c iplSimulatorCommit after calling this function for the changes to take effect.
+        /// </remarks>
         [DllImport(Library, EntryPoint = "iplSourceAdd", CallingConvention = CallingConvention.Cdecl)]
         public static extern void SourceAdd(IPL.Source source, IPL.Simulator simulator);
         
         /// <summary>
         /// Removes a source from the set of sources processed by a simulator in subsequent simulations.
         /// </summary>
-        /// <param name="source">The source to remove.</param>
         /// <param name="simulator">The simulator being used.</param>
+        /// <param name="source">The source to remove.</param>
+        /// <remarks>
+        /// Call @c iplSimulatorCommit after calling this function for the changes to take effect.
+        /// </remarks>
         [DllImport(Library, EntryPoint = "iplSourceRemove", CallingConvention = CallingConvention.Cdecl)]
         public static extern void SourceRemove(IPL.Source source, IPL.Simulator simulator);
         
@@ -4935,9 +5507,9 @@ namespace SteamAudio
         
         public const uint VersionMajor = 4;
         
-        public const uint VersionMinor = 6;
+        public const uint VersionMinor = 7;
         
-        public const uint VersionPatch = 1;
+        public const uint VersionPatch = 0;
         
         public const uint Version = (((uint)(VersionMajor)<<16)|((uint)(VersionMinor)<<8)|((uint)(VersionPatch)));
     }
